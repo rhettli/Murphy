@@ -4,3 +4,4 @@ main
 go.sum
 .xml
 runtime/*
+vendor

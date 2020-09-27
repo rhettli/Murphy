@@ -17,7 +17,7 @@ return {
     remark='for dev web app',
     title='Coder Wooyri official web framework',
 
-    -- require == 0 or false,will be download local dir
+    -- require == 0 or false,will be download local dir [default is true]
     require=0 or false
 }
 
