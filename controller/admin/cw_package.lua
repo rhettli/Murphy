@@ -36,7 +36,6 @@ function _M:edit()
 
     local member = Member:findFirstById(http_params('id'))
 
-
     print('member edit:=====', json_encode(member))
     print('member STATUS_TEXT:=====', member.STATUS_TEXT)
 
@@ -51,7 +50,7 @@ function _M:index()
     print('got conditions:==', json_encode(cond))
 
     local page = http_params('page')
-    page = page or 1
+    page = page ~= "" and page or 1
     local res = _cw_package:findPagination(cond, page * 1, 30)
 
     self:view('cw_packages', res):render("admin.cw_package.index")

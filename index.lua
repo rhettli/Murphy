@@ -4,8 +4,13 @@ _curr_func = function()
     return debug.traceback()
 end
 
+install_dir = home() .. '/cwm/'
+package.path = _DIR .. '/vendor/?.lua;' .. install_dir .. '/?.lua;' .. _DIR .. '\\?.lua;'
+
+print(package.path)
+
 -- 刚开始只有这里使用路径
-require(_DIR..'vendor/autoload')
+require('vendor.autoload')
 require('lib.core')
 require('conf.defined')
 

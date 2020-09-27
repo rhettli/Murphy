@@ -2,6 +2,8 @@
 
 print(_DIR, dir())
 
+package.path = _DIR .. '/vendor/?.lua;' .. install_dir .. '/?.lua;' .. _DIR .. '\\?.lua;'
+
 require('vendor.autoload')
 require('lib.core')
 require('conf.defined')

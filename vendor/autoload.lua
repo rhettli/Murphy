@@ -2,14 +2,7 @@ local f = rtrim(_DIR, '/')
 local dir = str_split(f, '/')
 _dir_name = dir[#dir]
 _dir_name = _dir_name .. '/'
-install_dir = home() .. '/cwm/'
 
-local work_dir = rtrim(f, _dir_name) .. '/'
-
-package.path = _DIR .. '/vendor/?.lua;' .. install_dir .. '/?.lua;' .. _DIR .. '\\?.lua;'
-print('package.path:===', package.path)
-
---out(dir, _dir_name, "\n", package.path)
 
 _current_dir = function()
     local t = debug.traceback()
