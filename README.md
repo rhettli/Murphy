@@ -17,9 +17,8 @@ cw ./
 cw cli clear cache
 
 新建数据库更新脚本：
-```
-cw cli generate sql create_table_user
-# 将会在db文件夹里面生成： create_table_user_20200212091214.sql 这样的一个文件
-# 在这个文件里面写好sql更新脚本
-# 在服务器上面：git pull && cw cli sql update
-```
+
+1.`cw cli generate sql create_table_user`
+2. 将会在db文件夹里面生成： create_table_user_20200212091214.sql 这样的一个文件
+3. 在这个文件里面写好sql更新脚本
+4. 在服务器上面：`git pull && cw cli sql update`
