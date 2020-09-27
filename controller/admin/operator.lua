@@ -4,12 +4,12 @@ local _M = {}
 -- use p: I: (使用P: 开头表示权限类，I:开头表示权限类中的项目)
 
 -- [P:operator|管理员]
-function _M:new(o)
-    o = o or {}
-    setmetatable(o, self)
-    self.__index = self
+function _M:new()
+    return self
+end
 
-    return o
+function _M:a()
+    print('bb')
 end
 
 -- [I:update|更新]
@@ -39,7 +39,7 @@ function _M:edit()
     assert(is_valid(id), 'no id')
 
     local _operator = self:model('operator')
-    print('model new:=',json_encode(_operator))
+    print('model new:=', json_encode(_operator))
 
     local operator = _operator:findFirstById(id)
 
@@ -47,7 +47,6 @@ function _M:edit()
 
     self:view('operator', operator):render("admin.operator.edit")
 end
-
 
 function _M:loginAction()
 
@@ -118,6 +117,7 @@ function _M:index()
     print('got conditions:==', json_encode(cond))
 
     local page = http_params('page') or 1
+    page = page == '' and 1 or page
 
     local m = self:model('operator')
     print(m.member)

@@ -9,7 +9,11 @@ end
 
 _merge_left = function(a, b)
     for i, v in pairs(b) do
+        print(i,v)
         if i ~= 'new' then
+            if a[i] then
+                a[i] = nil
+            end
             a[i] = v
         end
     end

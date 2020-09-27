@@ -2,19 +2,18 @@ local _M = {}
 
 function _M:new(o)
     o = o or {}
+    print('self:==', json_encode(o))
     print('self:==', json_encode(self))
-
-    --    self.__index = self
-    --    setmetatable(self, o)
-    --for k, v in pairs(o) do
-    --    self[k] = v
-    --end
 
     o = o:new()
 
-    _merge_left(self, o)
+     _merge_left(self, o)
 
     return self
+end
+
+function _M:a()
+    print('aa')
 end
 
 function _M:getConditions(value_name)

@@ -49,6 +49,11 @@
                             <a href="/admin/member">用户列表</a>
                         </li>
                     {% endif %}
+                    {%if _is_allowed('device','index')  then %}
+                        <li>
+                            <a href="/admin/device">用户设备列表</a>
+                        </li>
+                    {% endif %}
                     {%if _is_allowed('sms_histories','index')  then %}
                         <li><a href="/admin/sms_histories">短信验证列表</a></li>
                     {% endif %}
