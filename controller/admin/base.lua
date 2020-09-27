@@ -10,6 +10,8 @@ function _M:new(o)
     --    self[k] = v
     --end
 
+    o = o:new()
+
     _merge_left(self, o)
 
     return self
@@ -52,6 +54,60 @@ function _M:render(tpl, dt)
         self._view = dt
     end
     self._view:render(tpl)
+end
+
+function _M:update()
+    local id = http_params('id')
+    assert(is_valid(id), 'no id')
+
+    local _model = _new_model(self.model_name)
+
+    local model = _model:findFirstById(http_params('id'))
+    if is_valid(model) then
+        self:assign(model, self.model_name)
+        if self.beforeUpdate then
+            self:beforeUpdate(model)
+        end
+        model:save()
+    end
+    return self:renderJSON()
+end
+
+function _M:create()
+
+end
+
+function _M:edit()
+    local id = http_params('id')
+    assert(is_valid(id), 'no id')
+
+    local new_model = _new_model(self.model_name)
+
+    local model = new_model:findFirstById(http_params('id'))
+
+    if self.beforeEdit then
+        self:beforeEdit(model)
+    end
+
+    self:view(self.model_name, model):render('admin.' .. self.model_name .. '.edit')
+end
+
+function _M:index()
+    print(self.model_name)
+    _cw_package = _new_model(self.model_name)
+
+    local cond = self:getConditions(self.model_name);
+    print('got conditions:==', json_encode(cond))
+
+    local page = http_params('page')
+    page = page == '' and 1 or page
+    local res = _cw_package:findPagination(cond, page * 1, 30)
+
+    if self.beforeIndex then
+        self:beforeIndex(model)
+    end
+
+    self:view(self.model_name .. 's', res):render("admin." .. self.model_name .. ".index")
 end
 
 function _M:view(name, data)

@@ -151,10 +151,7 @@
         {% endif %}
 
         <!-- 系统 -->
-        {% if _is_allowed('operators','index') or _is_allowed('partners','index') or _is_allowed('sms_channels','index')
-        or _is_allowed('provinces','index') or _is_allowed('protocol_urls','index') or _is_allowed('banners','index')
-        or _is_allowed('soft_versions','index') or _is_allowed('sms_channels','index') or _is_allowed('partner_urls','index')
-        or _is_allowed('marketing_configs','index') or _is_allowed('cooperate', 'index') then %}
+        {% if _is_allowed('operators','index') then %}
 
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -199,11 +196,9 @@
                     {%if _is_allowed('payment_channels','index')  then %}
                         <li><a href="/admin/payment_channels">支付渠道</a></li>
                     {% endif %}
-                    {%if _is_allowed('provinces','index')  then %}
-                        <li><a href="/admin/provinces">省市管理</a></li>
-                    {% endif %}
-                    {%if _is_allowed('soft_versions','index')  then %}
-                        <li><a href="/admin/soft_versions">软件升级管理</a></li>
+
+                    {%if _is_allowed('cw_version','index')  then %}
+                        <li><a href="/admin/cw_version">软件升级管理</a></li>
                     {% endif %}
                     {%if _is_allowed('export_histories','index')  then %}
                         <li><a href="/admin/export_histories">导出记录</a></li>

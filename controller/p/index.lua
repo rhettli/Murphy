@@ -8,26 +8,8 @@ function _M:new(o)
     return o
 end
 
-function _M:index()
-    local plugs = require('oshine.cwm.plugs'):new('oshine.bitmap')
-
-    local S = 1024
-    local imageHandler = "image_background_gray_with_opacity_01"
-
-    plugs:call('create', imageHandler, S, S)
-
-    plugs:call('setRGBA', imageHandler, 0, 0, 0, 0.1)
-
-    for i = 0, 360, 15 do
-        plugs:call('push', imageHandler)
-        plugs:call('rotateAbout', imageHandler, i, S / 2, S / 2)
-        plugs:call('drawEllipse', imageHandler, S / 2, S / 2, S * 7 / 16, S / 8)
-        plugs:call('fill', imageHandler)
-        plugs:call('pop', imageHandler)
-    end
-    plugs:call('savePng', imageHandler, home() .. "/desktop/out.png")
-
-    --out(import('string').format('%s/123',1))
+function _M:index0()
+     --out(import('string').format('%s/123',1))
     http_session('user_id', '1236')
 
     out("session got:", http_session('user_id'))
@@ -103,10 +85,6 @@ function _M:index1()
 
 
     chart_out()
-end
-
-function _M:run()
-    out('self.vendor')
 end
 
 return _extend(_M, "lib.controller")

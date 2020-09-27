@@ -4,8 +4,8 @@ _curr_func = function()
     return debug.traceback()
 end
 
-install_dir = home() .. '/cwm/'
-package.path = _DIR .. '/vendor/?.lua;' .. install_dir .. '/?.lua;' .. _DIR .. '\\?.lua;'
+install_dir = env('CEM_PACKAGE') or home() .. '/cwm/'
+package.path = _DIR .. '/vendor/?.lua;' .. install_dir .. '/?.lua;' .. _DIR .. '/?.lua;'
 
 print(package.path)
 
@@ -65,7 +65,7 @@ end
 print('request in:==', file, method)
 
 -- 这里使用 _require_controller ，防止缓存已经存在的包
-local run_str = "local ctrl = _import('controller%s');ctrl:new();return ctrl:%s();"
+local run_str = "local ctrl = _import('controller%s');return ctrl:%s();"
 
 -- defined global var
 _ACCESS_FILE = file
