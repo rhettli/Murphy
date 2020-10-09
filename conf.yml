@@ -34,15 +34,8 @@ index_all: 1
 # 是否缓存lua代码
 cache_code: 0
 
+# before running
+before_run: _before_run.cw
 
-redis:
-  addr: "127.0.0.1:6379"
-  psw: ""
-  db: 0
-
-monogodb:
-  addr: 127.0.0.1:6379
-  psw:
-
-
+before_req:  _before_req.cw
 
