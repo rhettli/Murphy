@@ -20,10 +20,11 @@ index: index.lua index.html
 # 比如：/foo/bar/?op=list , 将重定向到 /index.lua?_url=/foo/bar/?op=list
 index_all: 1
 
-# 服务类型，默认为空 都开启，也可以单独开启
+# 服务类型，默认为空 都开启，也可以单独开启 -t socket:tcp , -t http&ws
 # type: http
 # type: ws
-# type: socket  # socket启动 需要配置socket_type ,默认tcp服务
+# type: ws&http
+
 
 #socket_type: tcp
 #socket_type: udp
