@@ -176,7 +176,7 @@ function M:async(delay, params)
     _stack()
 end
 
-function M:_doSave()
+function M:doSave_()
     local metadata_file = self:metatable()
     --out(metadata_file)
     local insert = 'insert %s(%s)values(%s)';
@@ -210,7 +210,7 @@ function M:_doSave()
     return true
 end
 
-function M:_doUpdate(p)
+function M:doUpdate_(p)
     local metadata_file = self:metatable()
     --out(metadata_file)
     local update = 'update %s set %s where id=%s';
@@ -232,7 +232,7 @@ function M:_doUpdate(p)
     end
 
     update = string.format(update, self._table, rtrim(field, ','), self.id)
-    print('_doUpdate:==', update)
+    print('doUpdate_:==', update)
 
     _import('lib.db'):new():with(function(c)
         if c ~= nil then
@@ -263,24 +263,24 @@ end
 function M:save()
     --    assert(obj, 'need self instance')
 
-    print(' self.beforeSave:===', self.beforeSave)
-    if self.beforeSave then
-        self:beforeSave()
+    print(' self._beforeSave:===', self._beforeSave)
+    if self._beforeSave then
+        self:_beforeSave()
     end
 
     if is_valid(self.id) then
-        if not self:_doUpdate() then
+        if not self:doUpdate_() then
             return false
         end
     else
-        if not self:_doSave() then
+        if not self:doSave_() then
             return false
         end
     end
 
-    print('asave:===', self.afterSave)
-    if self.afterSave then
-        self:afterSave()
+    print('asave:===', self._afterSave)
+    if self._afterSave then
+        self:_afterSave()
     end
 
     return true
