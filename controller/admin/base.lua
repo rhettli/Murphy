@@ -7,7 +7,7 @@ function _M:new(o)
 
     o = o:new()
 
-     _merge_left(self, o)
+    _merge_left(self, o)
 
     return self
 end
@@ -64,9 +64,9 @@ function _M:update()
     local model = _model:findFirstById(_http_params('id'))
     if _is_valid(model) then
         self:assign(model, self.model_name)
-        if self.beforeUpdate then
-            self:beforeUpdate(model)
-        end
+
+        self:_beforeUpdate(model)
+
         model:save()
     end
     return self:renderJSON()
@@ -84,11 +84,19 @@ function _M:edit()
 
     local model = new_model:findFirstById(_http_params('id'))
 
-    if self.beforeEdit then
-        self:beforeEdit(model)
-    end
+    self:_beforeEdit(model)
 
     self:view(self.model_name, model):render('admin.' .. self.model_name .. '.edit')
+end
+
+-- suggest overwrite
+function _M:_beforeUpdate(model)
+end
+-- suggest overwrite
+function _M:_beforeEdit(model)
+end
+-- suggest overwrite
+function _M:_beforeIndex(model)
 end
 
 function _M:index()
@@ -102,9 +110,7 @@ function _M:index()
     page = page == '' and 1 or page
     local res = _cw_package:findPagination(cond, page * 1, 30)
 
-    if self.beforeIndex then
-        self:beforeIndex(model)
-    end
+    self:_beforeIndex(res)
 
     self:view(self.model_name .. 's', res):render("admin." .. self.model_name .. ".index")
 end

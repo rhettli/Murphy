@@ -7,11 +7,11 @@ function _M:new(o)
     return self
 end
 
-function _M:beforeSave()
+function _M:_beforeSave()
     print('before save...')
 end
 
-function _M:afterSave()
+function _M:_afterSave()
 
     print('after save...')
 end

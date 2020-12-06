@@ -6,18 +6,18 @@ function _M:new()
     return self
 end
 
-function _M:beforeUpdate()
+function _M:_beforeUpdate()
 
 end
 
-function _M:beforeEdit()
+function _M:_beforeEdit()
 
 end
 
-function _M:beforeCreate()
+function _M:_beforeCreate()
 
 end
-function _M:beforeIndex()
+function _M:_beforeIndex()
     print('===index before===')
 end
 
