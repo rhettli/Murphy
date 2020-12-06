@@ -9,15 +9,15 @@ function _M:new(o)
 end
 
 function _M:update()
-    local id = http_params('id')
-    assert(is_valid(id), 'no id')
+    local id = _http_params('id')
+    assert(_is_valid(id), 'no id')
 
     local Member = _new_model('member')
 
-    local memberObj = Member:findFirstById(http_params('id'))
-    if is_valid(memberObj) then
+    local memberObj = Member:findFirstById(_http_params('id'))
+    if _is_valid(memberObj) then
         self:assign(memberObj, 'member')
-        print(json_encode(memberObj))
+        print(_json_encode(memberObj))
         memberObj:save()
     end
 
@@ -29,17 +29,17 @@ function _M:create()
 end
 
 function _M:edit()
-    local id = http_params('id')
-    assert(is_valid(id), 'no id')
+    local id = _http_params('id')
+    assert(_is_valid(id), 'no id')
 
     local v = _import('lib.view'):new()
 
     local Member = _new_model('member')
 
-    local member = Member:findFirstById(http_params('id'))
+    local member = Member:findFirstById(_http_params('id'))
     v.view['member'] = member
 
-    print('member edit:=====', json_encode(member))
+    print('member edit:=====', _json_encode(member))
     print('member STATUS_TEXT:=====', member.STATUS_TEXT)
 
     v:render("admin.member.edit")
@@ -53,9 +53,9 @@ function _M:index()
     --local cond= self:assign()
 
     local cond = self:getConditions('member');
-    print('got conditions:==', json_encode(cond))
+    print('got conditions:==', _json_encode(cond))
 
-    local page = http_params('page')
+    local page = _http_params('page')
     page = page or 1
     print('page:==', page)
     local res = _cw_package:find_pagination(cond, page * 1, 30)

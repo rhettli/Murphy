@@ -14,15 +14,15 @@ end
 
 -- [I:update|更新]
 function _M:update()
-    local id = http_params('id')
-    assert(is_valid(id), 'no id')
+    local id = _http_params('id')
+    assert(_is_valid(id), 'no id')
 
     local Member = _new_model('operator_permission')
 
-    local memberObj = Member:findFirstById(http_params('id'))
-    if is_valid(memberObj) then
+    local memberObj = Member:findFirstById(_http_params('id'))
+    if _is_valid(memberObj) then
         self:assign(memberObj, 'member')
-        print(json_encode(memberObj))
+        print(_json_encode(memberObj))
         memberObj:Save()
     end
 
@@ -35,11 +35,11 @@ end
 
 -- [I:edit|更新]
 function _M:edit()
-    local id = http_params('id')
-    assert(is_valid(id), 'no id')
+    local id = _http_params('id')
+    assert(_is_valid(id), 'no id')
 
     local _operator = self:model('operator_permission')
-    print('model new:=',json_encode(_operator))
+    print('model new:=',_json_encode(_operator))
 
     local operator = _operator:findFirstById(id)
 
@@ -52,9 +52,9 @@ end
 function _M:index()
 
     local cond = self:getConditions('operator_permission');
-    print('got conditions:==', json_encode(cond))
+    print('got conditions:==', _json_encode(cond))
 
-    local page = http_params('page') or 1
+    local page = _http_params('page') or 1
 
     local m = self:model('operator_permission')
     print(m.member)

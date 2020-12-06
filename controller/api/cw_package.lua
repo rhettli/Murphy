@@ -12,26 +12,26 @@ end
 
 function class_project:search()
     -- every 5 second only handle 2 request,need redis to storage.
-    if self:checkEnoughTimes('_p_search:'..http_ip(), 2, 5) then
+    if self:checkEnoughTimes('_p_search:'.._http_ip(), 2, 5) then
         return self:renderJSON(nil, 'Do not operate too much times', -1)
     end
 
-    local package_name = http_params('package_name')
-    if not is_valid(package_name) then
+    local package_name = _http_params('package_name')
+    if not _is_valid(package_name) then
         return self:renderJSON(nil, 'package_name can be empty,you can search member\'s package just use like:oshine/* or oshine/bitmap or bitmap', -1)
     end
 
     _package = _new_model('cw_package')
     _cw_package = _new_model('member')
 
-    package_name = str_split(package_name, '/')
+    package_name = _str_split(package_name, '/')
     if #package_name > 1 then
         local member = _cw_package:findFirstBy('username', package_name[1])
-        if not is_valid(member) then
+        if not _is_valid(member) then
             return self:renderJSON(nil, 'package_name can be ', -1)
         end
         local package = _package:findFirst({ conditions = 'member_id=:member_id: and name like :name:', bind = { member_id = member.id, name = '%' .. package_name[2] .. '%' } })
-        if not is_valid(package) then
+        if not _is_valid(package) then
             return self:renderJSON(nil, 'package not match with:' .. package_name, -1)
         end
 
@@ -51,21 +51,21 @@ function class_project:search()
 end
 
 function class_project:add()
-    local p = http_params('package_name', 'git_source')
+    local p = _http_params('package_name', 'git_source')
     local package_name = p.package_name
     local git_source = p.git_source
 
-    if not is_valid(package_name) then
+    if not _is_valid(package_name) then
         return self:renderJSON(nil, 'package_name empty', -1)
     end
 
-    if not is_valid(git_source) then
+    if not _is_valid(git_source) then
         return self:renderJSON(nil, 'git_source empty,git_source like:gitee.com/oshine/cwm,github.com/rhettli/cwm ;multi source split with (,)', -1)
     end
 
     local port, platform, title, remark
 
-    local git_source_arr = str_split(git_source, ',')
+    local git_source_arr = _str_split(git_source, ',')
     if #git_source_arr > 0 then
         local http = require('http')
         local url = ''
@@ -96,7 +96,7 @@ function class_project:add()
                 return self:renderJSON(nil, 'you typed package_name not equal package_name in file package.lua,your\'s:' ..
                         package_name .. ',git_source you gived:' .. package.package_name, -1)
             end
-            package_name = str_split(package_name, '/')
+            package_name = _str_split(package_name, '/')
             if #package_name ~= 2 then
                 return self:renderJSON(nil, 'package_name can only like:a/b;  [a/b/c or a] is forbidden,and [a] is your username', -1)
             end
@@ -116,7 +116,7 @@ function class_project:add()
 
     local pro = _package:findFirstBy('name', package_name)
 
-    if is_valid(pro) and pro.member_id / member_id == 1 then
+    if _is_valid(pro) and pro.member_id / member_id == 1 then
         return self:renderJSON(nil, 'project_name[' .. package_name .. '] you already have,change another one', -1)
     end
 
@@ -127,7 +127,7 @@ function class_project:add()
     _package.platform = platform
     _package.port = port
     _package.git_source = git_source
-    _package.created_at = time()
+    _package.created_at = _time()
     _package:save()
 
     return self:renderJSON(nil, 'ok')

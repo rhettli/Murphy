@@ -5,7 +5,7 @@ _curr_func = function()
 end
 
 install_dir = env('CEM_PACKAGE') or home() .. '/cwm/'
-package.path = _DIR .. '/vendor/?.lua;' .. install_dir .. '/?.lua;' .. _DIR .. '/?.lua;'
+package.path = _DIR .. '/vendor/?.cw;' .. install_dir .. '/?.cw;' .. _DIR .. '/?.cw;'
 
 print(package.path)
 
@@ -18,16 +18,16 @@ require('conf.defined')
 --index.lua?_url=/foo/bar?op=123
 local uri = http_request('uri')
 --out("uri:", uri, "\r\n")
-local params = str_split(uri, "?")
+local params = _str_split(uri, "?")
 --out(params)
-local controller = str_split(params[2], "=")[2]
+local controller = _str_split(params[2], "=")[2]
 --out('ctrl:', controller, "\r\n")
 
 -- 定义全局变量,请求句柄
 _request = _import('lib.request')
 _request:new(params[3])
 
-local func_arr = str_split(controller, '/')
+local func_arr = _str_split(controller, '/')
 local file = ""
 local method = ""
 

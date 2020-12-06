@@ -19,4 +19,4 @@ out(http_request('host') .. " host\r\n")
 out(http_request('uri') .. " uri\r\n")
 out(http_params('op') .. " params op\r\n")
 
-out(time() .. "\r\n")
+out(_time() .. "\r\n")

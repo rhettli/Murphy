@@ -11,7 +11,7 @@ end
 
 
 function _M:get(p)
-    return http_params(p)
+    return _http_params(p)
 end
 
 return _M

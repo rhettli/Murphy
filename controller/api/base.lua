@@ -11,8 +11,8 @@ function class_base:new(o)
     --setmetatable(o, self)
     --self.__index = self
     --
-    --local sid = http_params('sid')
-    --if not is_valid(sid) then
+    --local sid = _http_params('sid')
+    --if not _is_valid(sid) then
     --    return nil
     --end
 
@@ -41,17 +41,17 @@ function class_base:checkShortPsw()
     if _res_check_psw ~= nil then
         return _res_check_psw[1], _res_check_psw[2]
     end
-    local sp = http_params('sp')
-    if not is_valid(sp) then
+    local sp = _http_params('sp')
+    if not _is_valid(sp) then
         _res_check_psw = { false, 'sp invalid' }
     end
     local member = self:currentMember()
-    if not is_valid(member.sp) then
+    if not _is_valid(member.sp) then
         _res_check_psw = { false, 'no sp' }
     end
     if member.sp ~= sp then
         _res_check_psw = { false, 'sp invalid' }
-    elseif member.sp_expire_time > time() then
+    elseif member.sp_expire_time > _time() then
         _res_check_psw = { true }
     else
         _res_check_psw = { false, 'sp expire' }
@@ -92,8 +92,8 @@ function class_base:currentMemberId()
     if self._sid then
         return self._sid
     end
-    local sid = http_params('sid')
-    sid = str_split(sid, '.')
+    local sid = _http_params('sid')
+    sid = _str_split(sid, '.')
     if sid[1] then
         sid[1] = tonumber(sid[1])
         self._sid = sid[1]
@@ -102,10 +102,10 @@ function class_base:currentMemberId()
 end
 
 function class_base:checkAuth()
-    local sid = http_params('sid')
+    local sid = _http_params('sid')
     if sid then
-        local member = _new_model('member'):findFirstBy('id', str_split(sid, '.')[1])
-        if is_valid(member) and member.sid == sid then
+        local member = _new_model('member'):findFirstBy('id', _str_split(sid, '.')[1])
+        if _is_valid(member) and member.sid == sid then
             return true
         end
     end

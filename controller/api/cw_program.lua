@@ -13,7 +13,7 @@ end
 function class_member:logout()
     local member_id = self:currentMemberId()
 
-    local sid = http_params('sid')
+    local sid = _http_params('sid')
 
     local m_sid = self:model('sid'):findFirstBy('sid', sid)
     if not m_sid then
@@ -30,20 +30,20 @@ function class_member:logout()
 end
 
 function class_member:login()
-    local email = http_params('email')
-    local psw = http_params('psw')
-    local device_no = http_params('device_no')
-    local platform = http_params('platform')
+    local email = _http_params('email')
+    local psw = _http_params('psw')
+    local device_no = _http_params('device_no')
+    local platform = _http_params('platform')
 
     if platform and not in_array(platform, { 'windows', 'drawin', 'linux' }) then
         return self:renderJSON(nil, 'login fail:' .. uuid(), -1)
     end
 
-    if not is_valid(device_no) or #device_no < 8 then
+    if not _is_valid(device_no) or #device_no < 8 then
         device_no = nil
     end
 
-    if not is_valid(email, psw) then
+    if not _is_valid(email, psw) then
         return self:renderJSON(nil, 'email or psw empty!', -1)
     end
 
@@ -54,7 +54,7 @@ function class_member:login()
         return self:renderJSON(nil, 'login fail:' .. md5(psw), -1)
     end
 
-    mem.last_at = time()
+    mem.last_at = _time()
 
     -- get current member id
     --local member_id = self:currentMemberId()
@@ -70,9 +70,9 @@ function class_member:login()
     if device_no then
         local _Device = _new_model('device')
         local device = _Device:findFirstBy('device_no', device_no)
-        if is_valid(device) then
+        if _is_valid(device) then
             -- update last login time [更新这个设备的最后登录时间]
-            device.last_at = time()
+            device.last_at = _time()
             device.member_id = member_id
             device.sid = sid
             -- a platform can not be change after record to DB
@@ -88,10 +88,10 @@ function class_member:login()
             _Device.sid = sid
             _Device.platform = platform
             _Device.device_no = device_no
-            _Device.created_at = time()
+            _Device.created_at = _time()
             _Device.member_id = member_id
-            _Device.last_at = time()
-            _Device.ip = http_ip()
+            _Device.last_at = _time()
+            _Device.ip = _http_ip()
             _Device.status = 1
             _Device:save()
 
@@ -113,7 +113,7 @@ function class_member:login()
 
     local old_sid = _Sid:findFirst({ conditions = 'member_id=' .. member_id .. ' and ' .. sidWhere })
 
-    if is_valid(old_sid) then
+    if _is_valid(old_sid) then
         old_sid.sid = sid
         old_sid:save()
     else
@@ -122,7 +122,7 @@ function class_member:login()
         if device_id then
             _Sid.device_id = device_id
         end
-        _Sid.created_at = time()
+        _Sid.created_at = _time()
         _Sid:save()
     end
 

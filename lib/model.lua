@@ -25,7 +25,7 @@ function M:new(o, _table)
     self.__index = function(a, f)
 
         print('==index==:', f)
-        local arr = str_split(f, '_')
+        local arr = _str_split(f, '_')
         local lens = #arr
         local r
 
@@ -38,10 +38,10 @@ function M:new(o, _table)
                 local filed = arr[lens - 1]
                 local item = tonumber(o[filed])
                 r = o[str_to_upper(arr[lens - 1]) .. '_TEXT'][item]
-                --print('text inner:', json_encode(r))
+                --print('text inner:', _json_encode(r))
             elseif arr[lens] == 'array' then
                 r = o[str_to_upper(arr[lens - 1]) .. '_TEXT']
-                print('==index== array inner:', json_encode(r))
+                print('==index== array inner:', _json_encode(r))
             elseif arr[lens] == 'time' then
                 r = date('Y-m-d H:i:s', o[join(table_sub_to_right(arr, lens - 1), '_')])
                 --print('time:==', o[join(table_sub_to_right(arr, lens - 1), '_')])
@@ -96,7 +96,7 @@ function M:new(o, _table)
                 pcall(function()
                     c:query(' desc  ' .. _table, function(res_)
                         local name = res_.Field
-                        --print('call back:', json_encode(res_), "\n")
+                        --print('call back:', _json_encode(res_), "\n")
                         tbl_struct[name] = {}
                         tbl_struct[name].type = fieldType(res_.Type)
                         tbl_struct[name].name = name
@@ -144,7 +144,7 @@ function M:checkValue(val, type_)
 
     print('checkValue:==', val, type(val), type_)
 
-    assert(type(val) ~= 'table', json_encode(val))
+    assert(type(val) ~= 'table', _json_encode(val))
 
     if 'number' == type_ then
         return tonumber(val)
@@ -161,7 +161,7 @@ function M:metatable()
         return self._metatable
     end
 
-    local rmt = _import('runtime.metadata.' .. self._table) -- json_decode(file_get_contents(_DIR .. '/runtime/metadata/' .. self._table))
+    local rmt = _import('runtime.metadata.' .. self._table) -- json_decode(_file_get_contents(_DIR .. '/runtime/metadata/' .. self._table))
     assert(rmt, 'metadata not find')
     self._metatable = unserialize(rmt)
     return self._metatable
@@ -268,7 +268,7 @@ function M:save()
         self:beforeSave()
     end
 
-    if is_valid(self.id) then
+    if _is_valid(self.id) then
         if not self:_doUpdate() then
             return false
         end
@@ -314,7 +314,7 @@ function M:findFirstBy(filed, val)
     assert(val, 'findFirsBy params $2 empty')
     local binds = {}
     binds[filed] = val
-    print('findFirstBy:==', json_encode(binds), filed, val)
+    print('findFirstBy:==', _json_encode(binds), filed, val)
 
     local ids = self:_query({ columns = 'id', conditions = filed .. "=:" .. filed .. ':', bind = binds })
 
@@ -330,7 +330,7 @@ function M:findFirstBy(filed, val)
         mod[i] = v
     end
 
-    --print(json_encode(mod))
+    --print(_json_encode(mod))
     --print('get status_text:==', mod.status_text)
     --print(mod.__index({}, 'status_text'))
     return mod
@@ -359,7 +359,7 @@ end
 
 function M:_toObj(ars)
     local rt = {}
-    print(json_encode(ars))
+    print(_json_encode(ars))
     for _, v in pairs(ars) do
         local mod = _new_model(self._table)
         mod.snap = v
@@ -382,10 +382,10 @@ function M:findByIds(ids)
 
     local fc = function()
         if _reds then
-            print("findByIds:==", json_encode(ids))
+            print("findByIds:==", _json_encode(ids))
             for _, id in pairs(ids) do
                 local res = _reds:exec('get', '__model_cache' .. prefix .. id)
-                if is_valid(res) then
+                if _is_valid(res) then
                     rt[#rt + 1] = json_decode(res)
                 else
                     not_find_ids[id] = { i = #rt + 1 }
@@ -407,7 +407,7 @@ function M:findByIds(ids)
             if #second_finds > 0 then
                 for _, item in pairs(second_finds) do
                     if _reds then
-                        local res = _reds:exec('SETEX', '__model_cache' .. prefix .. item.id, 7200, json_encode(item))
+                        local res = _reds:exec('SETEX', '__model_cache' .. prefix .. item.id, 7200, _json_encode(item))
                         print('set to cache:', res)
                     end
 
@@ -440,7 +440,7 @@ function M:findPagination(cond, page, per_page)
 
     local total_entries
 
-    if is_valid(cond['conditions']) then
+    if _is_valid(cond['conditions']) then
         total_entries = self:_query({ columns = 'count(id) as num', conditions = cond['conditions'], bind = cond['bind'] });
     else
         total_entries = self:_query({ columns = 'count(id) as num' });
@@ -451,7 +451,7 @@ function M:findPagination(cond, page, per_page)
     local new_cond = array_merge(cond, { columns = 'id', limit = { number = per_page, offset = offset } })
     local ids = self:_query(new_cond)
     local res = self:findByIds(ids)
-    --print("find_pagination:===", json_encode(res))
+    --print("find_pagination:===", _json_encode(res))
 
     return {
         entry = res,
@@ -477,10 +477,10 @@ function M:count(cond)
         local bind = cond.bind
         if bind and #bind > 0 then
             for i, v in pairs(bind) do
-                conditions = str_replace(conditions, ':' .. i .. ':', v)
+                conditions = _str_replace(conditions, ':' .. i .. ':', v)
             end
         end
-        if is_valid(conditions) then
+        if _is_valid(conditions) then
             conditions = ' where ' .. conditions
         end
         local sql = 'select count(id) as num from ' .. self._table .. conditions
@@ -497,7 +497,7 @@ end
 
 --  find all rows
 --  avoid use this function,you should use findPagination instead
---  cond = { conditions = 'id>10 and created_at> :created_at: ', order = 'id desc', bind = { created_at = time() } }
+--  cond = { conditions = 'id>10 and created_at> :created_at: ', order = 'id desc', bind = { created_at = _time() } }
 function M:find(cond)
     cond = cond or {}
     local ids = self:_query({ conditions = cond.conditions, bind = cond.bind, columns = 'id' })
@@ -510,14 +510,14 @@ end
 
 --  find first rows
 --  avoid use this function,you should use findPagination instead
---  cond = { conditions = 'id>10 and created_at> :created_at: ', order = 'id desc', bind = { created_at = time() } }
+--  cond = { conditions = 'id>10 and created_at> :created_at: ', order = 'id desc', bind = { created_at = _time() } }
 function M:findFirst(cond)
     cond = cond or {}
     local ids = self:_query({ conditions = cond.conditions, bind = cond.bind, columns = 'id', limit = 1 })
     if ids and #ids > 0 then
-        print(json_encode(ids))
+        print(_json_encode(ids))
         local objs = self:findByIds(ids)
-        print(json_encode(objs))
+        print(_json_encode(objs))
         return objs[1]
     end
     return nil
@@ -534,9 +534,9 @@ function M:_query(cond)
     local limit = cond.limit or ''
     local filed = cond.columns or '*'
 
-    print('find cond:==', json_encode(cond))
+    print('find cond:==', _json_encode(cond))
 
-    if is_valid(limit) then
+    if _is_valid(limit) then
         if type(limit) ~= "table" then
             limit = { number = limit, offset = 0 }
         end
@@ -544,14 +544,14 @@ function M:_query(cond)
     end
     local res = {}
     _import('lib.db'):new():with(function(c)
-        print('is_valid(conditions) ===', is_valid(conditions))
-        if is_valid(conditions) then
-            if is_valid(bind) then
+        print('_is_valid(conditions) ===', _is_valid(conditions))
+        if _is_valid(conditions) then
+            if _is_valid(bind) then
                 print('====================1')
                 local metadata_file = self:metatable()
                 for i, v in pairs(bind) do
                     print('+++++++++++++++++++', i, v)
-                    conditions = str_replace(conditions, ':' .. i .. ':', self:checkValue(v, metadata_file[i].type))
+                    conditions = _str_replace(conditions, ':' .. i .. ':', self:checkValue(v, metadata_file[i].type))
                 end
             else
                 print('====================')
@@ -559,12 +559,12 @@ function M:_query(cond)
             conditions = ' where ' .. conditions
         end
 
-        if is_valid(order) then
+        if _is_valid(order) then
             order = ' order by ' .. escape(order)
         end
 
         -- here just find id ,and resolve all data from redis
-        print('query:===', filed, self._table, conditions, order, json_encode(limit))
+        print('query:===', filed, self._table, conditions, order, _json_encode(limit))
         local sql = 'select ' .. filed .. ' from ' .. self._table .. conditions .. order .. limit
         print('Exec sql:==', sql)
         if 'id' == filed then

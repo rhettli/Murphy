@@ -25,22 +25,22 @@ function _M:render(tpl)
 
     -- todo 根据controller动态加载目录
 
-    tpl = str_replace(tpl, ".", "/") .. '.volt'
+    tpl = _str_replace(tpl, ".", "/") .. '.volt'
 
     local view_file = _DIR .. '/view/' .. tpl
-    local f = file_get_contents(view_file)
+    local f = _file_get_contents(view_file)
     if not f then
         assert(false, 'view not exist:' .. view_file)
     end
 
     if http_header('x-requested-with') ~= 'XMLHttpRequest' then
         parent_tpl = _DIR .. '/view/layouts/' .. str_sub_to_right(tpl, '/') .. '.volt';
-        local admin_content = file_get_contents(parent_tpl)
-        admin_content = str_split(admin_content, '{{#content#}}')
+        local admin_content = _file_get_contents(parent_tpl)
+        admin_content = _str_split(admin_content, '{{#content#}}')
         f = admin_content[1] .. f .. admin_content[2]
     end
 
-    self.arr = str_split(f, "\n")
+    self.arr = _str_split(f, "\n")
 
     local str = ""
     local if_count = 0
@@ -120,11 +120,11 @@ function _M:render(tpl)
                         if ind_end_if >= 0 and ind_if >= 0 and ind_end_if > ind_if then
                             print(item)
                             right_real_index = right_real_index - 2
-                            item = str_replace(item, 'endif', 'end')
+                            item = _str_replace(item, 'endif', 'end')
                         elseif ind_end_if >= 0 then
                             -- end if
                             if_count = if_count - 1
-                            item = str_replace(item, 'endif', 'end')
+                            item = _str_replace(item, 'endif', 'end')
                             right_real_index = right_real_index - 2
 
                         elseif ind_if >= 0 then
@@ -144,8 +144,8 @@ function _M:render(tpl)
                             if macro_count ~= '' then
                                 assert(false, "macro defined err")
                             end
-                            local f = re_match(item, 'macro *(.*?)\\((.*?)\\)')
-                            --print('f:=======',json_encode(f))
+                            local f = _re_match(item, 'macro *(.*?)\\((.*?)\\)')
+                            --print('f:=======',_json_encode(f))
                             macro_count = f[1][2]
                             macro[f[1][2]] = { param = f[1][3] } --{% macro edit(op) %}
                             ignore = true
@@ -241,7 +241,7 @@ function _M:render(tpl)
         assert(false, 'if not match' .. if_count)
     end
 
-    local macro_str = base64_encode(json_encode(macro))
+    local macro_str = base64_encode(_json_encode(macro))
 
     str = 'return function (data) local macro=[[' .. macro_str .. ']];local simple_table=_import("lib.view_tpl.simple_table");' ..
             'local simple_form=_import("lib.view_tpl.simple_form");' .. str .. ' end'
@@ -255,9 +255,9 @@ function _M:render(tpl)
     out('<!--', http_request('path'))
     out(http_request('host'))
     out(http_request('uri'))
-    out(http_params('member[email_eq]'))
-    out(http_params('member'))
-    out(http_params('email_eq'))
+    out(_http_params('member[email_eq]'))
+    out(_http_params('member'))
+    out(_http_params('email_eq'))
     --collectgarbage()
 end
 

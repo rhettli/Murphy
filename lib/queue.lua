@@ -19,7 +19,7 @@ function _M:delay(action, params)
     -- 默认default队列中去
 
     local redis = _import('lib.redis'):new()
-    local j = json_encode({ action = action, params = params })
+    local j = _json_encode({ action = action, params = params })
 
     redis:exec('lpush', self.queue_name, j)
     redis:close()
@@ -31,7 +31,7 @@ function _M:push(action, params)
     -- 默认default队列中去
 
     local redis = _import('lib.redis'):new()
-    local j = json_encode({ action = action, params = params })
+    local j = _json_encode({ action = action, params = params })
 
     redis:exec('lpush', self.queue_name, j)
     redis:close()
@@ -49,7 +49,7 @@ function _M:start(p)
             local res = redis:exec('brpop', self.queue_name)
             if res ~= '' then
                 local js = json_decode(res)
-                local action = str_split(js.action, '.')
+                local action = _str_split(js.action, '.')
                 if #action < 2 then
                     action[2] = 'handler'
                 end

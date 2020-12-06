@@ -1,7 +1,7 @@
 {%- macro attrs(operating_record) %}
     {% if operating_record.data %}
         {% for value in operating_record.data | json_decode %}
-            {% set strs = str_split(value, 160) %}
+            {% set strs = _str_split(value, 160) %}
             {% for v in strs %}
                 {{ v }}<br/>
             {% endfor %}

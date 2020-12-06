@@ -1,6 +1,5 @@
---
-
 -- you can use redis or ssdb cache to improve performance
+
 return {
     cloud_file_path='#home#/Desktop/cloud_file_path/',
     database = {

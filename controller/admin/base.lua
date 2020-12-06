@@ -2,8 +2,8 @@ local _M = {}
 
 function _M:new(o)
     o = o or {}
-    print('self:==', json_encode(o))
-    print('self:==', json_encode(self))
+    print('self:==', _json_encode(o))
+    print('self:==', _json_encode(self))
 
     o = o:new()
 
@@ -18,13 +18,13 @@ end
 
 function _M:getConditions(value_name)
     local tb = { conditions = '' }
-    local params = http_params(value_name)
+    local params = _http_params(value_name)
     local bind = {}
     local filter = { eq = '=', gte = '>=', gt = '>', lt = '<', lte = '<=', neq = '!=', like = 'like' }
     if 'table' == type(params) then
         for i, v in pairs(params) do
-            if is_valid(v) then
-                i = str_split(i, '_')[1]
+            if _is_valid(v) then
+                i = _str_split(i, '_')[1]
                 tb.conditions = tb.conditions .. ' ' .. i .. filter[#i] .. ':' .. v .. ': and'
                 bind[i] = v
             end
@@ -36,7 +36,7 @@ function _M:getConditions(value_name)
 end
 
 function _M:assign(object, value_name)
-    local params = http_params(value_name .. '[]')
+    local params = _http_params(value_name .. '[]')
 
     assert('table' == type(params), 'params must model table')
 
@@ -56,13 +56,13 @@ function _M:render(tpl, dt)
 end
 
 function _M:update()
-    local id = http_params('id')
-    assert(is_valid(id), 'no id')
+    local id = _http_params('id')
+    assert(_is_valid(id), 'no id')
 
     local _model = _new_model(self.model_name)
 
-    local model = _model:findFirstById(http_params('id'))
-    if is_valid(model) then
+    local model = _model:findFirstById(_http_params('id'))
+    if _is_valid(model) then
         self:assign(model, self.model_name)
         if self.beforeUpdate then
             self:beforeUpdate(model)
@@ -77,12 +77,12 @@ function _M:create()
 end
 
 function _M:edit()
-    local id = http_params('id')
-    assert(is_valid(id), 'no id')
+    local id = _http_params('id')
+    assert(_is_valid(id), 'no id')
 
     local new_model = _new_model(self.model_name)
 
-    local model = new_model:findFirstById(http_params('id'))
+    local model = new_model:findFirstById(_http_params('id'))
 
     if self.beforeEdit then
         self:beforeEdit(model)
@@ -96,9 +96,9 @@ function _M:index()
     _cw_package = _new_model(self.model_name)
 
     local cond = self:getConditions(self.model_name);
-    print('got conditions:==', json_encode(cond))
+    print('got conditions:==', _json_encode(cond))
 
-    local page = http_params('page')
+    local page = _http_params('page')
     page = page == '' and 1 or page
     local res = _cw_package:findPagination(cond, page * 1, 30)
 

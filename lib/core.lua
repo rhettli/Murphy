@@ -38,7 +38,7 @@ _render_model = function(model, key, value)
     for _, v in pairs(opRole) do
         select_items[v[key]] = v[value]
     end
-    --print(json_encode(select_items))
+    --print(_json_encode(select_items))
     return select_items
 end
 
@@ -54,7 +54,7 @@ _try_lock = function(lock_key, request_id, func, ...)
         assert(false, 'params 2 must be func')
     end
     if nil == request_id then
-        request_id = time(true)
+        request_id = _time(true)
     end
 
     local sleep = sleep

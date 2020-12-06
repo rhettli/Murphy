@@ -11,7 +11,7 @@ end
 function _M:download()
     local _ver = _new_model('cw_version')
     local ver = _ver:findFirst({ order = 'ver desc' })
-    if is_valid(ver) then
+    if _is_valid(ver) then
         http_redirect(302, ver.addr)
     end
 end

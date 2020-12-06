@@ -14,7 +14,7 @@ function class_msg:new(o)
     self.psw = "/*415 saj25?>j|\\"
     self.version = "1"
     local conf = _import('conf.conf')
-    conf.cloud_file_path = str_replace(conf.cloud_file_path, '#home#', home())
+    conf.cloud_file_path = _str_replace(conf.cloud_file_path, '#home#', home())
     self._conf = conf
     return self
 end
@@ -33,26 +33,26 @@ function class_msg:send()
         return self:renderJSON(nil, e, -1)
     end
 
-    local file_id = http_params('file_id')
-    local token = http_params('token')
+    local file_id = _http_params('file_id')
+    local token = _http_params('token')
 
     local t = require('oshine/cw_jwt'):new(self.psw, self.psw, 'nonce')
-    if not is_valid(token) then
+    if not _is_valid(token) then
         return self:renderJSON(nil, 'token fail', -1)
     else
-        local r, e = t:decode({ ip = http_ip() })
-        if e ~= nil or http_ip() ~= r.ip or r.member_id ~= self:currentMemberId() then
+        local r, e = t:decode({ ip = _http_ip() })
+        if e ~= nil or _http_ip() ~= r.ip or r.member_id ~= self:currentMemberId() then
             return self:renderJSON(nil, e or 'err', -1)
         end
 
     end
 
-    if not is_valid(file_id) then
+    if not _is_valid(file_id) then
         return self:renderJSON(nil, 'fail:', -1)
     end
     local cf = _new_model('cloud_file')
     local cloud_file = cf:findFirstBy('id', file_id)
-    if not is_valid(cloud_file) then
+    if not _is_valid(cloud_file) then
         return self:renderJSON(nil, 'file not find:', -1)
     end
     cloud_file.download_times = cloud_file.download_times + 1
