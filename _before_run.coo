@@ -1,0 +1,10 @@
+-- check if plugs is running when start/启动时检查插件是否运行
+return {
+    -- return true continue,false exit process
+    run = function()
+        return require('oshine.cwm.check'):new():checkStart({
+            ['oshine/bitmap'] = { port = 6698 }-- 覆盖启动端口
+        })
+    end
+}
+
