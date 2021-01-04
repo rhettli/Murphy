@@ -5,20 +5,22 @@ return {
     package_name = 'oshine/Murphy',
 
     dependencies = {
+        --['oshine/cw_any_type'] = '*|[local/global]',
         ['oshine/cw_any_type'] = '*|local',
         ['oshine/cw_args_capture'] = '*|local'
     },
 
     platform = 'all' or 'windows drawn linux',
+    arch = 'all' or 'amd64 x86_64 arm64 arm32',
 
-    -- register port 8008
-    port = '8008',
-
-    remark = 'for dev web app',
+    remark = { ['en'] = 'A web development framework for all wooer', zh = '一个给所有人的web开发框架' },
     title = 'Coder Wooyri official web framework',
 
-    -- require == 0 or false,will be download local dir [default is true]
-    require = 0 or false
+    -- global:install in global package path/global:安装到全局lib目录
+    -- local:install in project path/local：安装在当前项目lib目录内
+    -- download:just download,not install/download:仅仅下载不安装
+    install_where = 'download',
+
 }
 
 

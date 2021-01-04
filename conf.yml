@@ -1,5 +1,7 @@
 port: 8008
 host: 0.0.0.0
+type: http ws
+#type: sockets
 
 # 墨菲:  murphy-http
 
@@ -20,23 +22,15 @@ index: index.lua index.html
 # 比如：/foo/bar/?op=list , 将重定向到 /index.lua?_url=/foo/bar/?op=list
 index_all: 1
 
-# 服务类型，默认为空 都开启，也可以单独开启 -t socket:tcp , -t http&ws
-# type: http
-# type: ws
-# type: ws&http
+# websockets 处理文件，默认ws.woo
+# index_ws=ws.woo
 
-
-#socket_type: tcp
-#socket_type: udp
-
-# 处理websocket的文件
-# ws_handler: 默认ws.lua
-
-# 是否缓存lua代码
+# 是否缓存lua代码,默认不缓存，1缓存，0|false不缓存，生产环境必须设置1
 cache_code: 0
 
 # before running
 before_run: _before_run.woo
 
-before_req:  _before_req.cw
+
+
 
