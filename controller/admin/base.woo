@@ -30,7 +30,7 @@ function _M:getConditions(value_name)
             end
         end
     end
-    tb.conditions = rtrim(tb.conditions, 'and')
+    tb.conditions = _rtrim(tb.conditions, 'and')
     tb.bind = bind
     return tb
 end

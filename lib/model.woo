@@ -2,12 +2,13 @@ local pairs = pairs
 local assert = assert
 local print = print
 local pcall = pcall
-local escape = escape
-local is_valid = is_valid
-local json_decode = json_decode
-local rtrim = rtrim
-local str_pos = str_pos
-local file_exist = file_exist
+local _escape = _escape
+local _is_valid = _is_valid
+local _json_decode = _json_decode
+local _json_encode = _json_encode
+local _rtrim = _rtrim
+local _str_pos = _str_pos
+local _file_exist = _file_exist
 
 local _import = _import
 local _new_model = _new_model
@@ -37,22 +38,22 @@ function M:new(o, _table)
             if arr[lens] == 'text' then
                 local filed = arr[lens - 1]
                 local item = tonumber(o[filed])
-                r = o[str_to_upper(arr[lens - 1]) .. '_TEXT'][item]
-                --print('text inner:', _json_encode(r))
+                r = o[_str_to_upper(arr[lens - 1]) .. '_TEXT'][item]
+                --print('text inner:', json_encode(r))
             elseif arr[lens] == 'array' then
-                r = o[str_to_upper(arr[lens - 1]) .. '_TEXT']
+                r = o[_str_to_upper(arr[lens - 1]) .. '_TEXT']
                 print('==index== array inner:', _json_encode(r))
             elseif arr[lens] == 'time' then
-                r = date('Y-m-d H:i:s', o[join(table_sub_to_right(arr, lens - 1), '_')])
+                r = _date('Y-m-d H:i:s', o[_join(table_sub_to_right(arr, lens - 1), '_')])
                 --print('time:==', o[join(table_sub_to_right(arr, lens - 1), '_')])
             elseif arr[lens] == 'model' then
 
             elseif lens > 3 and arr[lens - 2] == 'sub' then
                 -- username_sub_0_12
-                r = str_sub(o[join(table_sub_to_right(arr, lens - 3), '_')], arr[lens - 1], arr[lens])
+                r = _str_sub(o[_join(table_sub_to_right(arr, lens - 3), '_')], arr[lens - 1], arr[lens])
             elseif lens > 2 and arr[lens - 1] == 'sub' then
                 -- username_sub_0
-                r = str_sub(o[join(table_sub_to_right(arr, lens - 2), '_')], 0, arr[lens - 1])
+                r = _str_sub(o[_join(table_sub_to_right(arr, lens - 2), '_')], 0, arr[lens - 1])
             else
                 --local obj_id = o[join(table_sub_to_right(arr, lens - 1), '_') .. '_id']
                 --print('==index== obj:==', obj_id)
@@ -77,14 +78,14 @@ function M:new(o, _table)
     if _table then
         self._table = _table
         local metadata_file = _DIR .. '/runtime/metadata/' .. self._table .. '.lua'
-        if not file_exist(metadata_file) then
+        if not _file_exist(metadata_file) then
             local c = _import('lib.db'):new()
             if c.db ~= nil then
                 local fieldType = function(t)
-                    if str_pos(t, 'char') > -1 or str_pos(t, 'text') > -1 then
+                    if _str_pos(t, 'char') > -1 or _str_pos(t, 'text') > -1 then
                         return 'text'
-                    elseif str_pos(t, 'int') > -1 or str_pos(t, 'decimal') > -1 or str_pos(t, 'double') > -1 or str_pos(t, 'float') > -1
-                            or str_pos(t, 'long') > -1 or str_pos(t, 'numeric') > -1 then
+                    elseif _str_pos(t, 'int') > -1 or _str_pos(t, 'decimal') > -1 or _str_pos(t, 'double') > -1 or _str_pos(t, 'float') > -1
+                            or _str_pos(t, 'long') > -1 or _str_pos(t, 'numeric') > -1 then
                         return 'number'
                     else
                         return t
@@ -96,7 +97,7 @@ function M:new(o, _table)
                 pcall(function()
                     c:query(' desc  ' .. _table, function(res_)
                         local name = res_.Field
-                        --print('call back:', _json_encode(res_), "\n")
+                        --print('call back:', json_encode(res_), "\n")
                         tbl_struct[name] = {}
                         tbl_struct[name].type = fieldType(res_.Type)
                         tbl_struct[name].name = name
@@ -106,14 +107,14 @@ function M:new(o, _table)
 
                 if tbl_struct then
                     local ser = 'return [[' .. serialize(tbl_struct) .. ']]'
-                    local e = file_put_contents(metadata_file, ser)
+                    local e = _file_put_contents(metadata_file, ser)
                     local ff = _DIR .. '/runtime/metadata'
-                    if not e and not file_exist(ff) then
+                    if not e and not _file_exist(ff) then
                         print('write file fail,try to create folder and try again')
-                        mkdir(_DIR .. '/runtime')
-                        local e, r = mkdir(ff)
+                        _mkdir(_DIR .. '/runtime')
+                        local e, r = _mkdir(ff)
                         print('mkdir:==', e, r)
-                        e = file_put_contents(metadata_file, ser)
+                        e = _file_put_contents(metadata_file, ser)
                         print('file_write again:==', e)
                         assert(e, 'can not mkdir :' .. ff)
                     end
@@ -149,9 +150,9 @@ function M:checkValue(val, type_)
     if 'number' == type_ then
         return tonumber(val)
     elseif 'text' == type_ then
-        return '"' .. escape(val or '') .. '"'
+        return '"' .. _escape(val or '') .. '"'
     else
-        return '"' .. escape(val or '') .. '"'
+        return '"' .. _escape(val or '') .. '"'
     end
 end
 
@@ -194,7 +195,7 @@ function M:_doSave()
         end
     end
 
-    insert = string.format(insert, self._table, rtrim(field, ','), rtrim(values, ','))
+    insert = string.format(insert, self._table, _rtrim(field, ','), _rtrim(values, ','))
     print(insert)
 
     _import('lib.db'):new():with(function(c)
@@ -231,7 +232,7 @@ function M:_doUpdate(p)
         return true
     end
 
-    update = string.format(update, self._table, rtrim(field, ','), self.id)
+    update = string.format(update, self._table, _rtrim(field, ','), self.id)
     print('_doUpdate:==', update)
 
     _import('lib.db'):new():with(function(c)
@@ -330,7 +331,7 @@ function M:findFirstBy(filed, val)
         mod[i] = v
     end
 
-    --print(_json_encode(mod))
+    --print(json_encode(mod))
     --print('get status_text:==', mod.status_text)
     --print(mod.__index({}, 'status_text'))
     return mod
@@ -386,7 +387,7 @@ function M:findByIds(ids)
             for _, id in pairs(ids) do
                 local res = _reds:exec('get', '__model_cache' .. prefix .. id)
                 if _is_valid(res) then
-                    rt[#rt + 1] = json_decode(res)
+                    rt[#rt + 1] = _json_decode(res)
                 else
                     not_find_ids[id] = { i = #rt + 1 }
                     rt[#rt + 1] = 0
@@ -403,7 +404,7 @@ function M:findByIds(ids)
         end
 
         if ids_list ~= '' then
-            local second_finds = self:_query({ conditions = 'id in (' .. rtrim(ids_list, ',') .. ')' })
+            local second_finds = self:_query({ conditions = 'id in (' .. _rtrim(ids_list, ',') .. ')' })
             if #second_finds > 0 then
                 for _, item in pairs(second_finds) do
                     if _reds then
@@ -447,8 +448,8 @@ function M:findPagination(cond, page, per_page)
     end
     total_entries = total_entries[1].num
 
-    local offset = (page - 1) * per_page;
-    local new_cond = array_merge(cond, { columns = 'id', limit = { number = per_page, offset = offset } })
+    local offset = (page - 1) * per_page
+    local new_cond = _merge(cond, { columns = 'id', limit = { number = per_page, offset = offset } })
     local ids = self:_query(new_cond)
     local res = self:findByIds(ids)
     --print("find_pagination:===", _json_encode(res))
@@ -560,7 +561,7 @@ function M:_query(cond)
         end
 
         if _is_valid(order) then
-            order = ' order by ' .. escape(order)
+            order = ' order by ' .. _escape(order)
         end
 
         -- here just find id ,and resolve all data from redis

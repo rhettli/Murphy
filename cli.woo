@@ -8,7 +8,7 @@ require('vendor.autoload')
 require('lib.core')
 require('conf.defined')
 
-if is_cli() == false then
+if _is_cli() == false then
     print('error,mush cli can run cli cmd file')
     return
 end

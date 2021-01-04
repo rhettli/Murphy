@@ -1,3 +1,4 @@
+-- local import
 _import = function(path)
     local p = path  --_dir_name ..
     _remove_package_cache(p)
@@ -57,7 +58,6 @@ _try_lock = function(lock_key, request_id, func, ...)
         request_id = _time(true)
     end
 
-    local sleep = sleep
     local SET_IF_NOT_EXIST = "NX";
     local SET_WITH_EXPIRE_TIME = "PX";
 
@@ -89,51 +89,51 @@ _try_lock = function(lock_key, request_id, func, ...)
 
             return rf
         else
-            sleep(10)
+            _sleep(10)
         end
     end
 end
 
 function serialize(obj)
-    local lua = ""
+    local woo = ""
     local t = type(obj)
     if t == "number" then
-        lua = lua .. obj
+        woo = woo .. obj
     elseif t == "boolean" then
-        lua = lua .. tostring(obj)
+        woo = woo .. tostring(obj)
     elseif t == "string" then
-        lua = lua .. string.format("%q", obj)
+        woo = woo .. string.format("%q", obj)
     elseif t == "table" then
-        lua = lua .. "{\n"
-        for k, v in pairs(obj) do
-            lua = lua .. "[" .. serialize(k) .. "]=" .. serialize(v) .. ",\n"
+        woo = woo .. "{\n"
+        for k, v in ipairs(obj) do
+            woo = woo .. "[" .. serialize(k) .. "]=" .. serialize(v) .. ",\n"
         end
         local metatable = getmetatable(obj)
         if metatable ~= nil and type(metatable.__index) == "table" then
             for k, v in pairs(metatable.__index) do
-                lua = lua .. "[" .. serialize(k) .. "]=" .. serialize(v) .. ",\n"
+                woo = woo .. "[" .. serialize(k) .. "]=" .. serialize(v) .. ",\n"
             end
         end
-        lua = lua .. "}"
+        woo = woo .. "}"
     elseif t == "nil" then
         return nil
     else
         error("can not serialize a " .. t .. " type.")
     end
-    return lua
+    return woo
 end
 
-function unserialize(lua)
-    local t = type(lua)
-    if t == "nil" or lua == "" then
+function unserialize(woo)
+    local t = type(woo)
+    if t == "nil" or woo == "" then
         return nil
     elseif t == "number" or t == "string" or t == "boolean" then
-        lua = tostring(lua)
+        woo = tostring(woo)
     else
         error("can not unserialize a " .. t .. " type.")
     end
-    lua = "return " .. lua
-    local func = loadstring(lua)
+    woo = "return " .. woo
+    local func = loadstring(woo)
     if func == nil then
         return nil
     end

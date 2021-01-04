@@ -48,7 +48,7 @@ function _M:start(p)
         _try_lock('_lock_key_QUEUE_DEFAULT_', nil, function()
             local res = redis:exec('brpop', self.queue_name)
             if res ~= '' then
-                local js = json_decode(res)
+                local js = _json_decode(res)
                 local action = _str_split(js.action, '.')
                 if #action < 2 then
                     action[2] = 'handler'
@@ -62,7 +62,7 @@ function _M:start(p)
 
             end
         end)
-        sleep(100)
+        _sleep(100)
     end
 
 end

@@ -14,11 +14,11 @@ return {
     -- register port 8008
     port = '8008',
 
-    remark='for dev web app',
-    title='Coder Wooyri official web framework',
+    remark = 'for dev web app',
+    title = 'Coder Wooyri official web framework',
 
     -- require == 0 or false,will be download local dir [default is true]
-    require=0 or false
+    require = 0 or false
 }
 
 

@@ -30,7 +30,7 @@ end_with = function(str, to)
 end
 
 begin_with = function(str, to)
-    return str_index(str, to) == 0
+    return _str_index(str, to) == 0
 end
 
 _is_allowed = function(path, p)

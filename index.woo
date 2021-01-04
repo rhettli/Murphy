@@ -4,7 +4,7 @@ _curr_func = function()
     return debug.traceback()
 end
 
-install_dir = env('CEM_PACKAGE') or home() .. '/cwm/'
+install_dir = _env('CEM_PACKAGE') or _home() .. '/cwm/'
 package.path = _DIR .. '/vendor/?.cw;' .. install_dir .. '/?.cw;' .. _DIR .. '/?.cw;'
 
 print(package.path)
@@ -16,7 +16,7 @@ require('conf.defined')
 
 
 --index.lua?_url=/foo/bar?op=123
-local uri = http_request('uri')
+local uri = _http_request('uri')
 --out("uri:", uri, "\r\n")
 local params = _str_split(uri, "?")
 --out(params)

@@ -19,8 +19,8 @@ function _M:renderJSON(arr, msg, code)
     print(arr, msg, code)
 
     arr = arr or {}
-    http_header('Content-Type', 'application/json')
-    out({ msg = msg or arr.msg or '', data = arr.data or arr, code = code or arr.code or 0 })
+    _http_header('Content-Type', 'application/json')
+    _out({ msg = msg or arr.msg or '', data = arr.data or arr, code = code or arr.code or 0 })
 
 end
 
