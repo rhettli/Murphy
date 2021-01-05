@@ -27,11 +27,11 @@ function _M:delay(action, params)
 end
 
 -- 动作 参数
-function _M:push(action, params)
+function _M:push(model, action, params)
     -- 默认default队列中去
 
     local redis = _import('lib.redis'):new()
-    local j = _json_encode({ action = action, params = params })
+    local j = _json_encode({ model = model, action = action, params = params })
 
     redis:exec('lpush', self.queue_name, j)
     redis:close()
@@ -53,12 +53,14 @@ function _M:start(p)
                 if #action < 2 then
                     action[2] = 'handler'
                 end
-                local params = js.params
 
-                local exec_queue = "local ctrl = _import('queue.%s');ctrl:new();return ctrl:%s,ctrl;"
-                exec_queue = string.format(exec_queue, action[1], action[2])
-                local call, obj = loadstring(exec_queue)()
-                pcall(call, obj, params)
+                --local exec_queue = "local ctrl = _import('queue.%s');ctrl:new();return ctrl:%s,ctrl;"
+                --exec_queue = string.format(exec_queue, action[1], action[2])
+                --local call, obj = loadstring(exec_queue)()
+                --pcall(call, obj, params)
+
+                -- Todo
+                local res = _run(_DIR .. '/queue/' .. js.model .. '.woo', js.params)
 
             end
         end)

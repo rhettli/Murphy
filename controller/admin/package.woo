@@ -1,7 +1,7 @@
 local _M = {  }
 
 function _M:new()
-    self. model_name = 'cw_package'
+    self. model_name = 'package'
 
     return self
 end

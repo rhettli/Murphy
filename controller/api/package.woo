@@ -21,7 +21,7 @@ function class_project:search()
         return self:renderJSON(nil, 'package_name can be empty,you can search member\'s package just use like:oshine/* or oshine/bitmap or bitmap', -1)
     end
 
-    _package = _new_model('cw_package')
+    _package = _new_model('package')
     _cw_package = _new_model('member')
 
     package_name = _str_split(package_name, '/')
