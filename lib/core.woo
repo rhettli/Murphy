@@ -1,7 +1,7 @@
 -- local import
 _import = function(path)
     local p = path  --_dir_name ..
-    _remove_package_cache(p)
+    --_remove_package_cache(p)
     print('import:==', p)
 
     local res = require(p)
@@ -22,7 +22,7 @@ _merge_left = function(a, b)
 end
 
 _extend = function(model_self, model_name, ...)
-    _remove_package_cache(model_name)
+    --_remove_package_cache(model_name)
     print('extend:==', model_name)
     local r = _import(model_name):new(model_self, ...)
     return r
@@ -45,7 +45,7 @@ end
 
 _new_model = function(path)
     local p = 'model.' .. path
-    _remove_package_cache(p)
+    --_remove_package_cache(p)
     local res = _import(p):new()
     return res
 end

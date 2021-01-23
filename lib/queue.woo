@@ -42,8 +42,7 @@ function _M:start(p)
     local redis = _import('lib.redis'):new()
 
     print('queue is start ok')
-    while true
-    do
+    while true do
         -- 这里循环取出队列数据 处理
         _try_lock('_lock_key_QUEUE_DEFAULT_', nil, function()
             local res = redis:exec('brpop', self.queue_name)

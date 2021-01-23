@@ -2,7 +2,7 @@
 
 print(_DIR, dir())
 
-package.path = _DIR .. '/vendor/?.cw;' .. install_dir .. '/?.cw;' .. _DIR .. '\\?.cw;'
+package.path = _DIR .. '/vendor/?.woo;' .. install_dir .. '/?.woo;' .. _DIR .. '\\?.woo;'
 
 require('vendor.autoload')
 require('lib.core')

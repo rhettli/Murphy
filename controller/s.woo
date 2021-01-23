@@ -1,0 +1,27 @@
+local class_source = {}
+
+function class_source:new(o)
+    o = o or {}
+
+    return self
+end
+
+function class_source:installer()
+
+end
+
+function class_source:list()
+
+end
+
+function class_source:gip()
+    local got_string = false
+    local body = _http_body(got_string)
+    if _len(body) > 0 then
+        _del_at(body, 2, -1)
+    end
+    local gip_ = '101.33.125.167:1280;'
+    return self:renderJSON(gip_, e or 'err', -1)
+end
+
+return _extend(class_source, "lib.controller")

@@ -13,7 +13,7 @@ static_map:
   static: ./public/static
 
 # 首页文件
-index: index.lua index.html
+index: index.woo
 
 # html模板目录
 #tpl: ./tpl/*.html

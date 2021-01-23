@@ -1,0 +1,13 @@
+local class_source = {}
+
+function class_source:new(o)
+    o = o or {}
+
+    return self
+end
+
+function class_source:index()
+    return self:renderJSON({  }, e or 'err', -1)
+end
+
+return _extend(class_source, "lib.controller")
