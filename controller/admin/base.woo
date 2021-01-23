@@ -100,7 +100,7 @@ function _M:_beforeIndex(model)
 end
 
 function _M:index()
-    print(self.model_name)
+    print('===admin.base.index:===',self.model_name)
     _cw_package = _new_model(self.model_name)
 
     local cond = self:getConditions(self.model_name);

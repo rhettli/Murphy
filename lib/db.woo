@@ -11,7 +11,7 @@ function _M:new(o)
 end
 
 function _M:_connect()
-    local gorm = require('gorm')
+    local gorm = require(':orm')
     local c = gorm.new()
     local conf = _import('conf.conf')
     local ok, err = c:open(conf.database.adapter, conf.database.conn)

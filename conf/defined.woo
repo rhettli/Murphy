@@ -46,23 +46,23 @@ str_sub_to_right = function(str, to, skip)
         local i = 1
         local right_index = -1
         while i < skip do
-            right_index = str_index(str, to, right_index)
+            right_index = _str_index(str, to, right_index)
             if right_index < 0 then
                 return str
             end
             i = i + 1
         end
 
-        return str_sub(str, 0, right_index)
+        return _str_sub(str, 0, right_index)
     end
 
-    return str_sub(str, 0, _str_index(str, to))
+    return _str_sub(str, 0, _str_index(str, to))
 end
 
 -- todo
 
 str_sub_to_left = function(str, to)
-    return str_sub(str, _str_rindex(str, to) + 1, #str)
+    return _str_sub(str, _str_rindex(str, to) + 1, #str)
 end
 
 end_of_day = function()
