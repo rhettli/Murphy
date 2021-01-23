@@ -100,10 +100,10 @@ function _M:_beforeIndex(model)
 end
 
 function _M:index()
-    print('===admin.base.index:===',self.model_name)
+    print('===admin.base.index:===', self.model_name)
     _cw_package = _new_model(self.model_name)
 
-    local cond = self:getConditions(self.model_name);
+    local cond = self:getConditions(self.model_name)
     print('got conditions:==', _json_encode(cond))
 
     local page = _http_params('page')
@@ -118,9 +118,13 @@ end
 function _M:view(name, data)
     if not self._view then
         self._view = _import('lib.view'):new()
+        self._view.view['admin_name'] = "1"
+        self._view.view['operator_username'] = "2"
     end
 
     self._view.view[name] = data
+
+    print("====data====",self._view.view.admin_name)
     return self
 end
 

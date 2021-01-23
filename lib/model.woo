@@ -112,10 +112,10 @@ function M:new(o, _table)
                     if not e and not _file_exist(ff) then
                         print('write file fail,try to create folder and try again')
                         _mkdir(_DIR .. '/runtime')
-                        local e, r = _mkdir(ff)
-                        print('mkdir:==', e, r)
-                        e = _file_put_contents(metadata_file, ser)
-                        print('file_write again:==', e)
+                        local e1, r = _mkdir(ff)
+                        print('mkdir:==', e1, r)
+                        e1 = _file_put_contents(metadata_file, ser)
+                        print('file_write again:==', e1)
                         assert(e, 'can not mkdir :' .. ff)
                     end
                 end
@@ -360,7 +360,7 @@ end
 
 function M:_toObj(ars)
     local rt = {}
-    print(_json_encode(ars))
+    --print(_json_encode(ars))
     for _, v in pairs(ars) do
         local mod = _new_model(self._table)
         mod.snap = v
@@ -518,7 +518,7 @@ function M:findFirst(cond)
     if ids and #ids > 0 then
         print(_json_encode(ids))
         local objs = self:findByIds(ids)
-        print(_json_encode(objs))
+        -- print(_json_encode(objs))
         return objs[1]
     end
     return nil
@@ -555,7 +555,7 @@ function M:_query(cond)
                     conditions = _str_replace(conditions, ':' .. i .. ':', self:checkValue(v, metadata_file[i].type))
                 end
             else
-                print('====================')
+                print('====================2')
             end
             conditions = ' where ' .. conditions
         end
@@ -565,9 +565,9 @@ function M:_query(cond)
         end
 
         -- here just find id ,and resolve all data from redis
-        print('query:===', filed, self._table, conditions, order, _json_encode(limit))
+        -- print('query:===', filed, self._table, conditions, order, _json_encode(limit))
         local sql = 'select ' .. filed .. ' from ' .. self._table .. conditions .. order .. limit
-        print('Exec sql:==', sql)
+        --print('Exec sql:==', sql)
         if 'id' == filed then
             c:query(sql, function(res_)
                 res[#res + 1] = res_.id

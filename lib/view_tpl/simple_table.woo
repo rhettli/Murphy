@@ -12,20 +12,23 @@ return function(data1, macro1, obj, params)
         total = (data1[obj].total or 0) * 1
     end
 
-    macro = json_decode(base64_decode(macro1))
+
+    --_out('---------macro:', macro.edit)
+    --macro = _json_decode(_base64_decode(macro1))
 
     --out('---------data1:', page, per_page, total, data)
 
-    --out('---------macro:', macro.edit)
+
     --out('---------obj:', obj)
     --out('---------params:', params)
-    --out('---------data:', data)
+
+    --_out('---------data:', data)
 
     local pagination = ''
     if total > 0 then
-        local url = http_request('uri')
-        url = str_split(url, '=')[2]
-        url = str_split(url, '?')[1]
+        local url = _http_request('uri')
+        url = _str_split(url, '=')[2]
+        url = _str_split(url, '?')[1]
 
         pagination = [[
     <nav><ul class="pagination"><li class="disabled">
@@ -89,25 +92,25 @@ return function(data1, macro1, obj, params)
 </table>
 ]]
 
-    print('macro++++++++++++++++++++', json_encode((macro)))
+    print('macro++++++++++++++++++++', _json_encode((macro)))
     local tbody_tr_list = ""
     for j, t in pairs(data[obj]) do
         local tbody_tr = '<tr id="partner_6"> %s </tr>'
         local td_list = ""
         for i, _ in pairs(params) do
             --out('it+', j, i)
-            print('***************', json_encode(macro[i] or {}), i)
-            if is_valid(macro[i]) and macro[i].param and macro[i].code then
+            print('***************', _json_encode(macro[i] or {}), i)
+            if _is_valid(macro[i]) and macro[i].param and macro[i].code then
                 print('--------macro valid-----------')
                 print('FUNC:====================0', macro[i].param,macro[i].code)
                 local func = 'return function(' .. macro[i].param .. ')return ' .. macro[i].code .. ' ;end'
-                print('FUNC:====================1', func)
+                print('FUNC:====================11', func)
 
                 local res = loadstring(func)()
                 local err, r = pcall(res, t)
 
-                print('FUNC:====================2', err, r, func)
-                print('FUNC:====================3',t.id,t.package_name,t.name)
+                print('FUNC:====================22', err, r, func)
+                print('FUNC:====================33',t.id,t.package_name,t.name)
 
                 td_list = td_list .. '<td>' .. r .. '</td>'
             else
@@ -119,6 +122,6 @@ return function(data1, macro1, obj, params)
     end
 
     body = string.format(body, thread_tr_list, tbody_tr_list)
-    out(pagination .. body)
+    _out(pagination .. body)
 end
 

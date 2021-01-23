@@ -1,6 +1,7 @@
 --[ 'admin', device ], ['class':'ajax_model_form']
 
 return function(data, obj, params)
+    _out("form:::===")
     local res_ = ""
     local url = obj
     if data[obj].id then
@@ -39,7 +40,7 @@ return function(data, obj, params)
             res_ = res_ .. '<input type="submit" class="btn btn-default " value="' .. label .. '">'
         end,
         render = function()
-            out(_form_header .. res_ .. _footer)
+            _out(_form_header .. res_ .. _footer)
         end,
         select = function(name, attr)
             local str = [[<div class="form-group string optional user_user_type"
@@ -64,7 +65,7 @@ return function(data, obj, params)
                 print('text render:',name..'_array')
             end
 
-            print('collection:',json_encode(col) )
+            print('collection:',_json_encode(col) )
 
             for i, v in pairs(col) do
                 --out('---------' .. i .. v)

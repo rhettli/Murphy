@@ -178,7 +178,7 @@ function _M:render(tpl)
                             if left_real_index > 0 then
                                 local r = _str_sub(item, nil, left_real_index)
                                 --out(r)
-                                str = str .. 'out([[' .. r .. ']]);'
+                                str = str .. '_out([[' .. r .. ']]);'
                             end
 
                             local r1 = _str_sub(item, left_real_index + 2, right_real_index)
@@ -212,11 +212,11 @@ function _M:render(tpl)
                         else
                             if left_real_index > 0 then
                                 local r = _str_sub(item, nil, left_real_index)
-                                str = str .. 'out([[' .. r .. ']]);'
+                                str = str .. '_out([[' .. r .. ']]);'
                             end
 
                             local r1 = _str_sub(item, left_real_index + 2, right_real_index)
-                            str = str .. 'out(data.' .. r1 .. ');'
+                            str = str .. '_out(data.' .. r1 .. ');'
                         end
                     end
 
@@ -235,7 +235,7 @@ function _M:render(tpl)
                             macro[macro_count].code = macro[macro_count].code .. '..[[' .. item .. ']]'
 
                         else
-                            str = str .. 'out([[' .. item .. ']]);'
+                            str = str .. '_out([[' .. item .. ']]);'
                         end
                     end
                     item = ""
@@ -258,12 +258,15 @@ function _M:render(tpl)
     --out('', 'Render string:', str)
 
     local r = loadstring(str)()
+
+    --_out(str)
+
     local t1, t2 = pcall(r, self.view)
     print('view done:', t1, t2)
 
     _out('<!--', _http_request('path'))
     _out(_http_request('host'))
-    _out(_http_request('uri'))
+    _out('uri:', _http_request('uri'))
     _out(_http_params('member[email_eq]'))
     _out(_http_params('member'))
     _out(_http_params('email_eq'))
