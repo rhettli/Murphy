@@ -41,7 +41,7 @@ function _M:render(tpl)
 
     if _http_header('x-requested-with') == 'XMLHttpRequest' then
         store_key = 'ajax' + store_key
-        f = _get_data(store_key, f)
+        f = _data_get(store_key, f)
         if not f then
 
             local view_file = _DIR .. '/view/' .. tpl
@@ -51,11 +51,11 @@ function _M:render(tpl)
             end
 
             -- store to cache
-            _put_data(store_key, f)
+            _data_put(store_key, f)
         end
     else
         -- get template from cache first
-        f = _get_data(store_key, f)
+        f = _data_get(store_key, f)
         if not f then
             local view_file = _DIR .. '/view/' .. tpl
             f = _file_get_contents(view_file)
@@ -72,7 +72,7 @@ function _M:render(tpl)
             f = _str_replace(admin_content, "{{#content#}}", f, 1) -- admin_content[1] .. f .. admin_content[2]
 
             -- store to cache
-            _put_data(store_key, f)
+            _data_put(store_key, f)
         end
     end
 
