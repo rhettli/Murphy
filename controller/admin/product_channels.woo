@@ -46,7 +46,7 @@ function _M:edit()
 end
 
 function _M:index()
-    _cw_package = _new_model('member')
+    local mod = _new_model('member')
 
     local v = _import('lib.view'):new()
 
@@ -58,7 +58,7 @@ function _M:index()
     local page = _http_params('page')
     page = page or 1
     print('page:==', page)
-    local res = _cw_package:find_pagination(cond, page * 1, 30)
+    local res = mod:find_pagination(cond, page * 1, 30)
 
     v.view['members'] = res
 

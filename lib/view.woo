@@ -34,19 +34,46 @@ function _M:render(tpl)
 
     -- todo 根据controller动态加载目录
 
+    local f
+
+    local store_key = tpl
     tpl = _str_replace(tpl, ".", "/") .. '.volt'
 
-    local view_file = _DIR .. '/view/' .. tpl
-    local f = _file_get_contents(view_file)
-    if not f then
-        assert(false, 'view not exist:' .. view_file)
-    end
+    if _http_header('x-requested-with') == 'XMLHttpRequest' then
+        store_key = 'ajax' + store_key
+        f = _get_data(store_key, f)
+        if not f then
 
-    if _http_header('x-requested-with') ~= 'XMLHttpRequest' then
-        parent_tpl = _DIR .. '/view/layouts/' .. str_sub_to_right(tpl, '/') .. '.volt';
-        local admin_content = _file_get_contents(parent_tpl)
-        admin_content = _str_split(admin_content, '{{#content#}}')
-        f = admin_content[1] .. f .. admin_content[2]
+            local view_file = _DIR .. '/view/' .. tpl
+            f = _file_get_contents(view_file)
+            if not f then
+                assert(false, 'view not exist:' .. view_file)
+            end
+
+            -- store to cache
+            _put_data(store_key, f)
+        end
+    else
+        -- get template from cache first
+        f = _get_data(store_key, f)
+        if not f then
+            local view_file = _DIR .. '/view/' .. tpl
+            f = _file_get_contents(view_file)
+
+            --123/456/789
+            --123           n
+            --123/456       ne
+            --789           r
+            --456/789       re
+
+            local parent_tpl = _DIR .. '/view/layouts/' .. _str_sub_ex('n',tpl, '/') .. '.volt';
+            local admin_content = _file_get_contents(parent_tpl)
+            --admin_content = _str_split(admin_content, '{{#content#}}')
+            f = _str_replace(admin_content, "{{#content#}}", f, 1) -- admin_content[1] .. f .. admin_content[2]
+
+            -- store to cache
+            _put_data(store_key, f)
+        end
     end
 
     self.arr = _str_split(f, "\n")

@@ -101,14 +101,14 @@ end
 
 function _M:index()
     print('===admin.base.index:===', self.model_name)
-    _cw_package = _new_model(self.model_name)
+    local mod = _new_model(self.model_name)
 
     local cond = self:getConditions(self.model_name)
     print('got conditions:==', _json_encode(cond))
 
     local page = _http_params('page')
     page = page == '' and 1 or page
-    local res = _cw_package:findPagination(cond, page * 1, 30)
+    local res = mod:findPagination(cond, page * 1, 30)
 
     self:_beforeIndex(res)
 

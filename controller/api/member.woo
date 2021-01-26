@@ -73,9 +73,9 @@ function class_member:login()
         return self:renderJSON(nil, 'email or psw empty!', -1)
     end
 
-    _cw_package = _new_model('member')
+    local mod = _new_model('member')
 
-    local member = _cw_package:findFirstBy('email', email)
+    local member = mod:findFirstBy('email', email)
     if not member or member.password ~= md5(psw) then
         return self:renderJSON(nil, 'login fail:' .. md5(psw), -1)
     end

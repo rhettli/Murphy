@@ -45,14 +45,14 @@ function _M:edit()
 end
 
 function _M:index()
-    _cw_package = _new_model('cw_package')
+    local mod = _new_model('cw_package')
 
     local cond = self:getConditions('cw_package');
     print('got conditions:==', _json_encode(cond))
 
     local page = _http_params('page')
     page = page or 1
-    local res = _cw_package:findPagination(cond, page * 1, 30)
+    local res = mod:findPagination(cond, page * 1, 30)
 
     self:view('cw_packages', res):render("admin.cw_package.index")
 end
