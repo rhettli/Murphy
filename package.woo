@@ -19,17 +19,27 @@ return {
     --- cause thread instance be cached,too much instance will spend too much memory. | 由于线程实例被缓存，太多的线程会造成内存占用，这里使用400
     thread_num = 400,
 
-    --- where to install self | 安装在哪里?
+    --- where to install self | 本包安装在哪里?
     ---
-    --- global:install in global package path | global:安装到全局lib目录
+    --- global:install in global package path | global:安装到全局lib目录,一般是~/wpm
     ---
-    --- local:install in project path | local：安装在当前项目lib目录内
+    --- local:install in project path | local：安装在当前项目vonder目录内
     ---
     --- download:just download,not install | download:仅仅下载不安装
-    install_where = 'download',
+    ---
+    --- default install local,if you export a port or add some folder to env,you must set global
+    self_install = 'download',
+    
+    --- add folder to env,make sure all in it can be execute anywhere.
+    ---
+    --- 添加目录到环境变量，使得其中的可执行文件可以在任何地方直接运行
+    -- add_env='cmd',
+    
+    --- export cmd ,and you can run it anywhere,cmd must in cmd folder
+    -- export_cmd='wpm',
 
 
-    --- ? :means latest version,or 1.2? you will install latest about 1.2*|? 表示安装最新版本，1.2?安装1.2*的最新版
+    --- ? means latest version,or 1.2? you will install latest about 1.2*|? 表示安装最新版本，1.2?安装1.2*的最新版
     dependencies = {
         ['oshine/woo_any_type'] = '?|local',
         ['oshine/woo_args_capture'] = '?|local',
@@ -37,7 +47,9 @@ return {
         ['oshine/woo_ctl'] = '1.?|download'        -- download woo server control|下载woo 服务控制
     },
 
-    --- use 'all' to support all platform or use 'windows drawn linux' to support windows mac linux platform| 使用 'all' 来支持所有平台，或者 'windows drawn linux' 来支持windows mac linux
+    --- use 'all' to support all platform or use 'windows drawn linux' to support windows mac linux platform
+    ---
+    --- 使用 'all' 来支持所有平台，或者 'windows drawn linux' 来支持windows mac linux
     ['platform'] = 'all',
 
     --- use 'all' to support all arch ,or 'amd64 x86_64' to support amd64 x86_64 | 使用 'all' 来支持所有 arch ,或者 'amd64 x86_64' 来支持 amd64 x86_64 平台
@@ -45,9 +57,12 @@ return {
     arch = 'all',
 
     --- add remark of this package
-    remark = { ['en'] = 'A web development framework for all wooer', zh = '一个给所有人的web开发框架' },
+    remark = { 
+        ['en'] = 'A web development framework for all wooer,author:liyanxi', 
+        zh = '标准的mvc web开发框架，先给可爱的码人；作者:李焱曦' 
+        },
 
-    --- every package need a title
+    --- every package need a title|给包起个名字吧
     title = 'Murphy-(Web framework for woo)',
 
 }

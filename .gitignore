@@ -5,3 +5,5 @@ go.sum
 .xml
 runtime/*
 vendor
+
+.woo_manual

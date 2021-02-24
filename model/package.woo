@@ -36,4 +36,4 @@ function _M:toJson()
     }
 end
 
-return _extend(_M, 'lib.model', 'cw_package')
+return _extend(_M, 'lib.model', 'package')

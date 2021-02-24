@@ -51,49 +51,50 @@ function class_project:search()
 end
 
 function class_project:add()
-    local p = _http_params('package_name', 'git_source')
-    local package_name = p.package_name
-    local git_source = p.git_source
+
+    local package_name,git_source = _http_params('package_name', 'git_source') --- p.package_name, p.git_source
 
     if not _is_valid(package_name) then
         return self:renderJSON(nil, 'package_name empty', -1)
     end
 
     if not _is_valid(git_source) then
-        return self:renderJSON(nil, 'git_source empty,git_source like:gitee.com/oshine/cwm,github.com/rhettli/cwm ;multi source split with (,)', -1)
+        return self:renderJSON(nil, 'git_source empty,git_source like:`gitee.com/oshine/cwm,github.com/rhettli/cwm` ;multi source split with (,)', -1)
     end
 
-    local port, platform, title, remark
+    local port, platform,arch, title, remark,export,self_install
 
     local git_source_arr = _str_split(git_source, ',')
     if #git_source_arr > 0 then
-        local http = require('http')
+        local http = woo.http:new()
         local url = ''
-        --git_source_arr[1] = rtrim(git_source_arr[1], '.git')
-        if str_index(git_source_arr[1], 'gitee.com/') > -1 then
-            --gitee https://gitee.com/oshine/cwm/raw/master/package.lua
+        if _str_index(git_source_arr[1], 'gitee.com/') > -1 then
+            --gitee https://gitee.com/oshine/cwm/raw/master/package.woo
 
-            url = 'https://' .. git_source_arr[1] .. '/raw/master/package.lua'
-        elseif str_index(git_source_arr[1], 'github.com/') > -1 then
+            url = 'https://' .. git_source_arr[1] .. '/raw/master/package.woo'
+        elseif _str_index(git_source_arr[1], 'github.com/') > -1 then
             --https://raw.githubusercontent.com/curl/curl/master/buildconf.bat
 
-            url = 'https://raw.githubusercontent.com/' .. git_source_arr[1] .. '/master/package.lua'
+            url = 'https://raw.githubusercontent.com/' .. git_source_arr[1] .. '/master/package.woo'
         end
-        local r, e = http.request('get', url, { headers = { ['User-Agent'] = 'curl/7.70.0/cwm_1.0' } })
+        local r, e = http:request('get', url, { headers = { ['User-Agent'] = 'curl/7.7.0/woo-wpm-cli' } })
         if e then
-            return self:renderJSON(nil, e .. 'make sure there have a package.lua file in root dir,can\'t access ' .. url, -1)
+            return self:renderJSON(nil, e .. ' ,make sure there have a package.woo file in root dir,can\'t access ' .. url, -1)
         elseif r['status_code'] == 200 then
             local package = loadstring(r.body)()
             platform = package.platform or 'all'
+            arch= package.arch or 'all'
+            self_install=package.self_install
             port = package.port
+            export=package.export
             title = package.title
             remark = package.remark
             if not package.package_name then
-                return self:renderJSON(nil, 'package_name in git_source\'s package.lua is empty', -1)
+                return self:renderJSON(nil, 'package_name in git_source\'s package.woo is empty', -1)
             end
 
             if package_name ~= package.package_name then
-                return self:renderJSON(nil, 'you typed package_name not equal package_name in file package.lua,your\'s:' ..
+                return self:renderJSON(nil, 'you typed package_name not equal package_name in file package.woo,your\'s:' ..
                         package_name .. ',git_source you gived:' .. package.package_name, -1)
             end
             package_name = _str_split(package_name, '/')
@@ -106,11 +107,11 @@ function class_project:add()
         end
     end
 
-    if str_index(package_name, '/') > -1 or str_index(package_name, '\\') > -1 then
+    if _str_index(package_name, '/') > -1 or _str_index(package_name, '\\') > -1 then
         return self:renderJSON(nil, 'package_name must like:bitmap, do not contain any special char ', -1)
     end
 
-    _package = _new_model('cw_package')
+    local _package = _new_model('package')
 
     local member_id = self:currentMemberId()
 
@@ -120,12 +121,15 @@ function class_project:add()
         return self:renderJSON(nil, 'project_name[' .. package_name .. '] you already have,change another one', -1)
     end
 
+    _package.self_install=self_install -- where to install:global,local,download
     _package.member_id = member_id
     _package.name = package_name
     _package.remark = remark
     _package.title = title
     _package.platform = platform
-    _package.port = port
+    _package.arch = arch
+    _package.port = _rtrim(port,',')..','
+    _package.export=export
     _package.git_source = git_source
     _package.created_at = _time()
     _package:save()
