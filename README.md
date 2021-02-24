@@ -1,8 +1,10 @@
 # Murphy
+>by liyanxi:oshine@wooyri.com
+
 
 #### 安装与运行
 ```
-cwm install oshine/murphy
+wpm install oshine/murphy
 cd oshine_murphy
 cw cli set database [这里数据库用户名] [这里数据库密码]
 cw cli init

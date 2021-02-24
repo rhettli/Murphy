@@ -63,7 +63,7 @@ end
 
 --- enable this function ,you must config redis in conf/conf.lua [检查某个key是否达到足够的total次数，在in_second秒内]
 function class_base:checkEnoughTimes(key, total, in_second)
-    local ch = redis_cache0()
+    local ch = __REDIS_CACHE0()
     if ch then
         key = '__check_lock' .. key
         total = total or 50
@@ -116,7 +116,7 @@ end
 function class_base:checkRouter()
     if skip_router then
         for i, v in pairs(skip_router) do
-            local action = str_sub_to_left(_ACCESS_FILE, '/')
+            local action = __STR_SUB_TO_LEFT(_ACCESS_FILE, '/')
             print('action:==', action)
             print(_ACCESS_FILE, _ACCESS_METHOD)
             if action == i then

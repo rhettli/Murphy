@@ -7,7 +7,7 @@ function class_source:new(o)
 end
 
 function class_source:index()
-    return self:renderJSON({  }, e or 'err', -1)
+    return self:renderJSON({ say = 'hello world!' }, nil, 0)
 end
 
 return _extend(class_source, "lib.controller")

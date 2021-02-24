@@ -1,19 +1,17 @@
 local _M = {}
 
 function _M:new(o)
-    o = o or {}
+    --o = o and o:new() or {}
+
     print('self:==', _json_encode(o))
     print('self:==', _json_encode(self))
 
-    o = o:new()
-
-    _merge_left(self, o)
+    --o = o:new()
+    if o then
+        _merge_left(self, o:new())
+    end
 
     return self
-end
-
-function _M:a()
-    print('aa')
 end
 
 function _M:getConditions(value_name)
@@ -45,6 +43,7 @@ function _M:assign(object, value_name)
     end
 end
 
+---render a volt file
 function _M:render(tpl, dt)
     if not self._view then
         self._view = _import('lib.view'):new()
@@ -73,7 +72,18 @@ function _M:update()
 end
 
 function _M:create()
+    local new_model = _new_model(self.model_name)
 
+    local model = new_model:findFirstById(_http_params('id'))
+
+    if _is_valid(model) then
+        self:assign(model, self.model_name)
+
+        self:_beforeCreate(model)
+
+        model:save()
+    end
+    return self:renderJSON()
 end
 
 function _M:edit()
@@ -89,17 +99,25 @@ function _M:edit()
     self:view(self.model_name, model):render('admin.' .. self.model_name .. '.edit')
 end
 
--- suggest overwrite
+--- suggest overwrite
+function _M:_beforeCreate(model)
+end
+--- suggest overwrite
 function _M:_beforeUpdate(model)
 end
--- suggest overwrite
+--- suggest overwrite
 function _M:_beforeEdit(model)
 end
--- suggest overwrite
+--- suggest overwrite
 function _M:_beforeIndex(model)
 end
 
 function _M:index()
+    if not self.model_name then
+        print('this model not implement')
+        return
+    end
+
     print('===admin.base.index:===', self.model_name)
     local mod = _new_model(self.model_name)
 
@@ -124,7 +142,7 @@ function _M:view(name, data)
 
     self._view.view[name] = data
 
-    print("====data====",self._view.view.admin_name)
+    print("====data====", self._view.view.admin_name)
     return self
 end
 

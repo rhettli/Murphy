@@ -1,5 +1,6 @@
 local _M = { }
 
+print('lib controller runner ok!========')
 function _M:new(o, params)
     params = params or {}
 

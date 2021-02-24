@@ -1,25 +1,54 @@
---author: liyanxi
-
+---@author liyanxi
+---@language woo
 return {
 
-    package_name = 'oshine/Murphy',
+    -- Attention:move mouse to key,you will get information about this key|鼠标移动到key上，将会有提示信息弹出
 
+    --- package_name means your will be install with this name,eg:wpm install (package_name) | 包名称，用户可以使用这个名称来安装
+    ---
+    --- package_name must like :(your user name)/(package name) | 包名称必须形似：【你的用户名】/【包的名称】
+    ---
+    --- [click here to register (your name)](https://coder.wooyri.com/reg)  | [点击这里注册你的用户](https://coder.wooyri.com/reg)
+    package_name = 'oshine/murphy',
+
+    --- if 1 will cache code,otherwise will not. | 是否缓存woo代码，开启缓存代码后，需要更新代码，请执行 woo --update_code pid
+    cache_code = _env('WOO_CACHE_CODE') or 0, -- 从环境变量中获取是否缓存代码
+
+    --- total thread instance for handle use request. | 处理线程总数量，超过400，新的连接处于等待状态，直到有线程实例被释放
+    ---
+    --- cause thread instance be cached,too much instance will spend too much memory. | 由于线程实例被缓存，太多的线程会造成内存占用，这里使用400
+    thread_num = 400,
+
+    --- where to install self | 安装在哪里?
+    ---
+    --- global:install in global package path | global:安装到全局lib目录
+    ---
+    --- local:install in project path | local：安装在当前项目lib目录内
+    ---
+    --- download:just download,not install | download:仅仅下载不安装
+    install_where = 'download',
+
+
+    --- ? :means latest version,or 1.2? you will install latest about 1.2*|? 表示安装最新版本，1.2?安装1.2*的最新版
     dependencies = {
-        --['oshine/cw_any_type'] = '*|[local/global]',
-        ['oshine/cw_any_type'] = '*|local',
-        ['oshine/cw_args_capture'] = '*|local'
+        ['oshine/woo_any_type'] = '?|local',
+        ['oshine/woo_args_capture'] = '?|local',
+        ['oshine/woo_manual'] = '?|download', -- download woo manual|下载woo用户手册
+        ['oshine/woo_ctl'] = '1.?|download'        -- download woo server control|下载woo 服务控制
     },
 
-    platform = 'all' or 'windows drawn linux',
-    arch = 'all' or 'amd64 x86_64 arm64 arm32',
+    --- use 'all' to support all platform or use 'windows drawn linux' to support windows mac linux platform| 使用 'all' 来支持所有平台，或者 'windows drawn linux' 来支持windows mac linux
+    ['platform'] = 'all',
 
+    --- use 'all' to support all arch ,or 'amd64 x86_64' to support amd64 x86_64 | 使用 'all' 来支持所有 arch ,或者 'amd64 x86_64' 来支持 amd64 x86_64 平台
+    --- other position:amd64 x86_64 arm arm64 ...
+    arch = 'all',
+
+    --- add remark of this package
     remark = { ['en'] = 'A web development framework for all wooer', zh = '一个给所有人的web开发框架' },
-    title = 'Coder Wooyri official web framework',
 
-    -- global:install in global package path/global:安装到全局lib目录
-    -- local:install in project path/local：安装在当前项目lib目录内
-    -- download:just download,not install/download:仅仅下载不安装
-    install_where = 'download',
+    --- every package need a title
+    title = 'Murphy-(Web framework for woo)',
 
 }
 

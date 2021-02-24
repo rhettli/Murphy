@@ -1,7 +1,6 @@
 port: 8008
 host: 0.0.0.0
 type: http ws
-#type: sockets
 
 # 墨菲:  murphy-http
 
@@ -11,6 +10,7 @@ output_file: 0
 # static 为静态文件夹映射,有扩展名的则映射单个文件
 static_map:
   static: ./public/static
+  favicon: ./public/static
 
 # 首页文件
 index: index.woo
@@ -26,7 +26,7 @@ index_all: 1
 # index_ws=ws.woo
 
 # 是否缓存lua代码,默认不缓存，1缓存，0|false不缓存，生产环境必须设置1
-cache_code: 0
+cache_code: 1
 
 # before running
 before_run: _before_run.woo

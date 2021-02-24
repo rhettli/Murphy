@@ -66,7 +66,7 @@ function class_member:upload()
             return self:renderJSON(nil, 'the upload folder not exists ,please created first', -1)
         end
 
-        for i, v in pairs(p['file[]']) do
+        for _, v in pairs(p['file[]']) do
             local cf_tmp = _new_model('cloud_file')
             cf_tmp.md5 = _file_md5(v['temp'])
             -- 一个用户的相同目录中存在相同的文件，那么覆盖这个文件，md5不一致删除之前的文件

@@ -21,7 +21,8 @@ function M:new(o, _table)
     --    setmetatable(self,o)
     --    self.__index = self
 
-    self.snap = {}
+    self._snap = {}
+    self._db = nil
 
     self.__index = function(a, f)
 
@@ -38,22 +39,22 @@ function M:new(o, _table)
             if arr[lens] == 'text' then
                 local filed = arr[lens - 1]
                 local item = tonumber(o[filed])
-                r = o[_str_to_upper(arr[lens - 1]) .. '_TEXT'][item]
+                r = o[_str_upper(arr[lens - 1]) .. '_TEXT'][item]
                 --print('text inner:', json_encode(r))
             elseif arr[lens] == 'array' then
-                r = o[_str_to_upper(arr[lens - 1]) .. '_TEXT']
+                r = o[_str_upper(arr[lens - 1]) .. '_TEXT']
                 print('==index== array inner:', _json_encode(r))
             elseif arr[lens] == 'time' then
-                r = _date('Y-m-d H:i:s', o[_join(table_sub_to_right(arr, lens - 1), '_')])
+                r = _date('Y-m-d H:i:s', o[_join(__TABLE_SUB_TO_RIGHT(arr, lens - 1), '_')])
                 --print('time:==', o[join(table_sub_to_right(arr, lens - 1), '_')])
             elseif arr[lens] == 'model' then
 
             elseif lens > 3 and arr[lens - 2] == 'sub' then
                 -- username_sub_0_12
-                r = _str_sub(o[_join(table_sub_to_right(arr, lens - 3), '_')], arr[lens - 1], arr[lens])
+                r = _str_sub(o[_join(__TABLE_SUB_TO_RIGHT(arr, lens - 3), '_')], arr[lens - 1], arr[lens])
             elseif lens > 2 and arr[lens - 1] == 'sub' then
                 -- username_sub_0
-                r = _str_sub(o[_join(table_sub_to_right(arr, lens - 2), '_')], 0, arr[lens - 1])
+                r = _str_sub(o[_join(__TABLE_SUB_TO_RIGHT(arr, lens - 2), '_')], 0, arr[lens - 1])
             else
                 --local obj_id = o[join(table_sub_to_right(arr, lens - 1), '_') .. '_id']
                 --print('==index== obj:==', obj_id)
@@ -77,20 +78,11 @@ function M:new(o, _table)
 
     if _table then
         self._table = _table
-        local metadata_file = _DIR .. '/runtime/metadata/' .. self._table .. '.lua'
+        local metadata_file = _DIR .. '/runtime/metadata/' .. self._table .. '.woo'
         if not _file_exist(metadata_file) then
             local c = _import('lib.db'):new()
             if c.db ~= nil then
-                local fieldType = function(t)
-                    if _str_pos(t, 'char') > -1 or _str_pos(t, 'text') > -1 then
-                        return 'text'
-                    elseif _str_pos(t, 'int') > -1 or _str_pos(t, 'decimal') > -1 or _str_pos(t, 'double') > -1 or _str_pos(t, 'float') > -1
-                            or _str_pos(t, 'long') > -1 or _str_pos(t, 'numeric') > -1 then
-                        return 'number'
-                    else
-                        return t
-                    end
-                end
+                local fieldType = require('lib.func.meta')
                 --  show create table
                 local tbl_struct = {}
                 --local ind = 1
@@ -107,14 +99,14 @@ function M:new(o, _table)
 
                 if tbl_struct then
                     local ser = 'return [[' .. serialize(tbl_struct) .. ']]'
-                    local e = _file_put_contents(metadata_file, ser)
+                    local e = _file_save(metadata_file, ser)
                     local ff = _DIR .. '/runtime/metadata'
                     if not e and not _file_exist(ff) then
                         print('write file fail,try to create folder and try again')
                         _mkdir(_DIR .. '/runtime')
                         local e1, r = _mkdir(ff)
                         print('mkdir:==', e1, r)
-                        e1 = _file_put_contents(metadata_file, ser)
+                        e1 = _file_save(metadata_file, ser)
                         print('file_write again:==', e1)
                         assert(e, 'can not mkdir :' .. ff)
                     end
@@ -156,7 +148,6 @@ function M:checkValue(val, type_)
     end
 end
 
---Todo here can use require,use lua file instead json file.
 function M:metatable()
     if self._metatable ~= nil then
         return self._metatable
@@ -169,7 +160,7 @@ function M:metatable()
 end
 
 function M:old(filed)
-    return self.snap[filed]
+    return self._snap[filed]
 end
 
 -- 异步执行代码
@@ -198,7 +189,8 @@ function M:_doSave()
     insert = string.format(insert, self._table, _rtrim(field, ','), _rtrim(values, ','))
     print(insert)
 
-    _import('lib.db'):new():with(function(c)
+    local db = self._db or _import('lib.db'):new()
+    db:with(function(c)
         c:query(insert, function(res_)
             --out('call back:', res_, "\n")
         end)
@@ -206,24 +198,27 @@ function M:_doSave()
             self['id'] = res_.id
             print('call back:', self['id'], "\n")
         end)
-    end)             :close()
+    end)
+    if self._db then
+        db:close()
+    end
 
     return true
 end
 
-function M:_doUpdate(p)
+function M:_doUpdate()
     local metadata_file = self:metatable()
     --out(metadata_file)
     local update = 'update %s set %s where id=%s';
     local field = ''
     --local values = ''
-    for i, v in pairs(metadata_file) do
-        print(i, v)
-        if i ~= 'id' then
-            print("n o:==", self:checkValue(self[i], v.type), self:checkValue(self:old(i), v.type))
-            local res = self:checkValue(self[i], v.type)
-            if res ~= self:checkValue(self:old(i), v.type) then
-                field = field .. '`' .. i .. '`=' .. res .. ',' --v.type
+    for k, v in pairs(metadata_file) do
+        print(k, v)
+        if k ~= 'id' then
+            print("n o:==", self:checkValue(self[k], v.type), self:checkValue(self:old(k), v.type))
+            local res = self:checkValue(self[k], v.type)
+            if res ~= self:checkValue(self:old(k), v.type) then
+                field = field .. '`' .. k .. '`=' .. res .. ',' --v.type
             end
         end
     end
@@ -235,19 +230,18 @@ function M:_doUpdate(p)
     update = string.format(update, self._table, _rtrim(field, ','), self.id)
     print('_doUpdate:==', update)
 
-    _import('lib.db'):new():with(function(c)
-        if c ~= nil then
-            c:query(update, function(res_)
-                --print('call back:', res_, "\n")
-            end)
-        end
-    end)             :close()
+    local db = self._db or _import('lib.db'):new()
+    db:with(function(c)
+        c:query(update, function(res_)
+            --print('call back:', res_, "\n")
+        end)
+    end)
 
-    if not e then
-        return false
+    if self._db then
+        db:close()
     end
 
-    local _reds = redis_cache0()    -- _import('lib.redis'):new()
+    local _reds = __REDIS_CACHE0()    -- _import('lib.redis'):new()
     _reds:with(function(rds)
         local r = rds:exec('EXPIRE', '__model_cache' .. self._table .. self.id, 0)
         print('EXPIRE:==', r)
@@ -337,25 +331,30 @@ function M:findFirstBy(filed, val)
     return mod
 end
 
-function M:delete(p)
+function M:delete()
     if self.beforeDelete then
         self:beforeDelete()
     end
-    local c = self:db()
-    if c ~= nil then
+
+    local db = self._db or _import('lib.db'):new()
+    db:with(function(c)
         c:query('delete ' .. self._table .. ' where id=' .. self.id, function(res_)
-            out('call back:', res_, "\n")
+            out('delete call back:', res_, "\n")
         end)
+    end)
+
+    if not self._db then
+        db:close()
     end
-    c:close()
+
     if self.afterDelete then
         self:afterDelete()
     end
     return true
 end
 
-function M:update(p)
-    return self:save(p)
+function M:update()
+    return self:save()
 end
 
 function M:_toObj(ars)
@@ -363,7 +362,7 @@ function M:_toObj(ars)
     --print(_json_encode(ars))
     for _, v in pairs(ars) do
         local mod = _new_model(self._table)
-        mod.snap = v
+        mod._snap = v
         for n, m in pairs(v) do
             mod[n] = m
         end
@@ -379,7 +378,7 @@ function M:findByIds(ids)
     local ids_list = ''
 
     -- use redis cache or not
-    local _reds = redis_cache0()  -- _import('lib.redis'):new()
+    local _reds = __REDIS_CACHE0()  -- _import('lib.redis'):new()
 
     local fc = function()
         if _reds then
@@ -581,5 +580,47 @@ function M:_query(cond)
 
     return res
 end
+
+-- db transaction start
+---@param func fun(sql_handler)
+function _M:begin(func)
+    if not self._db then
+        self._db = _import('lib.db'):new()
+    end
+
+    self._db:query('begin;')
+
+    pcall(func, self._db)
+
+    self._db:query('commit;')
+    -- anyway if it is success of callback function, close db always
+    self._db:close()
+    self._db = nil
+
+end
+
+---@param func__handler sql_hander|fun(sql_handler)
+---@param auto_close boolean@ if automatic close sql handler after callback
+function _M:with(func__handler, auto_close)
+    if type(func__handler) == "function" then
+        if not self._db then
+            self._db = _import('lib.db'):new()
+        end
+
+        pcall(func__handler, self._db)
+
+        if auto_close ~= false then
+            -- anyway if it is success of callback function, close db always
+            self._db:close()
+            self._db = nil
+        end
+    else
+        self._db = func__handler
+        return self
+    end
+end
+
+--function _M:commit()
+--end
 
 return M

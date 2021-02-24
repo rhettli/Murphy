@@ -1,0 +1,10 @@
+return function(t)
+    if _str_pos(t, 'char') > -1 or _str_pos(t, 'text') > -1 then
+        return 'text'
+    elseif _str_pos(t, 'int') > -1 or _str_pos(t, 'decimal') > -1 or _str_pos(t, 'double') > -1 or _str_pos(t, 'float') > -1
+            or _str_pos(t, 'long') > -1 or _str_pos(t, 'numeric') > -1 then
+        return 'number'
+    else
+        return t
+    end
+end
