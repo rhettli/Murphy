@@ -19,7 +19,7 @@ function _M:new(o)
 end
 
 function _M:findNext(flag, i)
-    for n = i, #self.arr, 1 do
+    for n = i, #self._arr, 1 do
         local index = _str_index(item, flag)
         if index >= 0 then
             return index
@@ -40,12 +40,12 @@ function _M:render(tpl)
     tpl = _str_replace(tpl, ".", "/") .. '.volt'
 
     if _http_header('x-requested-with') == 'XMLHttpRequest' then
-        store_key = 'ajax' + store_key
+        store_key = 'ajax' .. store_key
         f = _data_get(store_key, f)
         if not f then
 
             local view_file = _DIR .. '/view/' .. tpl
-            f = _file_get_contents(view_file)
+            f = _cat(view_file,true)
             if not f then
                 assert(false, 'view not exist:' .. view_file)
             end
@@ -76,7 +76,8 @@ function _M:render(tpl)
         end
     end
 
-    self.arr = _str_split(f, "\n")
+    print('fff:',_json_encode(f))
+    self._arr = _str_split(f, "\n")
 
     local str = ""
     local if_count = 0
@@ -85,7 +86,7 @@ function _M:render(tpl)
     local ignore = false
     local contact = false
     local item = ""
-    for _, item1 in pairs(self.arr) do
+    for _, item1 in pairs(self._arr) do
         --out(contact, item, item1, "--------------------------")
         if contact then
             item = item .. item1

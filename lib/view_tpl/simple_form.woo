@@ -1,7 +1,6 @@
 --[ 'admin', device ], ['class':'ajax_model_form']
 
 return function(data, obj, params)
-    _out("form:::===")
     local res_ = ""
     local url = obj
     if data[obj].id then

@@ -35,25 +35,25 @@ __STR_SUB_TO_LEFT = function(str, to)
     return _str_sub(str, _str_rindex(str, to) + 1, #str)
 end
 
-end_of_day = function()
-
-end
-
-end_of_month = function()
-
-end
-
-end_of_week = function()
-
-end
-
-begin_of_month = function()
-
-end
-
-begin_of_day = function()
-
-end
+--end_of_day = function()
+--
+--end
+--
+--end_of_month = function()
+--
+--end
+--
+--end_of_week = function()
+--
+--end
+--
+--begin_of_month = function()
+--
+--end
+--
+--begin_of_day = function()
+--
+--end
 
 -- 获取多国语言
 function __TI8(p, lan, ...)

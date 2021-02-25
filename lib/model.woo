@@ -76,18 +76,20 @@ function M:new(o, _table)
         return r
     end
 
+    print('==========create metadata before==========')
     if _table then
         self._table = _table
         local metadata_file = _DIR .. '/runtime/metadata/' .. self._table .. '.woo'
         if not _file_exist(metadata_file) then
+            print('==========create metadata==========', metadata_file)
             local c = _import('lib.db'):new()
-            if c.db ~= nil then
-                local fieldType = require('lib.func.meta')
+            if c._db ~= nil then
+                local fieldType = _import('lib.func.meta')
                 --  show create table
                 local tbl_struct = {}
                 --local ind = 1
                 pcall(function()
-                    c:query(' desc  ' .. _table, function(res_)
+                    c:query('desc ' .. _table, function(res_)
                         local name = res_.Field
                         --print('call back:', json_encode(res_), "\n")
                         tbl_struct[name] = {}
@@ -98,7 +100,10 @@ function M:new(o, _table)
                 c:close()
 
                 if tbl_struct then
-                    local ser = 'return [[' .. serialize(tbl_struct) .. ']]'
+                    local ser = 'return [[' .. _json_encode(tbl_struct) .. ']]'
+                    --_out(tbl_struct)
+                    print('==========create metadata ready1==========', serialize(tbl_struct))
+                    print('==========create metadata ready2==========', _json_encode(tbl_struct))
                     local e = _file_save(metadata_file, ser)
                     local ff = _DIR .. '/runtime/metadata'
                     if not e and not _file_exist(ff) then
@@ -155,7 +160,7 @@ function M:metatable()
 
     local rmt = _import('runtime.metadata.' .. self._table) -- json_decode(_file_get_contents(_DIR .. '/runtime/metadata/' .. self._table))
     assert(rmt, 'metadata not find')
-    self._metatable = unserialize(rmt)
+    self._metatable = _json_decode(rmt)
     return self._metatable
 end
 

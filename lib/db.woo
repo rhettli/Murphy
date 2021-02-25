@@ -5,7 +5,7 @@ function _M:new(o)
     setmetatable(o, self)
     self.__index = self
     --self.__call = with
-    self.db = nil
+    self._db = nil
     self:_connect()
     return o
 end
@@ -18,9 +18,9 @@ function _M:_connect()
     print(ok, err)
     if ok then
         print('mysql ok')
-        self.db = c
+        self._db = c
     else
-        --self.db = nil
+        --self._db = nil
         error("connect to database err", err)
     end
 end
@@ -29,30 +29,30 @@ end
 function _M:with(fc)
 
     assert(type(fc) == 'function', 'params #1 must function')
-    assert(self.db, 'db connect fail')
+    assert(self._db, 'db connect fail')
     local e
-    e, self.r = pcall(fc, self.db)
+    e, self.r = pcall(fc, self._db)
 
-    assert(e, 'db exec fail' .. (self.r or ''))
+    --assert(e, 'db exec fail' .. (self.r or ''))
     return self
 end
 
 function _M:withClose(fc)
     self:with(fc)
-    self.db:close()
+    self._db:close()
     return self.r
 end
 
 function _M:query(...)
-    return self.db:query(...)
+    return self._db:query(...)
 end
 
 function _M:close()
-    if not self.db then
+    if not self._db then
         return
     end
-    local r = self.db:close()
-    self.db = nil
+    local r = self._db:close()
+    self._db = nil
     return r
 end
 

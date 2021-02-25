@@ -1,6 +1,6 @@
 --[ 'admin', device ], ['class':'ajax_model_form']
 
-return function(data1, macro, obj, params)
+return function(data1, macro1, obj, params)
     local data = {}
     local page
     local per_page
@@ -12,16 +12,13 @@ return function(data1, macro, obj, params)
         total = (data1[obj].total or 0) * 1
     end
 
+    local macro = _json_decode(_base64_decode(macro1))
+
 
     --_out('---------macro:', macro.edit)
-    --macro = _json_decode(_base64_decode(macro))
-
     --out('---------data1:', page, per_page, total, data)
-
-
     --out('---------obj:', obj)
     --out('---------params:', params)
-
     --_out('---------data:', data)
 
     local pagination = ''

@@ -92,7 +92,7 @@ function _M:edit()
 
     local new_model = _new_model(self.model_name)
 
-    local model = new_model:findFirstById(_http_params('id'))
+    local model = new_model:findFirstById(id)
 
     self:_beforeEdit(model)
 
