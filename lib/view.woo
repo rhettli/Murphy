@@ -58,7 +58,7 @@ function _M:render(tpl)
         f = _data_get(store_key, f)
         if not f then
             local view_file = _DIR .. '/view/' .. tpl
-            f = _file_get_contents(view_file)
+            f = _cat(view_file,true)
 
             --123/456/789
             --123           n
@@ -66,8 +66,8 @@ function _M:render(tpl)
             --789           r
             --456/789       re
 
-            local parent_tpl = _DIR .. '/view/layouts/' .. _str_sub_ex('n',tpl, '/') .. '.volt';
-            local admin_content = _file_get_contents(parent_tpl)
+            local parent_tpl = _DIR .. '/view/layouts/' .. _sub_ex('n',tpl, '/') .. '.volt';
+            local admin_content = _cat(parent_tpl,true)
             --admin_content = _str_split(admin_content, '{{#content#}}')
             f = _str_replace(admin_content, "{{#content#}}", f, 1) -- admin_content[1] .. f .. admin_content[2]
 
@@ -85,7 +85,7 @@ function _M:render(tpl)
     local ignore = false
     local contact = false
     local item = ""
-    for i, item1 in ipairs(self.arr) do
+    for _, item1 in pairs(self.arr) do
         --out(contact, item, item1, "--------------------------")
         if contact then
             item = item .. item1

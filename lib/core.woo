@@ -2,7 +2,7 @@
 _import = function(path)
     local p = path  --_dir_name ..
     --_remove_package_cache(p)
-    print('import:==', p)
+    print('import:==', p,package.path)
 
     local res = require(p)
     return res

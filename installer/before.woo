@@ -1,0 +1,7 @@
+return {
+    run = function(params)
+
+        print('install murphy ...')
+
+    end
+}

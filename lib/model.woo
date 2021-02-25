@@ -7,7 +7,7 @@ local _is_valid = _is_valid
 local _json_decode = _json_decode
 local _json_encode = _json_encode
 local _rtrim = _rtrim
-local _str_pos = _str_pos
+local _str_index = _str_index
 local _file_exist = _file_exist
 
 local _import = _import
@@ -583,7 +583,7 @@ end
 
 -- db transaction start
 ---@param func fun(sql_handler)
-function _M:begin(func)
+function M:begin(func)
     if not self._db then
         self._db = _import('lib.db'):new()
     end
@@ -601,7 +601,7 @@ end
 
 ---@param func__handler sql_hander|fun(sql_handler)
 ---@param auto_close boolean@ if automatic close sql handler after callback
-function _M:with(func__handler, auto_close)
+function M:with(func__handler, auto_close)
     if type(func__handler) == "function" then
         if not self._db then
             self._db = _import('lib.db'):new()
@@ -620,7 +620,7 @@ function _M:with(func__handler, auto_close)
     end
 end
 
---function _M:commit()
+--function M:commit()
 --end
 
 return M

@@ -1,6 +1,6 @@
 --[ 'admin', device ], ['class':'ajax_model_form']
 
-return function(data1, macro1, obj, params)
+return function(data1, macro, obj, params)
     local data = {}
     local page
     local per_page
@@ -14,7 +14,7 @@ return function(data1, macro1, obj, params)
 
 
     --_out('---------macro:', macro.edit)
-    --macro = _json_decode(_base64_decode(macro1))
+    --macro = _json_decode(_base64_decode(macro))
 
     --out('---------data1:', page, per_page, total, data)
 
@@ -27,8 +27,13 @@ return function(data1, macro1, obj, params)
     local pagination = ''
     if total > 0 then
         local url = _http_request('uri')
-        url = _str_split(url, '=')[2]
-        url = _str_split(url, '?')[1]
+        print('----------url---------',url)
+        url = _str_split(url, '=')
+        if #url<2 then
+            url=url[1]
+        else
+            url = _str_split(url[1], '?')[1]
+        end
 
         pagination = [[
     <nav><ul class="pagination"><li class="disabled">
@@ -99,7 +104,7 @@ return function(data1, macro1, obj, params)
         local td_list = ""
         for i, _ in pairs(params) do
             --out('it+', j, i)
-            print('***************', _json_encode(macro[i] or {}), i)
+            --print('***************', _json_encode(macro[i] or {}), i)
             if _is_valid(macro[i]) and macro[i].param and macro[i].code then
                 print('--------macro valid-----------')
                 print('FUNC:====================0', macro[i].param,macro[i].code)
@@ -110,7 +115,7 @@ return function(data1, macro1, obj, params)
                 local err, r = pcall(res, t)
 
                 print('FUNC:====================22', err, r, func)
-                print('FUNC:====================33',t.id,t.package_name,t.name)
+                --print('FUNC:====================33',t.id,t.package_name,t.name)
 
                 td_list = td_list .. '<td>' .. r .. '</td>'
             else

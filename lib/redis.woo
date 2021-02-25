@@ -18,7 +18,7 @@ function _M:new(point)
 end
 
 function _M:_connect(point)
-    local redis = require(':redis'):new()
+    local redis = woo.redis:new()
     local conf = _import('conf.conf')
     local res = redis:open(conf[point].addr, conf[point].addr.psw, conf[point].addr.db)
     if res then

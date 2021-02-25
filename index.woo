@@ -4,13 +4,13 @@ _curr_func = function()
     return debug.traceback()
 end
 
-install_dir = _env('WPM_PACKAGE') or _home() .. '/wpm/'
+local install_dir = _env('WPM_PACKAGE') or _home() .. '/wpm/'
 package.path = _DIR .. '/vendor/?.woo;' .. install_dir .. '/?.woo;' .. _DIR .. '/?.woo;'
 
 print('package.path1:===',package.path)
 
 -- 刚开始只有这里使用路径
-require('vendor.autoload')
+--require('vendor.autoload')
 require('lib.core')
 require('conf.defined')
 
