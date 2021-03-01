@@ -17,10 +17,7 @@
 {% endmacro %}
 
 {% macro user_info_(op) %}
-
-img:
 <img src="http://oilcn.cn-sh2.ufileos.com/{{op.avatar}}" style='width:100px;height:100px'/>
-
 {% endmacro %}
 
 {% macro user_details(op) %}

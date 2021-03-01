@@ -7,7 +7,8 @@ function class_source:new(o)
 end
 
 function class_source:index()
-    return self:renderJSON({ say = 'hello world!' }, nil, 0)
+    local k, p, id = _http_params('k[]','m[]', 'id')
+    return self:renderJSON({ say = 'hello world!' }, _merge(p,k or{}, { id = id }), 0)
 end
 
-return _extend(class_source, "lib.controller")
+return _extend(class_source, "oshine/woo_mvc@1.?:controller")

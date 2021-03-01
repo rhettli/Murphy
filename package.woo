@@ -41,6 +41,8 @@ return {
 
     --- ? means latest version,or 1.2? you will install latest about 1.2*|? 表示安装最新版本，1.2?安装1.2*的最新版
     dependencies = {
+        ['oshine/woo_tpl'] = '1.?|local',
+        ['oshine/woo_mvc'] = '1.?|local',
         ['oshine/woo_any_type'] = '?|local',
         ['oshine/woo_args_capture'] = '?|local',
         ['oshine/woo_manual'] = '?|download', -- download woo manual|下载woo用户手册

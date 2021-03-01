@@ -24,4 +24,4 @@ function class_source:gip()
     return self:renderJSON(gip_, e or 'err', -1)
 end
 
-return _extend(class_source, "lib.controller")
+return _extend(class_source, "oshine/woo_mvc@1.?:controller")

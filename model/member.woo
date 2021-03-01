@@ -53,4 +53,4 @@ function _M:p123()
     end
 end
 
-return _extend(_M, 'lib.model', 'member')
+return _extend(_M, 'oshine/woo_mvc@1.?:model', 'member')
