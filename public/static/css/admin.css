@@ -75,3 +75,7 @@ label {
 .navbar-default .navbar-nav>li>a{
     color: #565656 !important;
 }
+
+img.avatar{
+    border-radius: 1rem;
+}

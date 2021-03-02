@@ -16,18 +16,26 @@ end
 
 function _M:getConditions(value_name)
     local tb = { conditions = '' }
-    local params = _http_params(value_name)
+    local params = _http_params(value_name .. '[]')
     local bind = {}
     local filter = { eq = '=', gte = '>=', gt = '>', lt = '<', lte = '<=', neq = '!=', like = 'like' }
     if 'table' == type(params) then
         for i, v in pairs(params) do
             if _is_valid(v) then
-                i = _str_split(i, '_')[1]
-                tb.conditions = tb.conditions .. ' ' .. i .. filter[#i] .. ':' .. v .. ': and'
-                bind[i] = v
+
+                local prefix = _sub_ex('re', i, '_')
+                i = _sub_ex('ne', i, '_')
+
+                if filter[prefix] then
+                    tb.conditions = tb.conditions .. ' ' .. i .. filter[prefix] .. ':' .. i .. ': and'
+                    bind[i] = v
+                else
+                    print('conditions rule not match:', i, v)
+                end
             end
         end
     end
+
     tb.conditions = _rtrim(tb.conditions, 'and')
     tb.bind = bind
     return tb
@@ -36,7 +44,7 @@ end
 function _M:assign(object, value_name)
     local params = _http_params(value_name .. '[]')
 
-    print('assign:===', _json_encode(params))
+    --print('assign:===', _json_encode(params))
 
     assert(type(object) == 'table', 'params must model table')
 
@@ -96,9 +104,7 @@ function _M:update()
     local id = _http_params('id')
     assert(_is_valid(id), 'no id')
 
-    local _model = _new_model(self.model_name)
-
-    local model = _model:findFirstById(id)
+    local model = __model[self.model_name]:findFirstById(id)
     if _is_valid(model) then
         print('update valid ok:===', model.nickname)
         self:assign(model, self.model_name)
@@ -130,9 +136,7 @@ function _M:edit()
     local id = _http_params('id')
     assert(_is_valid(id), 'no id')
 
-    local new_model = _new_model(self.model_name)
-
-    local model = new_model:findFirstById(id)
+    local model = __model[self.model_name]:findFirstById(id)
 
     self:_beforeEdit(model)
 
@@ -153,20 +157,14 @@ function _M:_beforeIndex(model)
 end
 
 function _M:index()
-    if not self.model_name then
-        print('this model not implement')
-        return
-    end
-
-    print('===admin.base.index:===', self.model_name)
-    local mod = _new_model(self.model_name)
+    assert(self.model_name, 'this model not implement')
 
     local cond = self:getConditions(self.model_name)
-    print('got conditions:==', _json_encode(cond))
+    --print('got conditions:==', _json_encode(cond))
 
     local page = _http_params('page')
     page = page and page or 1
-    local res = mod:findPagination(cond, page * 1, 30)
+    local res = __model[self.model_name]:findPagination(cond, page * 1, 30)
 
     self:_beforeIndex(res)
 

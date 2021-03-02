@@ -7,8 +7,10 @@ function class_source:new(o)
 end
 
 function class_source:index()
-    local k, p, id = _http_params('k[]','m[]', 'id')
-    return self:renderJSON({ say = 'hello world!' }, _merge(p,k or{}, { id = id }), 0)
+
+    local member = __model.member:findFirstById(100)
+
+    return self:renderJSON({ say = 'hello world!' }, _merge(member.id, member.email, member.sex), 0)
 end
 
 return _extend(class_source, "oshine/woo_mvc@1.?:controller")

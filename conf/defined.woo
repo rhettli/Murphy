@@ -79,7 +79,7 @@ function __TI8(p, lan, ...)
     return _import('conf.i8_' .. lan)[p]
 end
 
-_try_lock = function(lock_key, request_id, func, ...)
+__try_lock = function(lock_key, request_id, func, ...)
     if func == nil then
         assert(false, 'params 2 must be func')
     end
@@ -122,3 +122,12 @@ _try_lock = function(lock_key, request_id, func, ...)
         end
     end
 end
+
+--- 比如使用member model:__model.member.findFirstById(1)
+--- find a rows:member model:__model.member.find({conditions={id=1}})
+---@return oshine.woo_mvc@1.?:model
+__model = setmetatable({}, {
+    __index = function(_, v)
+        return _new_model(v)
+    end
+})
