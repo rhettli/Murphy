@@ -83,7 +83,7 @@
 <!--<a href="/admin/business_informations/delete?id={{bus_info.id}}">删除</a>-->
 <a href="/admin/business_informations/add_photo?id={{bus_info.id}}" class='modal_action'>添加图片</a>
 
-{% endmacro %}
+{% /macro %}
 
 {% macro all_photos(bus_info) %}
 {% for val in bus_info.photos %}
@@ -94,25 +94,25 @@
     <span onclick="delete_photo('{{val}}',{{bus_info.id}})" class="img_photo">x</span>
 </div>
 {% endfor %}
-{% endmacro %}
+{% /macro %}
 
 {% macro all_mobiles(bus_info) %}
 {% for val in bus_info.mobiles %}
 {{val}},
 {% endfor %}
-{% endmacro %}
+{% /macro %}
 
 {% macro cityto(bus_info) %}
 <a href="/admin/city_positions?city_position[name_eq]={{bus_info.city}}">{{bus_info.city}}</a>
-{% endmacro %}
+{% /macro %}
 
 {% macro bags_amount_v1(bus_info) %}
 {{bus_info.bags_amount}}￥
-{% endmacro %}
+{% /macro %}
 
 {% macro rucksack_amount_v1(bus_info) %}
 {{bus_info.rucksack_amount}}￥
-{% endmacro %}
+{% /macro %}
 
 {% macro infos(bus_info) %}
 编号:{{bus_info.no}}<br/>
@@ -132,7 +132,7 @@
 爬虫来源:{{bus_info.spider_source}}<br/>
 爬虫来源id:{{bus_info.spider_id}}<br/>
 爬虫状态:{{bus_info.spider_status_text}}<br/>
-{% endmacro %}
+{% /macro %}
 
 <div>
 <a href="/admin/business_informations/add_normal" class='modal_action'>添加寄存点</a>

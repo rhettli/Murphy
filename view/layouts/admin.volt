@@ -36,7 +36,7 @@
     <ul class="nav navbar-nav">
         {%if __IS_ALLOWED('product_channels','index')  then %}
             <li>
-                <a href="/admin/product_channels">产品渠道</a>
+                <a href="/admin/product_channels/">产品渠道</a>
             </li>
         {% endif %}
 
@@ -46,12 +46,12 @@
                 <ul class="dropdown-menu">
                     {%if __IS_ALLOWED('users','index')  then %}
                         <li>
-                            <a href="/admin/member">用户列表</a>
+                            <a href="/admin/member/">用户列表</a>
                         </li>
                     {% endif %}
                     {%if __IS_ALLOWED('device','index')  then %}
                         <li>
-                            <a href="/admin/device">用户设备列表</a>
+                            <a href="/admin/device/">用户设备列表</a>
                         </li>
                     {% endif %}
                     {%if __IS_ALLOWED('sms_histories','index')  then %}
@@ -67,7 +67,7 @@
                 <ul class="dropdown-menu">
                     {%if __IS_ALLOWED('cw_package','index')  then %}
                         <li>
-                            <a href="/admin/cw_package">依赖包列表</a>
+                            <a href="/admin/package/">依赖包列表</a>
                         </li>
                     {% endif %}
                     {%if __IS_ALLOWED('city_positions','index')  then %}
@@ -77,13 +77,13 @@
                     {% endif %}
                     {%if __IS_ALLOWED('enters','index')  then %}
                     <li>
-                        <a href="/admin/enters">来源访问</a>
+                        <a href="/admin/enters/">来源访问</a>
                     </li>
                     {% endif %}
 
                     {%if __IS_ALLOWED('report','index')  then %}
                     <li>
-                        <a href="/admin/report">行为监测</a>
+                        <a href="/admin/report/">行为监测</a>
                     </li>
                     {% endif %}
                 </ul>

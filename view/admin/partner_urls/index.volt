@@ -31,7 +31,7 @@
 
 {% macro edit_link(partner_url) %}
     <a href="/admin/partner_urls/edit/{{ partner_url.id }}" class="modal_action">编辑</a>
-{% endmacro %}
+{% /macro %}
 
 {{ simple_table(partner_urls,['ID': 'id','名称': 'name','类型': 'type_text','平台':'platform',
 '域名':'domain','操作者':'operator_username','编辑':'edit_link']) }}

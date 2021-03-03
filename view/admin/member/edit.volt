@@ -1,8 +1,8 @@
-{% local t=simple_form(member, {login_at_text='登录时间', data='登录地区'}) %}
+{% local t=simple_form(member, {url='',login_at_text='登录时间', data='登录地区'}) %}
 
 
 {% t.input('nickname',{ label='昵称',width='50%' }) %}
-{% t.input('email',{ label='邮箱',width='50%' }) %}
+{% t.input('email',{ disabled="true", label='woo 邮箱',width='50%' }) %}
 
 {% t.select('sex',{  label='性别' } ) %}
 

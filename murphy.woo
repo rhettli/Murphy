@@ -1,0 +1,94 @@
+---@author liyanxi
+
+print('Murphy cli start with version:', _cat(_DIR .. '/version', true), "\nAuthor:liyanxi,copyright:shanghaixiye teg.c @2020")
+
+package.path = '@' .. _DIR .. '/vendor/?.woo;' .. '@' .. _env('WPM_PKG') .. '/?.woo;' .. _DIR .. '/?.woo;'
+
+print('Woo package path:', package.path)
+
+require('oshine/woo_mvc@1.?:core')
+_import('conf.defined')
+
+__model._list = function()
+    _ls(_DIR .. '/model', function(f)
+        print(_rtrim(_str_replace(f.name, '\\', '/'), '.woo'))
+    end)
+end
+
+_out(__model, __model._list)
+
+local lan = (require('wpm@conf/conf') or {}).language
+
+print('Language:', lan)
+
+assert(lan, 'Error:not find conf.woo file at wpm package,make sure wpm package install correct. / 没有找到语言配置文件conf.woo 在wpm包中，请确认wpm包是否安装正确')
+
+if _is_cli() == false then
+    print(({ en = 'Error:mush cli mode,try:woo murphy.woo -h', zh = '必须以cli模式运行,试试：woo murphy.woo -h' })[lan])
+    return
+end
+
+local arg = _del(_args(), 1)
+
+_out('Run with arg:', arg, '\n')
+
+local help_func = function(rule)
+    local help_str = [[
+run with
+    ]]
+    print(help_str)
+end
+
+-- add db config
+_data_put('sql_conn', require('oshine/woo_mvc@1.?:env')('sql_conn'))
+
+if _in_array(arg[1], { "-h", '?', '--help', "" }) then
+    help_func()
+elseif arg[1] == 'cli' then
+    --local member = __model.member:findFirstById(100).nickname ;print(member.nickname, member.id)
+
+    _cli()
+
+elseif arg[1] == 'admin' then
+    if _in_array(arg[2], { 'index' }) then
+        require(queue)[arg[2]]()
+    else
+        print(({ en = 'admin #2 not match any rule.', zh = '' })[lan])
+        help_func(arg[1])
+    end
+elseif arg[1] == 'runtime' then
+    local runtime = _DIR .. '/task/sys/runtime'
+    if _in_array(arg[2], { 'clear', 'list' }) then
+        require(runtime)[arg[2]](_del(arg, 2, 1))
+    else
+        print(({ en = 'admin #2 not match any rule:' .. arg[2], zh = 'admin 参数 #2 未匹配到命令:' .. arg[2] })[lan])
+        help_func(arg[1])
+    end
+elseif arg[1] == 'task' then
+    local task = _DIR .. '/task/sys/task'
+    if _in_array(arg[2], { 'add', 'list' }) then
+        require(task)[arg[2]](_del(arg, 2, 1))
+    else
+        print(({ en = 'admin #2 not match any rule:' .. arg[2], zh = 'admin 参数 #2 未匹配到命令:' .. arg[2] })[lan])
+        help_func(arg[1])
+    end
+elseif arg[1] == 'queue' then
+    local queue = _DIR .. '/task/sys/queue.woo'
+    if _in_array(arg[2], { 'start', 'reload', 'add', 'list' }) then
+        require(queue)[arg[2]]()
+    else
+        print(({ en = 'admin #2 not match any rule:' .. arg[2], zh = 'admin 参数 #2 未匹配到命令:' .. arg[2] })[lan])
+        help_func(arg[1])
+    end
+else
+    if not arg[2] then
+        return
+    end
+    -- run with task
+    local f = _DIR .. '/task/' .. _str_replace(arg[1], '.', '/') .. '.woo'
+    if _file_exist(f) then
+        require('task/' .. arg[1])[arg[2]]()
+    else
+        print('not find any task file with:' .. f)
+    end
+end

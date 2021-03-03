@@ -15,20 +15,20 @@
 {%- macro support_province_link(ge_tui_message) %}
     <a href="/admin/ge_tui_messages/support_province/{{ ge_tui_message.id }}"
        class="modal_action">支持的省份</a>
-{%- endmacro %}
+{%- /macro %}
 
 {%- macro message_contnet_send(ge_tui_message) %}
     <a href="/admin/ge_tui_messages/message_content_send?id={{ ge_tui_message.id }}"
        id="send_msg">发送消息</a>
-{%- endmacro %}
+{%- /macro %}
 
 {%- macro message_contnet_link(ge_tui_message) %}
     <a href="/admin/ge_tui_messages/message_content?id={{ ge_tui_message.id }}">添加消息</a>
-{%- endmacro %}
+{%- /macro %}
 
 {%- macro message_contnet_list(ge_tui_message) %}
     <a href="/admin/ge_tui_messages/message_content_list?id={{ ge_tui_message.id }}">查看消息({{ ge_tui_message.push_message_id }})</a>
-{%- endmacro %}
+{%- /macro %}
 
 {{ simple_table(ge_tui_messages, ['ID':'id', '产品渠道':'product_channel_name', '名称':'name','离线天数':'offline_day',
 '状态':'status_text','发送状态':'send_status_text','发送时间':'send_at_text', '发送统计结果':'remark','查看消息':'message_contnet_list','添加消息':'message_contnet_link',

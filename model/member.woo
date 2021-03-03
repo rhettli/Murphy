@@ -1,5 +1,3 @@
--- 继承model
-
 local _M = {}
 
 function _M:new(o)
@@ -8,7 +6,7 @@ function _M:new(o)
     --self.__index = self
     -- use for edit page:/admin/member/edit
 
-    self.SEX_TEXT = { [1] = '雌', [2] = '雄', [0] = '雌雄同体' }
+    self.SEX_TEXT = { [0] = '雌雄同体', [1] = '雌', [2] = '雄' }
     self.STATUS_TEXT = { [1] = '有效', [2] = '已禁用' }
 
     return self
@@ -31,4 +29,4 @@ function _M:toJson()
     }
 end
 
-return _extend(_M, 'oshine/woo_mvc@1.?:model', 'member')
+return _extend(_M, 'oshine/woo_mvc@1.?:model', 'member')    -- 继承model

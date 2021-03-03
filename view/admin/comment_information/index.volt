@@ -12,18 +12,18 @@
 {% macro username(comment) %}
 用户Id:{{comment.user.id}}<br/>
 用户昵称:{{comment.user.nickname}}<br/>
-{% endmacro %}
+{% /macro %}
 
 {% macro shopname(comment) %}
 编号：{{comment.business_information.no}}<br/>
 名称：{{comment.business_information.name}}<br/>
-{% endmacro %}
+{% /macro %}
 
 {% macro score(comment) %}
 环境评分:{{comment.score_env}}<br/>
 服务评分:{{comment.score_service}}<br/>
 舒适度评分:{{comment.score_comfortable}}<br/>
-{% endmacro %}
+{% /macro %}
 
 
 
@@ -33,17 +33,17 @@
        <img style="width:80px;height:80px;border:1px solid #868686;" src="{{ val }}" />
        </a>
     {% endfor %}
-{% endmacro %}
+{% /macro %}
 
 {% macro edit(comment) %}
 <a href="/admin/comment_information/pass?id={{comment.id}}">审核通过</a>
 <a href="/admin/comment_information/edit?id={{comment.id}}" class='modal_action'">编辑</a>
 <a href="#" onclick="del({{comment.id}});">删除</a>
-{% endmacro %}
+{% /macro %}
 
 {% macro status_ctl(comment) %}
 <i id="status_ctl_{{comment.id}}">{{comment.status_text}}</i>
-{% endmacro %}
+{% /macro %}
 
 
 {{ simple_table(comments, [

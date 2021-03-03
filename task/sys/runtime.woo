@@ -1,0 +1,20 @@
+return {
+    clear = function(p)
+        _rm(_DIR .. '/runtime/')
+        _mkdir(_DIR .. '/runtime/')
+    end,
+    list = function(p)
+        _ls(_DIR .. '/runtime', function(f)
+            if f.name == 'runtime' then
+                return
+            end
+            if f.isDir then
+                print(_sub_ex('re', _str_replace(f.path, '\\', '/'), '/') .. '', '\t')
+            else
+                print('\t', f.name)
+            end
+
+        end)
+        print('\nYou can clear runtime file with: woo murphy runtime clear ')
+    end
+}

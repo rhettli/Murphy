@@ -1,6 +1,6 @@
 {%- macro image_link(push_message) %}
     <img src="{{ push_message.image_small_url }}" height="50" width="50"/>
-{%- endmacro %}
+{%- /macro %}
 
 <input type="hidden" id="ge_tui_message_id" value="{{ ge_tui_message_id }}">
 

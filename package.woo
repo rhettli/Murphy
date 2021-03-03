@@ -29,12 +29,12 @@ return {
     ---
     --- default install local,if you export a port or add some folder to env,you must set global
     self_install = 'download',
-    
+
     --- add folder to env,make sure all in it can be execute anywhere.
     ---
     --- 添加目录到环境变量，使得其中的可执行文件可以在任何地方直接运行
     -- add_env='cmd',
-    
+
     --- export cmd ,and you can run it anywhere,cmd must in cmd folder
     -- export_cmd='wpm',
 
@@ -59,10 +59,10 @@ return {
     arch = 'all',
 
     --- add remark of this package
-    remark = { 
-        ['en'] = 'A web development framework for all wooer,author:liyanxi', 
-        zh = '标准的mvc web开发框架，先给可爱的码人；作者:李焱曦' 
-        },
+    remark = {
+        ['en'] = 'A web development framework for all wooer,author:liyanxi',
+        zh = '标准的mvc web开发框架，先给可爱的码人；作者:李焱曦'
+    },
 
     --- every package need a title|给包起个名字吧
     title = 'Murphy-(Web framework for woo)',

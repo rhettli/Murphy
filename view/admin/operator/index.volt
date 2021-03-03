@@ -6,7 +6,7 @@
     {% if _is_allowed('operator','edit') then %}
         <a class="modal_action" href="/admin/operator/edit?id={{ op.id }}">编辑</a>
     {% endif %}
-{% endmacro %}
+{% /macro %}
 
 {% simple_table(operators, {id='ID', username='昵称',role='角色',
     ip='注册ip',active_at_time='激活时间',created_at_time='创建时间' ,edit='操作' }) %}

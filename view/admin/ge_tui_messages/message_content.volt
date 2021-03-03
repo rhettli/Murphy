@@ -4,13 +4,13 @@
     {% else %}
         <a href="/admin/ge_tui_messages/add_message_content?id={{ push_message.id }}" id="add_message_content">添加</a>
     {% endif %}
-{%- endmacro %}
+{%- /macro %}
 
 <input type="hidden" id="ge_tui_message_id" value="{{ ge_tui_message_id }}">
 
 {%- macro image_link(push_message) %}
     <img src="{{ push_message.image_small_url }}" height="50" width="50"/>
-{%- endmacro %}
+{%- /macro %}
 
 <a href="/admin/ge_tui_messages">返回</a>
 

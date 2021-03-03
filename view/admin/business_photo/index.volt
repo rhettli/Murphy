@@ -3,12 +3,12 @@
 {% if !item.status %}
 <a href="/admin/business_photo/pass?id={{item.id}}">通过</a>
 {% endif %}
-{% endmacro %}
+{% /macro %}
 
 
 {% macro photo_img(item) %}
 <img src="{{item.photo}}" style="width:80px;"/>
-{% endmacro %}
+{% /macro %}
 
 {{ simple_table(busi_photo, [
 'ID': 'id', '上传用户': 'member_id',
