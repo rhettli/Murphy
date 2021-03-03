@@ -75,7 +75,7 @@ elseif arg[1] == 'task' then
 elseif arg[1] == 'queue' then
     local queue = _DIR .. '/task/sys/queue.woo'
     if _in_array(arg[2], { 'start', 'reload', 'add', 'list' }) then
-        require(queue)[arg[2]]()
+        require(queue)[arg[2]](_del(arg, 2, 1))
     else
         print(({ en = 'admin #2 not match any rule:' .. arg[2], zh = 'admin 参数 #2 未匹配到命令:' .. arg[2] })[lan])
         help_func(arg[1])
@@ -87,7 +87,7 @@ else
     -- run with task
     local f = _DIR .. '/task/' .. _str_replace(arg[1], '.', '/') .. '.woo'
     if _file_exist(f) then
-        require('task/' .. arg[1])[arg[2]]()
+        require('task/' .. arg[1])[arg[2]](_del(arg, 2, 1))
     else
         print('not find any task file with:' .. f)
     end

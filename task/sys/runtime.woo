@@ -1,10 +1,18 @@
 return {
     clear = function(p)
-        _rm(_DIR .. '/runtime/')
-        _mkdir(_DIR .. '/runtime/')
+        -- todo delete file with p[1]
+        _ls(_DIR .. '/runtime', function(f)
+            if f.name == 'runtime' then
+                return
+            end
+
+            _rm(f.path)
+        end)
+        print('Done')
     end,
     list = function(p)
-        _ls(_DIR .. '/runtime', function(f)
+        local dir = p[1] and '/'..p[1] or ''
+        _ls(_DIR .. '/runtime' .. dir, function(f)
             if f.name == 'runtime' then
                 return
             end
