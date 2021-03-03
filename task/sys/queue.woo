@@ -1,0 +1,14 @@
+return {
+    run=function()
+        -- queue start
+        local queue = _import('lib.queue')
+        queue:new()
+        if arg[2] == "start" then
+            queue:start()
+        elseif arg[2] == "status" then
+            queue:status()
+        elseif arg[2] == "exit" then
+            queue:exit()
+        end
+    end
+}

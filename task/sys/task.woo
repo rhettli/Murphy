@@ -1,0 +1,28 @@
+return {
+    add = function(p)
+
+    end,
+    list = function(p)
+        local rdir = _DIR .. '/task'
+        local dir = p[1] and '/' .. p[1] or ''
+        if _file_exist(rdir .. dir .. '.woo') then
+            rdir = rdir .. dir .. '.woo'
+        else
+            rdir = rdir .. dir
+        end
+        _ls(rdir, function(f)
+            if f.isDir then
+                return
+            end
+
+            print(_sub_ex('re', _del(_str_replace(f.path, '\\', '/'), '.woo', './'), '/'))
+            local t = _cat(f.path, true)
+            local fun = loadstring(t)()
+            for i, v in pairs(fun) do
+                if type(v) == 'function' then
+                    print('\t', i)
+                end
+            end
+        end)
+    end
+}
