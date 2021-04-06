@@ -23,16 +23,16 @@
 
 {% macro down_url(soft_version) %}
     <a target="_blank" href="{{ soft_version.file_url }}">点击下载</a>
-{% endmacro %}
+{% /macro %}
 {% macro info(soft_version) %}
     渠道: {{ soft_version.product_channel_name }} 平台: {{ soft_version.platform_text }}<br/>
     版本号: {{ soft_version.version_code }}  版本名称: {{ soft_version.version_name }}<br/>
     安装包内置fr: {{ soft_version.built_in_fr }}
-{% endmacro %}
+{% /macro %}
 
 {% macro edit_link(soft_version) %}
     <a href="/admin/channel_soft_versions/edit/{{ soft_version.id }}" class="modal_action">编辑</a>
-{% endmacro %}
+{% /macro %}
 
 {{
 simple_table(soft_versions, [

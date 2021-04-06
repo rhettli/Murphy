@@ -14,7 +14,7 @@
 
 {% macro edit(bus_info) %}
 <a href="/admin/city_positions/edit?id={{bus_info.id}}" class='modal_action'">编辑</a>
-{% endmacro %}
+{% /macro %}
 
 {{ simple_table(city_positions, [
 'ID': 'id','名称':'name','经度': 'lng','纬度': 'lat','缩放尺寸(1-19)': 'scale','首字母':'first_char','创建时间': 'created_at_text','状态': 'status_text','操作': 'edit']) }}

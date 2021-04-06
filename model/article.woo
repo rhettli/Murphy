@@ -23,67 +23,69 @@ function _M:__afterSave()
 end
 
 function _M:toJson()
+    --
+    --$user = [];
+    --if ($this->member) {
+    --$user = [
+    --'author' = > $this->member->nickname,
+    --'username' = > $this->member->username,
+    --'avatar' => $this->member->getAvatar100x100Url(),
+    --'c' = > $this->member->can_virtual
+    --];
+    --}
+    --
+    --return [
+    --'id' = > encodeStr($this->id),
+    --'content' = > $with_content ? ($this->temp_content ?:$this->renderSliceCodeToContent()):'',
+    --'title' = > $this->title,
+    --'descr' => $this->descr,
+    --'created_at' = > $this->created_at_text,
+    --'member' = > $user,
+    --'tags' = > $with_tags ? $this->getTags():[]
+    --];
+    --end
+    --
+    --// 渲染文章内容加上代码片段
+    --function _M:renderSliceCodeToContent()
+    --
+    --$scs = SliceCodes :: find(['conditions' => 'article_id=' . $this->id]);
+    --foreach ($scs as $sc) {
+    --$this->content = str_replace('_$(_STATIC_CODE_ID_REPLACE_' . $sc->id . ')$_', "```" . $sc->lan . ':ref:' . $sc->id . "\n" . $sc->content . "```", $this->content, $count);
+    --if ($count < 1) {
+    --//                $sc->delete();
+    --info('游离代码片段，让用户删除', $sc);
+    --}
+    --}
+    --return $this->content;
+    --end
+    --
+    --
+    --// 获取所有文章关联的tag列表
+    --function _M:getTags()
+    --
+    --$tags = TagsMapArticle :: find(['conditions' => 'article_id=' . $this->id]);
+    --$ls = [];
+    --foreach ($tags as $tag) {
+    --$ls[] = $tag->tag_id;
+    --end
+    --
+    --if (!$ls)
+    --return [];
+    --
+    --$cond = 'id in (' . implode(',', $ls) . ')';
+    --//        info('find tag:===', $cond);
+    --
+    --/** @var Tags[] $tags */
+    --$tags = Tags:: find(['conditions' = > $cond]);
+    --
+    --$ls = [];
+    --foreach ($tags as $tag) {
+    --$ls[] = $tag->toSimpleJson();
+    --}
+    --
+    --return $ls;
+    --end
+    --
+    --return _extend(_M, 'lib.model', 'article')
 
-$user = [];
-if ($this->member) {
-$user = [
-'author' = > $this->member->nickname,
-'username' = > $this->member->username,
-'avatar' => $this->member->getAvatar100x100Url(),
-'c' = > $this->member->can_virtual
-];
-}
-
-return [
-'id' = > encodeStr($this->id),
-'content' = > $with_content ? ($this->temp_content ?:$this->renderSliceCodeToContent()):'',
-'title' = > $this->title,
-'descr' => $this->descr,
-'created_at' = > $this->created_at_text,
-'member' = > $user,
-'tags' = > $with_tags ? $this->getTags():[]
-];
 end
-
-// 渲染文章内容加上代码片段
-function _M:renderSliceCodeToContent()
-
-$scs = SliceCodes :: find(['conditions' => 'article_id=' . $this->id]);
-foreach ($scs as $sc) {
-$this->content = str_replace('_$(_STATIC_CODE_ID_REPLACE_' . $sc->id . ')$_', "```" . $sc->lan . ':ref:' . $sc->id . "\n" . $sc->content . "```", $this->content, $count);
-if ($count < 1) {
-//                $sc->delete();
-info('游离代码片段，让用户删除', $sc);
-}
-}
-return $this->content;
-end
-
-
-// 获取所有文章关联的tag列表
-function _M:getTags()
-
-$tags = TagsMapArticle :: find(['conditions' => 'article_id=' . $this->id]);
-$ls = [];
-foreach ($tags as $tag) {
-$ls[] = $tag->tag_id;
-end
-
-if (!$ls)
-return [];
-
-$cond = 'id in (' . implode(',', $ls) . ')';
-//        info('find tag:===', $cond);
-
-/** @var Tags[] $tags */
-$tags = Tags:: find(['conditions' = > $cond]);
-
-$ls = [];
-foreach ($tags as $tag) {
-$ls[] = $tag->toSimpleJson();
-}
-
-return $ls;
-end
-
-return _extend(_M, 'lib.model', 'article')

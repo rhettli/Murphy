@@ -1,6 +1,6 @@
 {%- macro download_link(export_history) %}
     <a href="/admin/export_histories/download?id={{ export_history.id }}">下载</a><br/>
-{%- endmacro %}
+{%- /macro %}
 
 <form action="/admin/export_histories" method="get" class="search_form" autocomplete="off" id="search_form">
 

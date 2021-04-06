@@ -2,15 +2,15 @@
 
 {%- macro edit_link(object) %}
     <a href="/admin/payment_channels/edit/{{ object.id }}" class="modal_action">编辑</a>
-{%- endmacro  %}
+{%- /macro  %}
 
 {%- macro product_channel_link(object) %}
     <a href="/admin/payment_channels/product_channels?payment_channel_id={{ object.id }}" class="modal_action">产品渠道</a>
-{%- endmacro %}
+{%- /macro %}
 
 {%- macro platforms_link(object) %}
     <a href="/admin/payment_channels/platforms?id={{ object.id }}" class="modal_action">支持平台</a>
-{%- endmacro %}
+{%- /macro %}
 
 {{ simple_table(payment_channels, [
     'ID': 'id', '名称': 'name', '商户名称': 'mer_name', 'payment_type':'payment_type_text','产品渠道': 'product_channel_link','支持平台':'platforms_link','状态': 'status_text',

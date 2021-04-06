@@ -12,7 +12,7 @@
         {% macro username(comment) %}
         用户Id:{{comment.user_id}}
         用户昵称:{{comment.user.nickname}}<br/>
-        {% endmacro %}
+        {% /macro %}
 
 {{ simple_table(source, [
 'ID': 'id', '名称': 'name','用户': 'username','时间': 'created_at_text']) }}

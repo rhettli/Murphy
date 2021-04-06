@@ -2,12 +2,12 @@
 
 --- get ssdb0 handler,config it at conf/conf.lua [获取ssdb链接句柄,在conf/conf.lua中配置 ssdb0]
 __SSDB_CACHE0 = function()
-    return _import('lib.redis'):new('ssdb0')
+    return _import('oshine/woo_mvc@1.?:redis'):new('ssdb0')
 end
 
 --- get redis0 handler [获取redis链接句柄]
 __REDIS_CACHE0 = function()
-    return _import('lib.redis'):new('redis0')
+    return _import('oshine/woo_mvc@1.?:redis'):new('redis0')
 end
 
 --- get redis0 handler [获取redis链接句柄,共数据存储使用]
@@ -35,25 +35,37 @@ __STR_SUB_TO_LEFT = function(str, to)
     return _str_sub(str, _str_rindex(str, to) + 1, #str)
 end
 
-end_of_day = function()
+__DECODE_ID = function(id)
 
+    return
 end
 
-end_of_month = function()
+__ENCODE_ID = function(id)
 
+    return
 end
 
-end_of_week = function()
 
-end
 
-begin_of_month = function()
-
-end
-
-begin_of_day = function()
-
-end
+--end_of_day = function()
+--
+--end
+--
+--end_of_month = function()
+--
+--end
+--
+--end_of_week = function()
+--
+--end
+--
+--begin_of_month = function()
+--
+--end
+--
+--begin_of_day = function()
+--
+--end
 
 -- 获取多国语言
 function __TI8(p, lan, ...)
@@ -66,3 +78,57 @@ function __TI8(p, lan, ...)
     end
     return _import('conf.i8_' .. lan)[p]
 end
+
+__try_lock = function(lock_key, request_id, func, ...)
+    if func == nil then
+        assert(false, 'params 2 must be func')
+    end
+    if nil == request_id then
+        request_id = _time(true)
+    end
+
+    local SET_IF_NOT_EXIST = "NX";
+    local SET_WITH_EXPIRE_TIME = "PX";
+
+    local RELEASE_SUCCESS = 1;
+    local LOCK_SUCCESS = "OK";
+
+    local expireTime = 10000
+
+    local redis = _import('lib.redis'):new('redis0')
+
+    while true do
+        --枷锁
+        local r = redis:exec('set', lock_key, request_id, SET_IF_NOT_EXIST, SET_WITH_EXPIRE_TIME, expireTime)
+        if LOCK_SUCCESS == r then
+            local status, rf = pcall(func, ...)
+
+            -- 解锁
+            local script = "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
+            local result = redis:eval(script, lock_key, request_id);
+            redis:close()
+            print("\n", 'eveal:', result, "\n")
+            if RELEASE_SUCCESS ~= result * 1 then
+                assert(false, 'redis unlock error')
+            end
+            -- 解锁完毕后，判断回调是否成功，失败直接终止程序
+            if status == false then
+                assert(false, "cal func err," .. debug.traceback())
+            end
+
+            return rf
+        else
+            _sleep(10)
+        end
+    end
+end
+
+--- 比如使用member model:__model.member.findFirstById(1)
+--- find a rows:member model:__model.member.find({conditions={id=1}})
+---@return oshine.woo_mvc@1.?:model
+__model = setmetatable({}, {
+    __index = function(_, v)
+        --print('__model:',v)
+        return _new_model(v)
+    end
+})

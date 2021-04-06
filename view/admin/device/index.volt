@@ -12,7 +12,7 @@
 
 {% macro edit(op) %}
 <a href="/admin/device/edit?id={{op.id}}" class='modal_action'>编辑</a>
-{% endmacro %}
+{% /macro %}
 
 
 {% simple_table(devices, {id='ID', platform='运行平台', device_no='设备号', ip='ip地址',status_text='状态',

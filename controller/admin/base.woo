@@ -3,10 +3,10 @@ local _M = {}
 function _M:new(o)
     --o = o and o:new() or {}
 
-    print('self:==', _json_encode(o))
-    print('self:==', _json_encode(self))
+    --print('self:==', _json_encode(o))
+    --print('self:==', _json_encode(self))
 
-    --o = o:new()
+
     if o then
         _merge_left(self, o:new())
     end
@@ -16,18 +16,26 @@ end
 
 function _M:getConditions(value_name)
     local tb = { conditions = '' }
-    local params = _http_params(value_name)
+    local params = _http_params(value_name .. '[]')
     local bind = {}
     local filter = { eq = '=', gte = '>=', gt = '>', lt = '<', lte = '<=', neq = '!=', like = 'like' }
     if 'table' == type(params) then
         for i, v in pairs(params) do
             if _is_valid(v) then
-                i = _str_split(i, '_')[1]
-                tb.conditions = tb.conditions .. ' ' .. i .. filter[#i] .. ':' .. v .. ': and'
-                bind[i] = v
+
+                local prefix = _sub_ex('re', i, '_')
+                i = _sub_ex('ne', i, '_')
+
+                if filter[prefix] then
+                    tb.conditions = tb.conditions .. ' ' .. i .. filter[prefix] .. ':' .. i .. ': and'
+                    bind[i] = v
+                else
+                    print('conditions rule not match:', i, v)
+                end
             end
         end
     end
+
     tb.conditions = _rtrim(tb.conditions, 'and')
     tb.bind = bind
     return tb
@@ -36,7 +44,9 @@ end
 function _M:assign(object, value_name)
     local params = _http_params(value_name .. '[]')
 
-    assert('table' == type(params), 'params must model table')
+    --print('assign:===', _json_encode(params))
+
+    assert(type(object) == 'table', 'params must model table')
 
     for i, v in pairs(params) do
         object[i] = v
@@ -44,30 +54,66 @@ function _M:assign(object, value_name)
 end
 
 ---render a volt file
-function _M:render(tpl, dt)
+function _M:render(tpl)
     if not self._view then
-        self._view = _import('lib.view'):new()
+        self._view = require('oshine/woo_tpl@1.?:view'):new()
     end
-    if dt then
-        self._view = dt
+
+    local ajax = _http_header('x-requested-with') == 'XMLHttpRequest' and 'ajax' or ''
+
+    -- ========= render start ===========
+    local tpl_dir = _DIR .. '/view/'
+
+    _http_header('Content-Type', 'text/html;charset=utf-8')
+
+    local f
+
+    local store_key = tpl
+
+    tpl = _str_replace(tpl, ".", "/") .. '.volt'
+
+    store_key = ajax .. store_key
+    f = _data_get(store_key)
+    if not f then
+
+        local view_file = tpl_dir .. tpl;
+        print('vf:===', view_file)
+        f = _cat(view_file, true)
+        if not f then
+            assert(false, 'view not exist:' .. view_file)
+        end
+
+        if '' == ajax then
+
+            local parent_tpl = tpl_dir .. '/layouts/' .. _sub_ex('n', tpl, '/') .. '.volt';
+            local admin_content = _cat(parent_tpl, true)
+            --admin_content = _str_split(admin_content, '{{#content#}}')
+            f = _str_replace(admin_content, "{{#content#}}", f, 1) -- admin_content[1] .. f .. admin_content[2]
+
+            -- store to cache
+
+        end
+
+        _data_put(store_key, f)
     end
-    self._view:render(tpl)
+
+    self._view:render(f)
 end
 
 function _M:update()
     local id = _http_params('id')
     assert(_is_valid(id), 'no id')
 
-    local _model = _new_model(self.model_name)
-
-    local model = _model:findFirstById(_http_params('id'))
+    local model = __model[self.model_name]:findFirstById(id)
     if _is_valid(model) then
+        print('update valid ok:===', model.nickname)
         self:assign(model, self.model_name)
 
         self:_beforeUpdate(model)
 
         model:save()
     end
+
     return self:renderJSON()
 end
 
@@ -90,9 +136,7 @@ function _M:edit()
     local id = _http_params('id')
     assert(_is_valid(id), 'no id')
 
-    local new_model = _new_model(self.model_name)
-
-    local model = new_model:findFirstById(_http_params('id'))
+    local model = __model[self.model_name]:findFirstById(id)
 
     self:_beforeEdit(model)
 
@@ -113,20 +157,14 @@ function _M:_beforeIndex(model)
 end
 
 function _M:index()
-    if not self.model_name then
-        print('this model not implement')
-        return
-    end
-
-    print('===admin.base.index:===', self.model_name)
-    local mod = _new_model(self.model_name)
+    assert(self.model_name, 'this model not implement')
 
     local cond = self:getConditions(self.model_name)
-    print('got conditions:==', _json_encode(cond))
+    --print('got conditions:==', _json_encode(cond))
 
     local page = _http_params('page')
-    page = page == '' and 1 or page
-    local res = mod:findPagination(cond, page * 1, 30)
+    page = page and page or 1
+    local res = __model[self.model_name]:findPagination(cond, page * 1, 30)
 
     self:_beforeIndex(res)
 
@@ -135,9 +173,9 @@ end
 
 function _M:view(name, data)
     if not self._view then
-        self._view = _import('lib.view'):new()
-        self._view.view['admin_name'] = "1"
-        self._view.view['operator_username'] = "2"
+        self._view = require('oshine/woo_tpl@1.?:view'):new()
+        self._view.view['admin_name'] = "woo 后台管理系统"
+        self._view.view['operator_username'] = "admin"
     end
 
     self._view.view[name] = data
@@ -146,4 +184,4 @@ function _M:view(name, data)
     return self
 end
 
-return _extend(_M, "lib.controller")
+return _extend(_M, "oshine/woo_mvc@1.?:controller")

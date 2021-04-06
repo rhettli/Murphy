@@ -7,7 +7,7 @@
             {% endfor %}
         {% endfor %}
     {% endif %}
-{%- endmacro %}
+{%- /macro %}
 
 <form action="/admin/operating_records" method="get" class="search_form" autocomplete="off" id="search_form">
 

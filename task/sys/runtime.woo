@@ -1,0 +1,28 @@
+return {
+    clear = function(p)
+        -- todo delete file with p[1]
+        _ls(_DIR .. '/runtime', function(f)
+            if f.name == 'runtime' then
+                return
+            end
+
+            _rm(f.path)
+        end)
+        print('Done')
+    end,
+    list = function(p)
+        local dir = p[1] and '/'..p[1] or ''
+        _ls(_DIR .. '/runtime' .. dir, function(f)
+            if f.name == 'runtime' then
+                return
+            end
+            if f.isDir then
+                print(_sub_ex('re', _str_replace(f.path, '\\', '/'), '/') .. '', '\t')
+            else
+                print('\t', f.name)
+            end
+
+        end)
+        print('\nYou can clear runtime file with: woo murphy runtime clear ')
+    end
+}

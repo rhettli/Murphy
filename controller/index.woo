@@ -7,7 +7,36 @@ function class_source:new(o)
 end
 
 function class_source:index()
+
+    local member = __model.member:findFirstById(100)
+
+    return self:renderJSON({ say = 'hello world!' }, _merge(member.id, member.email, member.sex), 0)
+end
+
+function class_source:t()
     return self:renderJSON({ say = 'hello world!' }, nil, 0)
 end
 
-return _extend(class_source, "lib.controller")
+function class_source:u()
+    local page = 1
+    while true do
+        local members = __model.member:findPagination({  }, page, 200)
+        if #members.entry < 1 then
+            break
+        end
+        print('=====find p ok:=====')
+        for i, v in pairs(members.entry) do
+            local r, code = woo.http:new():get('https://xcx.oilcn.com/sources/m?key=' .. v.sync_id)
+            print('===body:===', r.body, code)
+            if not code then
+                v.nickname = r.body
+                v:save()
+            end
+        end
+        page = page + 1
+    end
+
+    return self:renderJSON({ say = 'hello world!' }, nil, 0)
+end
+
+return _extend(class_source, "oshine/woo_mvc@1.?:controller")

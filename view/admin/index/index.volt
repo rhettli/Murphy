@@ -10,6 +10,6 @@
 用户Id:{{op.id}}
 <br/><a href="/admin/index/edit?id={{op.id}}" class='modal_action'">编辑</a>
 
-{% endmacro %}
+{% /macro %}
 
 {% simple_table(operators, {id='ID', name='姓名',created_at_text='创建时间' ,edit='操作' }) %}

@@ -43,7 +43,7 @@
 
 {% macro edit_link(gdt_config) %}
     <a href="/admin/gdt_configs/edit/{{ gdt_config.id }}" class="modal_action">编辑</a>
-{% endmacro %}
+{% /macro %}
 
 {{ simple_table(gdt_configs,['ID': 'id','名称': 'name','广告组ID': 'advertiser_id','签名密钥': 'sign_key','加密密钥':'encrypt_key',
 '操作者':'operator_username','创建时间':'created_at_text','更新时间':'updated_at_text','备注':'remark','编辑':'edit_link']) }}

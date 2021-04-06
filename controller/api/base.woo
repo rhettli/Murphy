@@ -131,4 +131,4 @@ function class_base:checkRouter()
     return false
 end
 
-return _extend(class_base, "lib.controller", { skip_router = skip_router })
+return _extend(class_base, "oshine/woo_mvc@1.?:controller", { skip_router = skip_router })

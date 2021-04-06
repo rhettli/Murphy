@@ -3,23 +3,23 @@
 {% macro client_info(marketing_config) %}
     应用ID: {{ marketing_config.client_id }}</br>
     应用密钥: {{ marketing_config.client_secret }}
-{% endmacro %}
+{% /macro %}
 
 {% macro app_info(marketing_config) %}
     安卓应用宝id: {{ marketing_config.android_app_id }}</br>
     AppStore Id: {{ marketing_config.ios_app_id }}
-{% endmacro %}
+{% /macro %}
 
 {% macro user_action_info(marketing_config) %}
     android用户行为源id: {{ marketing_config.android_user_action_set_id }}</br>
     ios用户行为源id: {{ marketing_config.ios_user_action_set_id }}
-{% endmacro %}
+{% /macro %}
 
 {% macro refresh_token_info(marketing_config) %}
     {#refresh_token: {{ marketing_config.refresh_token }}</br>#}
     refresh_token过期: {{ marketing_config.refresh_token_expire_at_text }}</br>
     access_token过期: {{ marketing_config.access_token_expire_at_text }}
-{% endmacro %}
+{% /macro %}
 
 {% macro operate_lind(marketing_config) %}
     {% if _is_allowed('marketing_configs', 'edit') %}
@@ -34,7 +34,7 @@
     {% if _is_allowed('marketing_configs', 'user_action_sets') %}
         <a href="/admin/marketing_configs/user_action_sets/{{ marketing_config.id }}&type=IOS" class="user_action_sets">新建ios用户行为源</a><br/>
     {% endif %}
-{% endmacro %}
+{% /macro %}
 
 {{ simple_table(marketing_configs, ['id': 'id','名称': 'name','广告组ID': 'gdt_account_id','marketing应用':'client_info',
 '客户端ID':'app_info','用户行为源id':'user_action_info','token过期时间':'refresh_token_info',
