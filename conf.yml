@@ -5,7 +5,7 @@ type: http ws
 # 墨菲:  murphy-http
 
 # 访问的文件即使不是lua可执行文件也输出（不安全，建议使用static映射，当然整站都是静态页面就另当别论了）
-output_file: 0
+send_file: 0
 
 # static 为静态文件夹映射,有扩展名的则映射单个文件
 static_map:
