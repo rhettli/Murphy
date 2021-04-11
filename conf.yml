@@ -32,5 +32,7 @@ cache_code: 1
 before_run: _before_run.woo
 
 
+thread_num: 400
+
 
 

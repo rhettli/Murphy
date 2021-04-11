@@ -13,6 +13,14 @@ function class_source:index()
     return self:renderJSON({ say = 'hello world!' }, _merge(member.id, member.email, member.sex), 0)
 end
 
+-- index/memberTotal
+function class_source:memberTotal()
+
+    local r = __queue.member.getTotal()
+
+    return self:renderJSON({ say = r }, '', 0)
+end
+
 function class_source:t()
     return self:renderJSON({ say = 'hello world!' }, nil, 0)
 end

@@ -15,7 +15,7 @@ return {
                 return
             end
 
-            local ff = _sub_ex('re', _del(_str_replace(f.path, '\\', '/'), '.woo', './'), '/')
+            local ff = _sub_ex('re', _del(woo.DEL_NORMAL, _str_replace(f.path, '\\', '/'), '.woo', './'), '/')
             if _end_with(ff, 'murphy') then
                 return
             end

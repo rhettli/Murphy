@@ -21,6 +21,11 @@ function _M:_afterSave()
     print('after save...')
 end
 
+function _M:_queGetTotal()
+
+    print('after save...')
+end
+
 function _M:toJson()
     return {
         id = self.id,

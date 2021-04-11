@@ -11,14 +11,6 @@ return {
     --- [click here to register (your name)](https://coder.wooyri.com/reg)  | [点击这里注册你的用户](https://coder.wooyri.com/reg)
     package_name = 'oshine/murphy',
 
-    --- if 1 will cache code,otherwise will not. | 是否缓存woo代码，开启缓存代码后，需要更新代码，请执行 woo --update_code pid
-    cache_code = _env('WOO_CACHE_CODE') or 0, -- 从环境变量中获取是否缓存代码
-
-    --- total thread instance for handle use request. | 处理线程总数量，超过400，新的连接处于等待状态，直到有线程实例被释放
-    ---
-    --- cause thread instance be cached,too much instance will spend too much memory. | 由于线程实例被缓存，太多的线程会造成内存占用，这里使用400
-    thread_num = 400,
-
     --- where to install self | 本包安装在哪里?
     ---
     --- global:install in global package path | global:安装到全局lib目录,一般是~/wpm
@@ -33,7 +25,8 @@ return {
     --- add folder to env,make sure all in it can be execute anywhere.
     ---
     --- 添加目录到环境变量，使得其中的可执行文件可以在任何地方直接运行
-    -- add_env='cmd',
+    -- add_path='cmd',
+    -- add_env={APP_PATH='./**'},
 
     --- export cmd ,and you can run it anywhere,cmd must in cmd folder
     -- export_cmd='wpm',

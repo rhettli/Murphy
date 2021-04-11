@@ -1,23 +1,18 @@
--- check if plugs is running when start/启动时检查插件是否运行
+-- 启动http服务时运行一次，用于配置程序
 
 
+package.path = '@' .. _DIR .. '/vendor/?.woo'
 
+print('before run:===', package.path)
 
---print(_pwd())
---print(_cat('../murphy/lib/utils.woo',true))
+local env = require('oshine/woo_mvc@1.?:env')
 
+local addr, psw, db, db_conn = env('redis_addr', 'redis_psw', 'redis_db', 'db_conn')
 
-package.path='@'.._DIR..'/vendor/?.woo'
+require('oshine/woo_mvc@1?:redis')
+        .conf({ addr = addr, psw = psw, db = db })
 
-print('before=========run===',package.path)
-
-local env = require( 'oshine/woo_mvc@1.?:env')
-
-print(_DIR)
---print('*************',env('sql_conn'))
-
-_data_put('sql_conn', env('sql_conn'))
-
-
+require('oshine/woo_mvc@1?:db')
+        .conf({ db_conn = db_conn })
 
 

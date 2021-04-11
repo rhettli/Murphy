@@ -132,3 +132,12 @@ __model = setmetatable({}, {
         return _new_model(v)
     end
 })
+
+--- 比如使用queue/member.getTotal() 函数：__queue.member.getTotal(id,name,...)
+---@return oshine.woo_mvc@1.?:queue
+__queue = setmetatable({}, {
+    __index = function(_, v)
+        --print('__model:',v)
+        return require('oshine/woo_mvc@1?:queue')
+    end
+})
