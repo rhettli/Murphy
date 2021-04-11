@@ -3,6 +3,7 @@ main
 .vscode
 go.sum
 .xml
+*.br
 runtime/*
 vendor
 
