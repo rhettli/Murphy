@@ -2,10 +2,10 @@
 
 return {
     cloud_file_path = '#home#/Desktop/cloud_file_path/',
-    database = {
-        adapter = 'mysql',
-        conn = _data_get('db_conn')
-    },
+--    database = {
+--        adapter = 'mysql',
+--        conn = _data_get('db_conn')
+--    },
     ssdb0 = {
         addr = '127.0.0.1:8888',
         psw = '',

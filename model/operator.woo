@@ -9,11 +9,16 @@ function _M:new(o)
     --_merge(self,o)
 
     self.STATUS_TEXT = { [1] = '有效', [2] = '已禁用' }
+    self.skip = { 'login' }
 
     return self
 end
 
 --_M.STATUS_TEXT = { [1] = '有效', [2] = '已禁用' }
+
+function _M:isBlocked()
+    return self.status == 2
+end
 
 function _M:toJson()
     return {
@@ -23,4 +28,4 @@ function _M:toJson()
     }
 end
 
-return _extend(_M, 'lib.model', 'operator')
+return _extend(_M, 'oshine/woo_mvc@1.?:model', 'operator')

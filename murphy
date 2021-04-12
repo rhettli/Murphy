@@ -1,6 +1,6 @@
 ---Author: liyanxi
 
-local m=require('task/sys/murphy')
+local m=require('oshine/woo_mvc_task@1.?:task')
 if not m then
     print('please run cli ar murphy root folder. / 请在Murphy更目录下运行命令')
     return

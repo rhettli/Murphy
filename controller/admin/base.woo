@@ -6,6 +6,26 @@ function _M:new(o)
     --print('self:==', _json_encode(o))
     --print('self:==', _json_encode(self))
 
+    print('base new...')
+    local uri = (_http_request(('uri')))
+    if not _in_array(uri, { '/admin/operator/', '/admin/operator/login' }) then
+        local id = _http_cookie('i');
+        local md5 = _http_cookie('m');
+        print('base new...2', id, md5)
+        if not _is_valid(id) or not _is_valid(md5) then
+            _http_redirect('/admin/operator/', 302)
+            assert(false, 'login again')
+        else
+
+            local op = __model.operator:findById(id)
+            print('op find done:')
+            print(op)
+            if not op or op.password ~= md5 then
+                _http_redirect('/admin/operator/', 302)
+                assert(false, 'login again')
+            end
+        end
+    end
 
     if o then
         _merge_left(self, o:new())
@@ -83,7 +103,7 @@ function _M:render(tpl)
             assert(false, 'view not exist:' .. view_file)
         end
 
-        if '' == ajax then
+        if '' == ajax and self.show_list ~= false then
 
             local parent_tpl = tpl_dir .. '/layouts/' .. _sub_ex('n', tpl, '/') .. '.volt';
             local admin_content = _cat(parent_tpl, true)
@@ -157,17 +177,18 @@ function _M:_beforeIndex(model)
 end
 
 function _M:index()
-    assert(self.model_name, 'this model not implement')
+    local res = {}
+    if self.model_name and self.show_list ~= false then
+        local cond = self:getConditions(self.model_name)
+        --print('got conditions:==', _json_encode(cond))
 
-    local cond = self:getConditions(self.model_name)
-    --print('got conditions:==', _json_encode(cond))
+        local page = _http_params('page')
+        page = page and page or 1
+        res = __model[self.model_name]:findPagination(cond, page * 1, 30)
+        --print(_json_encode(res))
 
-    local page = _http_params('page')
-    page = page and page or 1
-    local res = __model[self.model_name]:findPagination(cond, page * 1, 30)
-
+    end
     self:_beforeIndex(res)
-
     self:view(self.model_name .. 's', res):render("admin." .. self.model_name .. ".index")
 end
 

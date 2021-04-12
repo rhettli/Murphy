@@ -5,14 +5,15 @@ package.path = '@' .. _DIR .. '/vendor/?.woo'
 
 print('before run:===', package.path)
 
-local env = require('oshine/woo_mvc@1.?:env')
+local env = require('oshine/woo_env@1.?:env'):new(_DIR .. '/.env')
 
-local addr, psw, db, db_conn = env('redis_addr', 'redis_psw', 'redis_db', 'db_conn')
+local addr = env:get('redis_addr')
+local psw = env:get('redis_psw')
+local db = env:get('redis_db')
+local db_conn = env:get('db_conn')
 
-require('oshine/woo_mvc@1?:redis')
-        .conf({ addr = addr, psw = psw, db = db })
+require('oshine/woo_mvc@1.?:redis').conf({ addr = addr, psw = psw, db = db })
 
-require('oshine/woo_mvc@1?:db')
-        .conf({ db_conn = db_conn })
+require('oshine/woo_mvc@1.?:db').conf({ db_conn = db_conn, adapter = 'mysql' })
 
 

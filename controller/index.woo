@@ -8,9 +8,9 @@ end
 
 function class_source:index()
 
-    local member = __model.member:findFirstById(100)
+--    local member = __model.member:findFirstById(100)
 
-    return self:renderJSON({ say = 'hello world!' }, _merge(member.id, member.email, member.sex), 0)
+    return self:renderJSON({ say = 'hello world!' }, '', 0)
 end
 
 -- index/memberTotal

@@ -12,17 +12,18 @@
 
 {% macro edit(op) %}
 
-<br/><a href="/admin/cw_package/edit?id={{op.id}}" class='modal_action'>编辑</a>
+<br/><a href="/admin/package/edit?id={{op.id}}" class='modal_action'>编辑</a>
 
 {% /macro %}
 
 
 {% macro user_details(op) %}
+提交用户:{{op.member.nickname}}<br/>
 项目名称:{{op.name}}<br/>
 注册端口:{{op.port}}<br/>
 标题:{{op.title}}<br/>
 备注:{{op.remark}}<br/>
 {% /macro %}
 
-{% simple_table(cw_packages, {id='ID', user_details='项目说明', platform='运行平台',install_times='安装次数',status_text='状态',created_at_time='创建时间' ,
+{% simple_table(packages, {id='ID', user_details='项目说明', platform='运行平台',install_times='安装次数',status_text='状态',created_at_time='创建时间' ,
     edit='操作' }) %}
