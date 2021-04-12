@@ -8,6 +8,7 @@ function _M:new(o)
 
     print('base new...')
     local uri = (_http_request(('uri')))
+    -- 登录和登录提交接口不需要鉴权
     if not _in_array(uri, { '/admin/operator/', '/admin/operator/login' }) then
         local id = _http_cookie('i');
         local md5 = _http_cookie('m');
@@ -24,6 +25,7 @@ function _M:new(o)
                 _http_redirect('/admin/operator/', 302)
                 assert(false, 'login again')
             end
+            self._currentOperator = op
         end
     end
 
@@ -59,6 +61,10 @@ function _M:getConditions(value_name)
     tb.conditions = _rtrim(tb.conditions, 'and')
     tb.bind = bind
     return tb
+end
+
+function _M:currentOperator()
+    return self._currentOperator
 end
 
 function _M:assign(object, value_name)
