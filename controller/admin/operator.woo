@@ -6,7 +6,7 @@ local _M = {}
 -- [P:operator|管理员]
 function _M:new()
     self.model_name = 'operator'
-    self.show_list = false
+    self.show_list = true
     return self
 end
 
@@ -47,7 +47,11 @@ function _M:edit()
 end
 
 function _M:dashboard()
+    self:view(self.model_name, {}):render('admin.' .. self.model_name .. '.dashboard')
+end
 
+function _M:_beforeIndex()
+    self.show_list = false -- index是login页面不显示navbar
 end
 
 function _M:login()

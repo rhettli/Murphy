@@ -57,7 +57,6 @@ function __TI8(p, lan, ...)
     return _import('conf.i8_' .. lan)[p]
 end
 
-
 --- 比如使用member model:__model.member:findFirstById(1)
 --- find a rows:member model:__model.member:find({conditions={id=1}})
 --- @return oshine.woo_mvc@1.?:model
@@ -76,3 +75,5 @@ __queue = setmetatable({}, {
         return require('oshine/woo_mvc@1?:queue')
     end
 })
+
+__admin_psw = 'oshine-murphy'

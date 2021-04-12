@@ -34,9 +34,9 @@
      style="padding-left: 10px;padding-right: 10px;">
 
     <ul class="nav navbar-nav">
-        {%if __IS_ALLOWED('product_channels','index')  then %}
+        {%if __IS_ALLOWED('operator','dashboard')  then %}
             <li>
-                <a href="/admin/product_channels/">产品渠道</a>
+                <a href="/admin/operator/dashboard">看板</a>
             </li>
         {% endif %}
 

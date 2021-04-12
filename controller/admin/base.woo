@@ -6,15 +6,18 @@ function _M:new(o)
     --print('self:==', _json_encode(o))
     --print('self:==', _json_encode(self))
 
-    print('base new...')
-    local uri = (_http_request(('uri')))
+    local uri = (_http_request(('path')))
+    if __admin_psw and uri == '/admin/operator/' and _http_params('admin_psw') ~= __admin_psw then
+        assert(false, 'admin_psw error')
+    end
+
     -- 登录和登录提交接口不需要鉴权
     if not _in_array(uri, { '/admin/operator/', '/admin/operator/login' }) then
         local id = _http_cookie('i');
         local md5 = _http_cookie('m');
         print('base new...2', id, md5)
         if not _is_valid(id) or not _is_valid(md5) then
-            _http_redirect('/admin/operator/', 302)
+            _http_redirect('/admin/operator/?admin_psw=' .. (__admin_psw or ''), 302)
             assert(false, 'login again')
         else
 
@@ -22,7 +25,7 @@ function _M:new(o)
             print('op find done:')
             print(op)
             if not op or op.password ~= md5 then
-                _http_redirect('/admin/operator/', 302)
+                _http_redirect('/admin/operator/?admin_psw=' .. (__admin_psw or ''), 302)
                 assert(false, 'login again')
             end
             self._currentOperator = op
@@ -165,6 +168,7 @@ function _M:edit()
     local model = __model[self.model_name]:findFirstById(id)
 
     self:_beforeEdit(model)
+
 
     self:view(self.model_name, model):render('admin.' .. self.model_name .. '.edit')
 end
