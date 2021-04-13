@@ -28,7 +28,7 @@ return {
             return
         end
 
-        local arg = _del(woo.DEL_NORMAL,_args(), 1)
+        local arg = _del(woo.DEL_NORMAL, _args(), 1)
 
         _out('Run with arg:', arg, '\n')
 
@@ -38,9 +38,6 @@ run with
     ]]
             print(help_str)
         end
-
-        -- add db config
-        _data_put('sql_conn', require('oshine/woo_mvc@1.?:env')('sql_conn'))
 
         if _in_array(arg[1], { "-h", '?', '--help', "" }) then
             help_func()
@@ -59,7 +56,7 @@ run with
         elseif arg[1] == 'runtime' then
             local runtime = _DIR .. '/task/sys/runtime'
             if _in_array(arg[2], { 'clear', 'list' }) then
-                require(runtime)[arg[2]](_del(woo.DEL_NORMAL,arg, 2, 1))
+                require(runtime)[arg[2]](_del(woo.DEL_NORMAL, arg, 2, 1))
             else
                 print(({ en = 'admin #2 not match any rule:' .. arg[2], zh = 'admin 参数 #2 未匹配到命令:' .. arg[2] })[lan])
                 help_func(arg[1])
@@ -67,15 +64,28 @@ run with
         elseif arg[1] == 'task' then
             local task = _DIR .. '/task/sys/task'
             if _in_array(arg[2], { 'add', 'list' }) then
-                require(task)[arg[2]](_del(woo.DEL_NORMAL,arg, 2, 1))
+                require(task)[arg[2]](_del(woo.DEL_NORMAL, arg, 2, 1))
+            else
+                print(({ en = 'admin #2 not match any rule:' .. arg[2], zh = 'admin 参数 #2 未匹配到命令:' .. arg[2] })[lan])
+                help_func(arg[1])
+            end
+        elseif arg[1] == 'install' then
+            -- start install/开始安装
+            -- add db config
+            _data_put('sql_conn', require('oshine/woo_env@1.?:env'):new():get('sql_conn'))
+
+        elseif arg[1] == 'sql' then
+            local sql = _DIR .. '/task/sys/sql'
+            if _in_array(arg[2], { 'update', 'create' }) then
+                require(sql)[arg[2]](_del(woo.DEL_NORMAL, arg, 2, 1))
             else
                 print(({ en = 'admin #2 not match any rule:' .. arg[2], zh = 'admin 参数 #2 未匹配到命令:' .. arg[2] })[lan])
                 help_func(arg[1])
             end
         elseif arg[1] == 'queue' then
             local queue = _DIR .. '/task/sys/queue'
-            if _in_array(arg[2], { 'start','stop', 'reload', 'add', 'list' }) then
-                require(queue)[arg[2]](_del(woo.DEL_NORMAL,arg, 2, 1))
+            if _in_array(arg[2], { 'start', 'stop', 'reload', 'add', 'list' }) then
+                require(queue)[arg[2]](_del(woo.DEL_NORMAL, arg, 2, 1))
             else
                 print(({ en = 'admin #2 not match any rule:' .. arg[2], zh = 'admin 参数 #2 未匹配到命令:' .. arg[2] })[lan])
                 help_func(arg[1])
@@ -87,7 +97,7 @@ run with
             -- run with task
             local f = _DIR .. '/task/' .. _str_replace(arg[1], '.', '/') .. '.woo'
             if _file_exist(f) then
-                require('task/' .. arg[1])[arg[2]](_del(woo.DEL_NORMAL,arg, 2, 1))
+                require('task/' .. arg[1])[arg[2]](_del(woo.DEL_NORMAL, arg, 2, 1))
             else
                 print('not find any task file with:' .. f)
             end

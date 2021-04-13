@@ -1,0 +1,57 @@
+return {
+    update = function()
+        local sqls = __model.sql:find()
+        local _sql_handler
+
+        local sql_handler = function()
+            if _sql_handler then
+                return _sql_handler
+            end
+            local c = woo.orm:new()
+            local ok, err = c:open(params.adapter, params.db_conn)
+            if ok then
+            else
+                error("connect to database err", err)
+            end
+            _sql_handler = c
+            return c
+        end
+
+        _ls(_DIR .. '/db', function(f, is_folder)
+            if f.name == 'db' then
+                return
+            end
+            local updated = false
+            for i, v in pairs(sqls) do
+                if v.sql == f.name then
+                    updated = true
+                    break
+                end
+            end
+
+            if updated then
+                local txt_sql = _cat(f.name, true)
+                local _, e = sql_handler():exec((txt_sql))
+                if not e then
+                    local s = __model.sql:new()
+                    s.sql = f.name
+                    s.created_at = _time()
+                    s:save()
+                end
+            end
+        end)
+        if _sql_handler then
+            _sql_handler:close()
+        end
+    end,
+    create = function(p)
+        if not p[1] then
+            print("need sql file name,eg:woo murphy sql create create_member_table_v1")
+            return
+        end
+        local sqlFile = _DIR .. '/db/' .. p[1] .. ".sql"
+        _file_save(sqlFile, "")
+
+        print("create sql file:" .. sqlFile .. ' done')
+    end
+}

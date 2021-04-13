@@ -1,6 +1,6 @@
 return {
     index = function()
-        _file_in_folder(_DIR .. '/controller/admin', function(f, is_folder)
+        _ls(_DIR .. '/controller/admin', function(f, is_folder)
             f = _str_replace(f, '\\', '/')
             local res = _str_split(f, '/')
             --print(res[#res])
