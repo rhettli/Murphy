@@ -135,7 +135,7 @@ function _M:update()
 
     local model = __model[self.model_name]:findFirstById(id)
     if _is_valid(model) then
-        print('update valid ok:===', model.nickname)
+        --print('update valid ok:===', model.nickname)
         self:assign(model, self.model_name)
 
         self:_beforeUpdate(model)
@@ -190,12 +190,10 @@ function _M:index()
     local res = {}
     if self.model_name and self.show_list ~= false then
         local cond = self:getConditions(self.model_name)
-        --print('got conditions:==', _json_encode(cond))
 
         local page = _http_params('page')
         page = page and page or 1
         res = __model[self.model_name]:findPagination(cond, page * 1, 30)
-        --print(_json_encode(res))
 
     end
     self:_beforeIndex(res)

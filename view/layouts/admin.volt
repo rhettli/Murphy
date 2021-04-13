@@ -54,14 +54,14 @@
                             <a href="/admin/device/">用户设备列表</a>
                         </li>
                     {% endif %}
-                    {%if __IS_ALLOWED('sms_histories','index')  then %}
-                        <li><a href="/admin/sms_histories">短信验证列表</a></li>
+                    {%if __IS_ALLOWED('sms_his','index')  then %}
+                        <li><a href="/admin/sms_his/">短信验证列表</a></li>
                     {% endif %}
                 </ul>
             </li>
         {% endif %}
 
-        {%if __IS_ALLOWED('products','index') or __IS_ALLOWED('banners','index') or __IS_ALLOWED('skus','index') or __IS_ALLOWED('third_photo','index')  then %}
+        {%if __IS_ALLOWED('third_photo','index')  then %}
             <li>
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">项目管理<b class="caret"></b></a>
                 <ul class="dropdown-menu">
@@ -75,40 +75,10 @@
                             <a href="/admin/city_positions">开放城市列表</a>
                         </li>
                     {% endif %}
-                    {%if __IS_ALLOWED('enters','index')  then %}
+                    {%if __IS_ALLOWED('action','index')  then %}
                     <li>
-                        <a href="/admin/enters/">来源访问</a>
+                        <a href="/admin/action/">活动监测</a>
                     </li>
-                    {% endif %}
-
-                    {%if __IS_ALLOWED('report','index')  then %}
-                    <li>
-                        <a href="/admin/report/">行为监测</a>
-                    </li>
-                    {% endif %}
-                </ul>
-            </li>
-        {% endif %}
-
-        <!--微信管理-->
-        {%if __IS_ALLOWED('weixin_menu_templates','index') or __IS_ALLOWED('push_messages','index') or __IS_ALLOWED('weixin_template_messages','index')  then %}
-            <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">微信管理<b class="caret"></b></a>
-                <ul class="dropdown-menu">
-                    {%if __IS_ALLOWED('weixin_menu_templates','index')  then %}
-                        <li><a href="/admin/weixin_menu_templates">微信菜单模板</a></li>
-                    {% endif %}
-                    {%if __IS_ALLOWED('push_messages','index')  then %}
-                        <li><a href="/admin/push_messages">离线消息配置</a></li>
-                    {% endif %}
-                    {%if __IS_ALLOWED('weixin_kefu_messages','index')  then %}
-                        <li><a href="/admin/weixin_kefu_messages">发送客服消息</a></li>
-                    {% endif %}
-                    {%if __IS_ALLOWED('weixin_template_messages','index')  then %}
-                        <li><a href="/admin/weixin_template_messages">发送模板消息</a></li>
-                    {% endif %}
-                    {%if __IS_ALLOWED('ge_tui_messages','index')  then %}
-                        <li><a href="/admin/ge_tui_messages">发送个推消息</a></li>
                     {% endif %}
                 </ul>
             </li>
@@ -122,34 +92,22 @@
                     统计<b class="caret"></b>
                 </a>
                 <ul class="dropdown-menu">
-                    {%if __IS_ALLOWED('stats','hours')  then %}
-                        <li><a href="/admin/stats/hours">小时统计</a></li>
+                    {%if __IS_ALLOWED('member','online')  then %}
+                        <li><a href="/admin/member/online">在线用户统计</a></li>
                     {% endif %}
-                    {%if __IS_ALLOWED('stats','days')  then %}
-                        <li><a href="/admin/stats/days">按天统计</a></li>
-                    {% endif %}
-                    {%if __IS_ALLOWED('active_users','day_rank_list')  then %}
-                        <li><a href="/admin/active_users/day_rank_list">在线用户统计</a></li>
-                    {% endif %}
-                    {%if __IS_ALLOWED('sms_histories','push_stat')  then %}
+
+                    {%if __IS_ALLOWED('sms_his','send')  then %}
                         <li class="dropdown-submenu">
-                            <a href="javascript:;" tabindex="-1">短信下发统计</a>
+                            <a href="javascript:;" tabindex="-1">登录统计（测试菜单）</a>
                             <ul class="dropdown-menu">
                                 {%if __IS_ALLOWED('sms_histories','login_stat')  then %}
-                                    <li><a href="/admin/sms_histories/login_stat">登录按天统计</a></li>
+                                    <li><a href="#">登录按天统计</a></li>
                                 {% endif %}
                                 {%if __IS_ALLOWED('sms_histories','login_hout_stat')  then %}
-                                    <li><a href="/admin/sms_histories/login_hour_stat">登录小时统计</a></li>
+                                    <li><a href="#">登录小时统计</a></li>
                                 {% endif %}
                             </ul>
                         </li>
-                    {% endif %}
-
-                    {%if __IS_ALLOWED('wap_visits', 'index')  then %}
-                        <li><a href="/admin/wap_visits">SEM落地页统计</a></li>
-                    {% endif %}
-                    {%if __IS_ALLOWED('word_visits', 'index')  then %}
-                        <li><a href="/admin/word_visits">SEM关键词统计</a></li>
                     {% endif %}
                 </ul>
             </li>
@@ -168,35 +126,26 @@
                             <a href="javascript:;" tabindex="-1">操作员管理</a>
                             <ul class="dropdown-menu">
                                 {%if __IS_ALLOWED('operator','index')  then %}
-                                    <li><a href="/admin/operator">操作员列表</a></li>
+                                    <li><a href="/admin/operator/list">操作员列表</a></li>
                                 {% endif %}
                                 {%if __IS_ALLOWED('operator','index')  then %}
-                                    <li><a href="/admin/operator_role">角色权限</a></li>
+                                    <li><a href="/admin/operator_role/">角色权限</a></li>
                                 {% endif %}
                                 {%if __IS_ALLOWED('operator_login_histories','operator_login_histories')  then %}
-                                    <li><a href="/admin/operator_login_histories">登录记录</a></li>
+                                    <li><a href="/admin/operator/login_his">登录记录</a></li>
                                 {% endif %}
                                 {%if __IS_ALLOWED('operating_records','index')  then %}
-                                    <li><a href="/admin/operating_record">操作记录</a></li>
+                                    <li><a href="/admin/operator/action_record">操作记录</a></li>
                                 {% endif %}
                             </ul>
                         </li>
                     {% endif %}
-                    {%if __IS_ALLOWED('partners','index')  then %}
-                        <li><a href="/admin/partners">推广渠道</a></li>
-                    {% endif %}
-                    {%if __IS_ALLOWED('channel_soft_versions','index')  then %}
-                        <li><a href="/admin/channel_soft_versions">推广渠道包</a></li>
-                    {% endif %}
+
                     {%if __IS_ALLOWED('partner_urls', 'index')  then %}
                         <li><a href="/admin/partner_urls">推广链接生成</a></li>
                     {% endif %}
-
-                    {%if __IS_ALLOWED('marketing_configs', 'index')  then %}
-                        <li><a href="/admin/marketing_configs">腾讯marketing配置</a></li>
-                    {% endif %}
                     {%if __IS_ALLOWED('sms_channels','index')  then %}
-                        <li><a href="/admin/sms_channels">短信渠道</a></li>
+                        <li><a href="/admin/sms_platform/">短信渠道</a></li>
                     {% endif %}
                     {%if __IS_ALLOWED('payment_channels','index')  then %}
                         <li><a href="/admin/payment_channels">支付渠道</a></li>
@@ -204,9 +153,6 @@
 
                     {%if __IS_ALLOWED('cw_version','index')  then %}
                         <li><a href="/admin/cw_version">软件升级管理</a></li>
-                    {% endif %}
-                    {%if __IS_ALLOWED('export_histories','index')  then %}
-                        <li><a href="/admin/export_histories">导出记录</a></li>
                     {% endif %}
 
                 </ul>

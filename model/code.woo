@@ -36,4 +36,4 @@ function _M:toJson()
     }
 end
 
-return _extend(_M, 'lib.model', 'code')
+return _extend(_M, 'oshine/woo_mvc@1.?:model', 'code')

@@ -1,4 +1,4 @@
-{% local t=simple_form(member, {url='',login_at_text='登录时间', data='登录地区'}) %}
+{% local t=simple_form(member, {login_at_text='登录时间', data='登录地区'}) %}
 
 
 {% t.input('nickname',{ label='昵称',width='50%' }) %}

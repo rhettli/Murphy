@@ -1,6 +1,6 @@
 -- 继承model
 
-local _M = _extend('lib.model', 'users')
+local _M = _extend('oshine/woo_mvc@1.?:model', 'users')
 
 function _M:new(o)
     o = o or {}

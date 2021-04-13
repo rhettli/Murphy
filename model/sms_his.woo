@@ -4,15 +4,13 @@ local _M = {}
 
 function _M:new(o)
     o = o or {}
-    --setmetatable(o, self)
-    --self.__index = self
-    -- use for edit page:/admin/member/edit
 
     return self
 end
 
 
-_M.STATUS_TEXT = { [1] = '有效', [2] = '已禁用' }
+_M.SEND_STATUS_TEXT = { [0] = '发送失败', [1] = '已发送' }
+_M.AUTH_STATUS_TEXT = { [0] = '未验证', [1] = '已验证' }
 
 function _M:_beforeSave()
     print('before save...')
@@ -29,4 +27,4 @@ function _M:toJson()
     }
 end
 
-return _extend(_M, 'oshine/woo_mvc@1.?:model', 'device')
+return _extend(_M, 'oshine/woo_mvc@1.?:model', 'sms_his')

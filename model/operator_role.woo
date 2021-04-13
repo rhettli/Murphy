@@ -22,4 +22,4 @@ function _M:toJson()
     }
 end
 
-return _extend(_M, 'lib.model', 'operator_role')
+return _extend(_M, 'oshine/woo_mvc@1.?:model', 'operator_role')

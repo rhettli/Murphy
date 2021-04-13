@@ -16,4 +16,4 @@ function _M:_afterSave()
     print('after save...')
 end
 
-return _extend(_M, 'lib.model', 'operator_permission')
+return _extend(_M, 'oshine/woo_mvc@1.?:model', 'operator_permission')

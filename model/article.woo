@@ -86,6 +86,6 @@ function _M:toJson()
     --return $ls;
     --end
     --
-    --return _extend(_M, 'lib.model', 'article')
+    --return _extend(_M, 'oshine/woo_mvc@1.?:model', 'article')
 
 end

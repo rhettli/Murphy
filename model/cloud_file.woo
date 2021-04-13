@@ -37,4 +37,4 @@ function _M:toJson()
     }
 end
 
-return _extend(_M, 'lib.model', 'cloud_file')
+return _extend(_M, 'oshine/woo_mvc@1.?:model', 'cloud_file')

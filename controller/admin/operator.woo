@@ -50,6 +50,18 @@ function _M:dashboard()
     self:view(self.model_name, {}):render('admin.' .. self.model_name .. '.dashboard')
 end
 
+function _M:list()
+    local res = {}
+
+    local cond = self:getConditions(self.model_name)
+
+    local page = _http_params('page')
+    page = page and page or 1
+    res = __model[self.model_name]:findPagination(cond, page * 1, 30)
+
+    self:view(self.model_name .. 's', res):render("admin." .. self.model_name .. ".list")
+end
+
 function _M:_beforeIndex()
     self.show_list = false -- index是login页面不显示navbar
 end
@@ -95,19 +107,20 @@ function _M:login()
         operator.active_at = _time();
         operator:update();
 
-        --if (class_exists('OperatorLoginHistories')) {
-        --    OperatorLoginHistories :: record(operator, ip);
-        --}
+        -- todo 超过一定时间重置密码
+        --if (_time() - operator.password_updated_at > 3600 * 24 * 30) then
+        --http_redirect('/admin/home/reset_password')
+        --end
 
         _http_cookie('i', operator.id, '/', _time() + 86400);
-
-        --this.session.set('operator_login_ip', ip);
-
-        if (_time() - operator.password_updated_at > 3600 * 24 * 30) then
-            --http_redirect('/admin/home/reset_password')
-        end
-
         _http_cookie('m', operator.password, '/', _time() + 86400);
+
+        -- 记录管理员登录log
+        local olh = __model.operator_login_his:new()
+        olh.operator_id = operator.id
+        olh.ip = ip
+        olh.created_at = _time()
+        olh:save()
 
         _http_redirect('', '/admin/operator/dashboard', 304)
     end

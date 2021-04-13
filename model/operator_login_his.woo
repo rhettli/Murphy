@@ -1,0 +1,12 @@
+-- 继承model
+
+local _M = {}
+
+function _M:new(o)
+    o = o or {}
+
+    return self
+end
+
+
+return _extend(_M, 'oshine/woo_mvc@1.?:model', 'operator_login_his')
