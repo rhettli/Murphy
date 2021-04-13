@@ -34,5 +34,8 @@ before_run: _before_run.woo
 
 thread_num: 400
 
+# log日志目录地址，目前仅仅woo语言支持
+log_path: ${TEMP}/info.log
+
 
 

@@ -26,6 +26,12 @@ function _M:_queGetTotal()
     print('after save...')
 end
 
+function _M:generateSid()
+    -- sid有效时间1天
+    self.sid = self.id .. '.' .. uuid() .. '.' .. (_time() + 86400)
+    return self
+end
+
 function _M:toJson()
     return {
         id = self.id,

@@ -2,11 +2,6 @@ local class_member = {}
 
 function class_member:new(o)
     o = o or {}
-    --setmetatable(o, self)
-    --self.__index = self
-
-    self.version0 = "1"
-
     return self
 end
 
@@ -51,19 +46,22 @@ function class_member:logout()
     return self:renderJSON(nil, 'ok')
 end
 
-function class_member:login()-- 多设备登陆
-    --local e = _http_params('2')
+function class_member:login()
+    -- 多设备登陆
+
     local email = _http_params('email')
     local psw = _http_params('psw')
 
     local device_no = _http_params('device_no')
     local platform = _http_params('platform')
 
-    print('before login:===', email, e, psw, platform, device_no)
+    print('before login:===', email, psw, platform, device_no)
 
-    if platform and not in_array(platform, { 'windows', 'drawin', 'linux' }) then
-        return self:renderJSON(nil, 'login fail:[0p]', -1)
-    end
+    --if platform and not in_array(platform, { 'windows', 'drawin', 'linux','web-chrome' ,'web-chrome' }) then
+    --    return self:renderJSON(nil, 'login fail:[0p]', -1)
+    --end
+
+    _log('login before:', email, e, psw, platform, device_no)
 
     if not _is_valid(device_no) or #device_no < 8 then
         device_no = nil
@@ -86,14 +84,10 @@ function class_member:login()-- 多设备登陆
     --local member_id = self:currentMemberId()
     local member_id = member.id
 
-    -- generate sid [生成sid]
-    local _Sid = _new_model('sid')
+    member:generateSid()
 
     local json = member:toJson()
-    local sid = _Sid:generateSid(member_id)
-    member.sid = sid
-
-    --member:with(function(sql_handler)
+    local sid = member.sid
 
     -- 开启事务：begin
     member:begin(function(sql_handler)
@@ -133,36 +127,19 @@ function class_member:login()-- 多设备登陆
             end
         end
 
+        member:save() -- member发起事务，不需要调用with()方法
 
-        -- if sid have device_id ,then it is single login or it is mulit login [sid 有设备id表示只能单点登录，单点登录会互相挤掉线，否则就是多端登录]
-        -- if not get prams of device_no,just new instance of sid[没有设备号参数，新加入一个sid实例]
-        local sidWhere = ''
-        if device_id then
-            sidWhere = ' device_id="' .. device_id .. '"'
-        else
-            sidWhere = ' device_id is null'
-        end
-
-        local old_sid = _Sid:findFirst({ conditions = 'member_id=' .. member_id .. ' and ' .. sidWhere })
-
-        if _is_valid(old_sid) then
-            old_sid.sid = sid
-            old_sid:with(sql_handler):save()
-        else
-            _Sid.member_id = member_id
-            _Sid.sid = sid
-            if device_id then
-                _Sid.device_id = device_id
-            end
-            _Sid.created_at = _time()
-            _Sid:with(sql_handler):save()
-        end
+        -- 返回真，执行事务
+        return true
     end)
 
-    member:save()
+
+    -- 保存sid到redis缓存
+    local rds = __REDIS_CACHE0()
+    local r = rds:exec('SADD', '$_sid_' .. member.id, sid)
 
     json.sid = sid
-    return self:renderJSON(json, '', __TI8()(I8_LOGIN_FAIL, 'en'))
+    return self:renderJSON(json, '', __TI8()(I8_LOGIN_OK, member.lan or 'en'))
 end
 
 return _extend(class_member, "controller.api.base")

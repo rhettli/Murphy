@@ -2,12 +2,12 @@
 
 --- get ssdb0 handler,config it at conf/conf.lua [获取ssdb链接句柄,在conf/conf.lua中配置 ssdb0]
 __SSDB_CACHE0 = function()
-    return _import('oshine/woo_mvc@1.?:redis'):new('ssdb0')
+    return _import('oshine/woo_mvc@1.?:redis'):new()
 end
 
 --- get redis0 handler [获取redis链接句柄]
 __REDIS_CACHE0 = function()
-    return _import('oshine/woo_mvc@1.?:redis'):new('redis0')
+    return _import('oshine/woo_mvc@1.?:redis'):new()
 end
 
 --- get redis0 handler [获取redis链接句柄,共数据存储使用]
@@ -46,12 +46,15 @@ __ENCODE_ID = function(id)
 end
 
 -- 获取多国语言
-function __TI8(p, lan, ...)
-    if not p then
+function __TI8(lan, p, ...)
+    if not I8_LOGIN_OK then
         _import('conf.i8')
         return __TI8
     end
-    if #... > 0 then
+    if not lan then
+        return __TI8
+    end
+    if ... and #... > 0 then
         return string.format(_import('conf.i8_' .. lan)[p], ...)
     end
     return _import('conf.i8_' .. lan)[p]

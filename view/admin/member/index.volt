@@ -17,7 +17,8 @@
 {% /macro %}
 
 {% macro user_info_(op) %}
-<img class='avatar' src="http://oilcn.cn-sh2.ufileos.com/{{op.avatar}}" style='width:100px;height:100px'/>
+<!-- img标签添加 classs:image_once_click 后可以鼠标点击查看大图  -->
+<img class='avatar image_once_click' src="http://oilcn.cn-sh2.ufileos.com/{{op.avatar}}" style='width:100px;height:100px'/>
 {% /macro %}
 
 {% macro user_details(op) %}

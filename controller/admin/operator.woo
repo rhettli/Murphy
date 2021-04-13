@@ -122,7 +122,8 @@ function _M:login()
         olh.created_at = _time()
         olh:save()
 
-        _http_redirect('', '/admin/operator/dashboard', 304)
+        -- js内部做跳转，这里不用写302/304，前段js获取到Location字段自动跳转
+        _http_redirect('/admin/operator/dashboard', 200)
     end
 
 end

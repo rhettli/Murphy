@@ -8,14 +8,6 @@ local class_base = {}
 
 function class_base:new(o)
     o = o or {}
-    --setmetatable(o, self)
-    --self.__index = self
-    --
-    --local sid = _http_params('sid')
-    --if not _is_valid(sid) then
-    --    return nil
-    --end
-
 
     if not self:checkRouter() then
         print('router check fail')
@@ -102,13 +94,29 @@ function class_base:currentMemberId()
     end
 end
 
+
+-- sid支持多端登录，使用redis存储
 function class_base:checkAuth()
     local sid = _http_params('sid')
     if sid then
-        local member = _new_model('member'):findFirstBy('id', _str_split(sid, '.')[1])
-        if _is_valid(member) and member.sid == sid then
+        local sp = _str_split(sid, '.')
+        if #sp ~= 3 then
+            return false
+        end
+        local member_id = sp[1]
+        local rds = __REDIS_CACHE0()
+        local r = rds:exec('SISMEMBER', '$_sid_' .. member_id, sid)
+
+        --local member = _new_model('member'):findFirstBy('id', )
+        --if _is_valid(member) and member.sid == sid then
+        if r then
+            -- 判断sid是否过期
+            if tonumber(sp[3]) < _time() then
+                return false
+            end
             return true
         end
+
     end
     return false
 end

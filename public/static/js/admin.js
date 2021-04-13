@@ -152,9 +152,9 @@ $(function () {
     $(document).on('click', '.image_once_click', function (event) {
         event.preventDefault();
         var self = $(this);
-        var url = self.attr("href");
+        var url = self.attr("src");
 
-        var title = self.attr("title");
+        var title = '预览';
         var html = '<div class="modal" id="normal_modal" data-backdrop="static">' +
             '<div class="modal-dialog">' +
             '<div class="modal-content">' +
@@ -268,12 +268,9 @@ $(function () {
                     alert(resp.msg)
                 }
 
-                if (resp.redirect_url) {
-                    top.window.location.href = resp.redirect_url;
-                    return;
-                }
-                if (resp.error_url) {
-                    top.window.location.href = resp.error_url;
+                var loc=xhr.getResponseHeader('Location')
+                if (loc) {
+                    top.window.location.href = loc;
                     return;
                 }
 
@@ -310,12 +307,9 @@ $(function () {
             success: function (resp, status, xhr) {
 
                 stopWait();
-                if (resp.redirect_url) {
-                    top.window.location.href = resp.redirect_url;
-                    return;
-                }
-                if (resp.error_url) {
-                    top.window.location.href = resp.error_url;
+                var loc=xhr.getResponseHeader('Location')
+                if (loc) {
+                    top.window.location.href = loc;
                     return;
                 }
                 if (resp.reload) {
@@ -324,8 +318,8 @@ $(function () {
                 }
                 if (resp.code < 0) {
                     alert(resp.msg);
-                    // self.find(".error_reason").html(resp.error_reason);
-                    // self.find(".error_reason").show();
+                    // self.find(".msg").html(resp.msg);
+                    // self.find(".msg").show();
                 } else {
                     top.window.location.reload();
                     return
@@ -368,12 +362,9 @@ $(function () {
         var self = $(this);
 
         $.ajax({url: self.attr("href")}).done(function (resp) {
-            if (resp.redirect_url) {
-                top.window.location.href = resp.redirect_url;
-                return;
-            }
-            if (resp.error_url) {
-                top.window.location.href = resp.error_url;
+            var loc=xhr.getResponseHeader('Location')
+            if (loc) {
+                top.window.location.href = loc;
                 return;
             }
             if (resp.reload) {
@@ -381,8 +372,8 @@ $(function () {
                 return;
             }
 
-            if (0 != resp.error_code) {
-                alert(resp.error_reason);
+            if (0 != resp.code) {
+                alert(resp.msg);
             } else {
                 var model = self.parents("[data-model]").data('model');
                 $.each(resp, function (k, v) {
@@ -399,23 +390,19 @@ $(function () {
             var self = $(this);
             var url = self.attr("href");
             $.get(url, function (resp) {
-                if (resp.redirect_url) {
-                    top.window.location.href = resp.redirect_url;
-                    return;
-                }
-
-                if (resp.error_url) {
-                    top.window.location.href = resp.error_url;
+                var loc=xhr.getResponseHeader('Location')
+                if (loc) {
+                    top.window.location.href = loc;
                     return;
                 }
                 if (resp.reload) {
                     top.window.location.reload();
                     return;
                 }
-                if (resp.error_code == 0) {
+                if (resp.code == 0) {
                     $(self.data("target")).remove();
                 } else {
-                    alert(resp.error_reason);
+                    alert(resp.msg);
                 }
 
 
@@ -431,12 +418,9 @@ $(function () {
 
         $(this).parents("form").ajaxSubmit({
             success: function (resp) {
-                if (resp.redirect_url) {
-                    top.window.location.href = resp.redirect_url;
-                    return;
-                }
-                if (resp.error_url) {
-                    top.window.location.href = resp.error_url;
+                var loc=xhr.getResponseHeader('Location')
+                if (loc) {
+                    top.window.location.href = loc;
                     return;
                 }
                 if (resp.reload) {
@@ -444,9 +428,9 @@ $(function () {
                     return;
                 }
 
-                if (0 != resp.error_code) {
+                if (0 != resp.code) {
 
-                    alert(resp.error_reason);
+                    alert(resp.msg);
                 } else {
                     location.reload();
                 }
@@ -460,19 +444,16 @@ $(function () {
         var self = $(this);
         var url = self.attr("href");
         $.get(url, function (resp) {
-            if (resp.redirect_url) {
-                top.window.location.href = resp.redirect_url;
-                return;
-            }
-            if (resp.error_url) {
-                top.window.location.href = resp.error_url;
+            var loc=xhr.getResponseHeader('Location')
+            if (loc) {
+                top.window.location.href = loc;
                 return;
             }
             if (resp.reload) {
                 top.window.location.reload();
                 return;
             }
-            alert(resp.error_reason);
+            alert(resp.msg);
         });
         return false;
     });
