@@ -31,7 +31,7 @@ return {
 
             if updated then
                 local txt_sql = _cat(f.name, true)
-                local _, e = sql_handler():exec((txt_sql))
+                local _, e = sql_handler():exec(txt_sql)
                 if not e then
                     local s = __model.sql:new()
                     s.sql = f.name

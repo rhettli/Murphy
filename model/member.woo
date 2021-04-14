@@ -26,9 +26,30 @@ function _M:_queGetTotal()
     print('after save...')
 end
 
+-- 保存sid到redis缓存
+---@param isRefresh boolean@是否刷新sid时间
+function _M:saveRds(isRefresh)
+    if isRefresh then
+        self.sid = _sub_ex('ne', self.sid, '.') .. (_time() + 86400)
+    end
+    local rds = __REDIS_CACHE0()
+    rds:with(function()
+        rds:exec('SADD', '$_sid_' .. self.id, self.sid)
+        -- 延长整个sid列表过期时间
+        rds:exec('EXPIRE', '$_sid_' .. self.id, 86400 + 120)
+    end, true) -- true 自动关闭redis
+end
+
+function _M:logout()
+    local rds = __REDIS_CACHE0()
+    rds:with(function()
+        rds:exec('SREM', '$_sid_' .. self.id, self.sid)
+    end, true) -- true 自动关闭redis
+end
+
 function _M:generateSid()
     -- sid有效时间1天
-    self.sid = self.id .. '.' .. uuid() .. '.' .. (_time() + 86400)
+    self.sid = self.id .. '.' .. _uuid() .. '.' .. (_time() + 86400)
     return self
 end
 

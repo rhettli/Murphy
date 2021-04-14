@@ -94,7 +94,6 @@ function class_base:currentMemberId()
     end
 end
 
-
 -- sid支持多端登录，使用redis存储
 function class_base:checkAuth()
     local sid = _http_params('sid')
@@ -112,11 +111,15 @@ function class_base:checkAuth()
         if r then
             -- 判断sid是否过期
             if tonumber(sp[3]) < _time() then
+                -- 过期，主动清理
+                local r = rds:exec('SREM', '$_sid_' .. member_id, sid)
+                rds:close()
                 return false
             end
+            rds:close()
             return true
         end
-
+        rds:close()
     end
     return false
 end
@@ -128,7 +131,7 @@ function class_base:checkRouter()
             print('action:==', action)
             print(_ACCESS_FILE, _ACCESS_METHOD)
             if action == i then
-                for k, p in pairs(v) do
+                for _, p in pairs(v) do
                     if p == _ACCESS_METHOD then
                         return true
                     end

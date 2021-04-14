@@ -28,22 +28,28 @@ function class_member:createShortPsw()
 end
 
 function class_member:logout()
-    local member_id = self:currentMemberId()
+    local member = self:currentMember()
+
+    member:logout()
+
+    return self:renderJSON(nil, 'ok')
+end
+
+--- 刷新sid,只需要把sid过期时间延长即可，todo 限制频繁刷新
+---
+--- base:checkAuth() 已经鉴权sid是否有效，这里不需要鉴权
+function class_member:refreshSid()
 
     local sid = _http_params('sid')
 
-    local m_sid = self:model('sid'):findFirstBy('sid', sid)
-    if not m_sid then
-        return self:renderJSON(nil, 'ok')
-    end
-    if m_sid.member_id == member_id then
-        m_sid.sid = ''
-        m_sid:save()
-    else
-        return self:renderJSON(nil, 'fail,can not logout other user')
-    end
+    _log('用户刷新sid', sid)
 
-    return self:renderJSON(nil, 'ok')
+    member.sid = sid
+
+    -- 刷新sid
+    member:saveRds(true)
+
+    return self:renderJSON({ sid = member.sid })
 end
 
 function class_member:login()
@@ -61,7 +67,7 @@ function class_member:login()
     --    return self:renderJSON(nil, 'login fail:[0p]', -1)
     --end
 
-    _log('login before:', email, e, psw, platform, device_no)
+    _log('login before:', email, psw, platform, device_no)
 
     if not _is_valid(device_no) or #device_no < 8 then
         device_no = nil
@@ -127,19 +133,18 @@ function class_member:login()
             end
         end
 
-        member:save() -- member发起事务，不需要调用with()方法
+        -- member发起事务，不需要调用with()方法
+        member:save()
+
+        -- 保存sid到redis缓存
+        member:saveRds()
 
         -- 返回真，执行事务
         return true
     end)
 
-
-    -- 保存sid到redis缓存
-    local rds = __REDIS_CACHE0()
-    local r = rds:exec('SADD', '$_sid_' .. member.id, sid)
-
     json.sid = sid
-    return self:renderJSON(json, '', __TI8()(I8_LOGIN_OK, member.lan or 'en'))
+    return self:renderJSON(json)
 end
 
 return _extend(class_member, "controller.api.base")

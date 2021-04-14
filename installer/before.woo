@@ -1,3 +1,4 @@
+-- 下载安装Murphy框架前调用此函数
 return {
     run = function(params)
 
