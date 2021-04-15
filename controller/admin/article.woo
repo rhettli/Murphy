@@ -1,10 +1,10 @@
 local _M = {  }
 
 -- [P:article|文章]
--- [I:update/更新|update]
--- [I:create/创建|create]
--- [I:edit/编辑|edit]
--- [I:list/列表页面|index]
+-- [I:update|更新]
+-- [I:create|创建]
+-- [I:edit|编辑]
+-- [I:index|列表页面]
 
 function _M:new()
     self. model_name = 'article'

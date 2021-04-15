@@ -1,7 +1,7 @@
 local _M = {}
 
 -- here defined the operator permission item use []  (使用[]来定义一个权限)
--- use p: I: (使用P: 开头表示权限类，I:开头表示权限类中的项目)
+-- use P: I: (使用P: 开头表示权限类，I:开头表示权限类中的项目)
 
 -- [P:operator|管理员]
 function _M:new()
@@ -27,11 +27,11 @@ function _M:update()
     return self:renderJSON()
 end
 
--- [I:create|更新]
+-- [I:create|新建]
 function _M:create()
 end
 
--- [I:edit|更新]
+-- [I:edit|编辑页面]
 function _M:edit()
     local id = _http_params('id')
     assert(_is_valid(id), 'no id')
@@ -50,6 +50,7 @@ function _M:dashboard()
     self:view(self.model_name, {}):render('admin.' .. self.model_name .. '.dashboard')
 end
 
+-- [I:edit|列表页面]
 function _M:list()
     local res = {}
 

@@ -1,4 +1,7 @@
 return {
+    help = function(p)
+
+    end,
     clear = function(p)
         -- todo delete file with p[1]
         _ls(_DIR .. '/runtime', function(f)
@@ -11,7 +14,7 @@ return {
         print('Done')
     end,
     list = function(p)
-        local dir = p[1] and '/'..p[1] or ''
+        local dir = p[1] and '/' .. p[1] or ''
         _ls(_DIR .. '/runtime' .. dir, function(f)
             if f.name == 'runtime' then
                 return

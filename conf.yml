@@ -1,10 +1,13 @@
+#默认 8080
 port: 8008
+#默认 0.0.0.0
 host: 0.0.0.0
+
 type: http ws
 
 # 墨菲:  murphy-http
 
-# 访问的文件即使不是lua可执行文件也输出（不安全，建议使用static映射，当然整站都是静态页面就另当别论了）
+# 访问的文件即使不是woo可执行文件也输出（不安全，建议使用static映射，当然整站都是静态页面就另当别论了）
 send_file: 0
 
 # static 为静态文件夹映射,有扩展名的则映射单个文件
@@ -18,12 +21,9 @@ index: index.woo
 # html模板目录
 #tpl: ./tpl/*.html
 
-# 是否启用index_all，启用后所有的请求都将重定向到index.lua，index配置无效
-# 比如：/foo/bar/?op=list , 将重定向到 /index.lua?_url=/foo/bar/?op=list
+# 是否启用index_all，启用后所有的请求都将重定向到index.woo，index配置无效
+# 比如：/foo/bar/?op=list , 将重定向到 /index.woo?_url=/foo/bar/?op=list
 index_all: 1
-
-# websockets 处理文件，默认ws.woo
-# index_ws=ws.woo
 
 # 是否缓存lua代码,默认不缓存，1缓存，0|false不缓存，生产环境必须设置1
 cache_code: 0
@@ -31,11 +31,10 @@ cache_code: 0
 # before running
 before_run: _before_run.woo
 
-
 thread_num: 400
 
-# log日志目录地址，目前仅仅woo语言支持
-log_path: ${TEMP}/info.log
+# log日志目录地址(系统缓存目录)，目前仅仅woo语言支持:${TEMP}
+log_path: ${TEMP}/info-murphy.log
 
 
 

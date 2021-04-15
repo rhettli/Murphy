@@ -1,5 +1,10 @@
 local _M = { }
 
+-- [P:device|设备]
+-- [I:update|更新]
+-- [I:edit|编辑]
+-- [I:index|列表页面]
+
 function _M:new()
     self. model_name = 'device'
 

@@ -2,11 +2,16 @@
 
 return {
     run = function()
-        print('Murphy cli start with version:', _cat(_DIR .. '/version', true), "\nAuthor:liyanxi,copyright:shanghaixiye teg.c @2020")
+        local lan = (require('wpm@conf/conf') or {}).language or 'zh' -- 默认语言中文
+
+        print(({ en = 'Language:english', zh = '当前语言：中文' })[lan])
+
+        print(({ en = 'Murphy cli start with version:%s\nAuthor:liyanxi,copyright:shanghaixiye ,Author:liyanxi/liye',
+                 zh = 'Murphy 运行版本：%s，版权所属：上海曦夜科技,作者：李焱曦、李夜' })[lan]:format(_cat(_DIR .. '/version', true)))
 
         package.path = '@' .. _DIR .. '/vendor/?.woo;' .. '@' .. _env('WPM_PKG') .. '/?.woo;' .. _DIR .. '/?.woo;'
 
-        print('Woo package path:', package.path)
+        --print('Woo package path:', package.path)
 
         require('oshine/woo_mvc@1.?:core')
         _import('conf.defined')
@@ -17,11 +22,8 @@ return {
             end)
         end
 
-        local lan = (require('wpm@conf/conf') or {}).language
 
-        print('Language:', lan)
-
-        assert(lan, 'Error:not find conf.woo file at wpm package,make sure wpm package install correct. / 没有找到语言配置文件conf.woo 在wpm包中，请确认wpm包是否安装正确')
+        --assert(lan, 'Error:not find conf.woo file at wpm package,make sure wpm package install correct. / 没有找到语言配置文件conf.woo 在wpm包中，请确认wpm包是否安装正确')
 
         if _is_cli() == false then
             print(({ en = 'Error:mush cli mode,try:woo murphy.woo -h', zh = '必须以cli模式运行,试试：woo murphy.woo -h' })[lan])
@@ -30,45 +32,78 @@ return {
 
         local arg = _del(woo.DEL_NORMAL, _args(), 1)
 
-        _out('Run with arg:', arg, '\n')
+        _out(({ en = 'Run with arg:', zh = '运行参数' })[lan], arg, '\n')
 
-        local help_func = function(rule)
-            local help_str = [[
-run with
-    ]]
-            print(help_str)
-        end
+        if _in_array(arg[1], { 'help' }) then
+            local p = _del(woo.DEL_NORMAL, arg, 2, 1)
+            local rdir = _DIR .. '/task'
+            local dir = p[1] and '/' .. p[1] or ''
+            if _file_exist(rdir .. dir .. '.woo') then
+                rdir = rdir .. dir .. '.woo'
+            else
+                rdir = rdir .. dir
+            end
+            _ls(rdir, function(f)
+                if f.isDir then
+                    return
+                end
 
-        if _in_array(arg[1], { "-h", '?', '--help', "" }) then
-            help_func()
+                local ff = _sub_ex('re', _del(woo.DEL_NORMAL, _str_replace(f.path, '\\', '/'), '.woo', './'), '/')
+                if _end_with(ff, 'murphy') then
+                    return
+                end
+
+                if _begin_with(ff, 'sys/') then
+                    ff = _str_replace(ff, 'sys/', '')
+                end
+
+                print(ff)
+                local t = _cat(f.path, true)
+                local fun = loadstring(t)()
+                for k, v in pairs(fun) do
+                    if type(v) == 'function' then
+                        _color('diy', ('\t<suc>%s</>\n'):format(k))
+                    end
+                end
+            end)
         elseif arg[1] == 'cli' then
             --local member = __model.member:findFirstById(100).nickname ;print(member.nickname, member.id)
 
+            if arg[2] == 'help' then
+                local doc = _DIR .. '/doc/task/' .. lan
+                require(doc).print('cli')
+                return
+            end
+
             _cli()
 
-        elseif arg[1] == 'admin' then
-            if _in_array(arg[2], { 'index' }) then
-                require(queue)[arg[2]]()
-            else
-                print(({ en = 'admin #2 not match any rule.', zh = '' })[lan])
-                help_func(arg[1])
+        elseif arg[1] == 'permission' then
+            local admin = _DIR .. '/task/sys/permission'
+            if not _in_array(arg[2], { 'add', 'del', 'update', 'help' }) then
+                arg[2] = 'help'
             end
+            if arg[2] == 'help' then
+                arg[3] = lan
+            end
+            require(admin)[arg[2]](_del(woo.DEL_NORMAL, arg, 2, 1))
         elseif arg[1] == 'runtime' then
             local runtime = _DIR .. '/task/sys/runtime'
-            if _in_array(arg[2], { 'clear', 'list' }) then
-                require(runtime)[arg[2]](_del(woo.DEL_NORMAL, arg, 2, 1))
-            else
-                print(({ en = 'admin #2 not match any rule:' .. arg[2], zh = 'admin 参数 #2 未匹配到命令:' .. arg[2] })[lan])
-                help_func(arg[1])
+            if not _in_array(arg[2], { 'clear', 'list', 'help' }) then
+                arg[2] = 'help'
             end
+            if arg[2] == 'help' then
+                arg[3] = lan
+            end
+            require(runtime)[arg[2]](_del(woo.DEL_NORMAL, arg, 2, 1))
         elseif arg[1] == 'task' then
             local task = _DIR .. '/task/sys/task'
-            if _in_array(arg[2], { 'add', 'list' }) then
-                require(task)[arg[2]](_del(woo.DEL_NORMAL, arg, 2, 1))
-            else
-                print(({ en = 'admin #2 not match any rule:' .. arg[2], zh = 'admin 参数 #2 未匹配到命令:' .. arg[2] })[lan])
-                help_func(arg[1])
+            if not _in_array(arg[2], { 'add', 'list', 'help' }) then
+                arg[2] = 'help'
             end
+            if arg[2] == 'help' then
+                arg[3] = lan
+            end
+            require(task)[arg[2]](_del(woo.DEL_NORMAL, arg, 2, 1))
         elseif arg[1] == 'install' then
             -- start install/开始安装
             -- add db config
@@ -76,20 +111,22 @@ run with
 
         elseif arg[1] == 'sql' then
             local sql = _DIR .. '/task/sys/sql'
-            if _in_array(arg[2], { 'update', 'create' }) then
-                require(sql)[arg[2]](_del(woo.DEL_NORMAL, arg, 2, 1))
-            else
-                print(({ en = 'admin #2 not match any rule:' .. arg[2], zh = 'admin 参数 #2 未匹配到命令:' .. arg[2] })[lan])
-                help_func(arg[1])
+            if not _in_array(arg[2], { 'update', 'create', 'help' }) then
+                arg[2] = 'help'
             end
+            if arg[2] == 'help' then
+                arg[3] = lan
+            end
+            require(sql)[arg[2]](_del(woo.DEL_NORMAL, arg, 2, 1))
         elseif arg[1] == 'queue' then
             local queue = _DIR .. '/task/sys/queue'
             if _in_array(arg[2], { 'start', 'stop', 'reload', 'add', 'list' }) then
-                require(queue)[arg[2]](_del(woo.DEL_NORMAL, arg, 2, 1))
-            else
-                print(({ en = 'admin #2 not match any rule:' .. arg[2], zh = 'admin 参数 #2 未匹配到命令:' .. arg[2] })[lan])
-                help_func(arg[1])
+                arg[2] = 'help'
             end
+            if arg[2] == 'help' then
+                arg[3] = lan
+            end
+            require(queue)[arg[2]](_del(woo.DEL_NORMAL, arg, 2, 1))
         else
             if not arg[2] then
                 return
@@ -97,6 +134,9 @@ run with
             -- run with task
             local f = _DIR .. '/task/' .. _str_replace(arg[1], '.', '/') .. '.woo'
             if _file_exist(f) then
+                if arg[2] == 'help' then
+                    arg[3] = lan
+                end
                 require('task/' .. arg[1])[arg[2]](_del(woo.DEL_NORMAL, arg, 2, 1))
             else
                 print('not find any task file with:' .. f)

@@ -1,5 +1,9 @@
 ---Author: liyanxi
 
+local p=package.path
+require('_before_run')
+package.path=p
+
 local m=require('task/sys/murphy')
 if not m then
     print('please run cli ar murphy root folder. / 请在Murphy更目录下运行命令')
