@@ -1,13 +1,15 @@
 ---Author: liyanxi
 
-local p=package.path
-require('_before_run')
-package.path=p
 
 local m=require('task/sys/murphy')
 if not m then
-    print('please run cli ar murphy root folder. / 请在Murphy更目录下运行命令')
+    _color('warn','please run cli at murphy root folder. / 请在Murphy根目录下运行命令')
     return
 end
+local p=package.path
+
+local r = _re_match(_cat('conf.yml',true) , 'before_run:(.*)')
+require(_trim(_rtrim(_rtrim(r[1][2],'\r'),'.woo'),' ') or '_before_run')
+package.path=p
 
 m.run()

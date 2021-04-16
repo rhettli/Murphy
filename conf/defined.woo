@@ -26,9 +26,23 @@ __TABLE_SUB_TO_RIGHT = function(t, r)
 end
 
 __IS_ALLOWED = function(path, p)
+    if not __IS_ALLOWED_DB_PERMISSION then
+        local id = _http_cookie('i')
+        local opr = __model.operator:findFirstById(id)
+        local items = __model.operator_role:findFirstById(opr.operator_role_id).permission_items
+        local permission_items = __model.operator_permission:findByIds(_str_split(items, ','))
+        __IS_ALLOWED_DB_PERMISSION = { opr = opr, p = permission_items }
+    end
+    if __IS_ALLOWED_DB_PERMISSION.opr.role == 'admin' then
+        return true
+    end
+    for _, v in pairs(__IS_ALLOWED_DB_PERMISSION.p) do
+        if v.p == path and v.i == p then
+            return true
+        end
+    end
 
-
-    return 1
+    return false
 end
 
 __STR_SUB_TO_LEFT = function(str, to)

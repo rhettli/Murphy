@@ -16,8 +16,6 @@ return {
                 if _is_valid(content) then
                     local a_arr = _str_split(content, '\n')
                     local permission_key = ''
-                    local i = {}
-                    local is_lock_item = ''
                     for _, v in pairs(a_arr) do
                         if #v > 5 then
                             --print('v:================', v)
@@ -26,11 +24,9 @@ return {
                                 local r = _re_match(v, '-- *?\\[P:(.+?)\\|(.*?)\\]')
                                 if _is_valid(r) and r[1] then
                                     r = r[1]
-                                    --print('===0', serialize(r))
                                     permission_key = r[2]
                                     if p_name ~= permission_key then
-                                        _out(r)
-                                        print('error', 'file name is ', p_name, ' but defined P: is ', permission_key)
+                                        _color('error', 'file name is ', p_name .. ' but defined P: is ' .. (permission_key or ''))
                                         return
                                     end
                                     --_re_match('-- [P:article|文章]', '-- *?\\[P:(.+?)\\|(.*?)\\]')
@@ -44,14 +40,13 @@ return {
                                     end
                                 end
                             else
-                                --print('v:================', v)
                                 local r = _re_match(v, '-- *?\\[I:(.+?)\\|(.*?)\\]')
                                 if _is_valid(r) then
                                     r = r[1]
                                     if r and #r == 3 then
                                         local op_permission = _new_model('operator_permission')
                                         local omp = op_permission:findFirst({ conditions = 'p="' .. p_name .. '" and i="' .. r[2] .. '"' })
-                                        _out(p_name,r)
+                                        _out(p_name, r)
                                         if not _is_valid(omp) then
                                             op_permission = _new_model('operator_permission')
                                             op_permission.p = p_name
@@ -74,8 +69,11 @@ return {
                 end
             end
             --print(f, r)
-
         end)
+    end,
+    add = function(p)
+    end,
+    del = function(p)
     end,
     help = function(p)
         local en = [[
