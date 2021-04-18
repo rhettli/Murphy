@@ -59,7 +59,6 @@ end
 --- @return oshine.woo_mvc@1.?:model
 __model = setmetatable({}, {
     __index = function(_, v)
-        --print('__model:',v)
         return _new_model(v)
     end
 })
