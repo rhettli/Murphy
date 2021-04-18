@@ -1,23 +1,34 @@
-
 -- __IS_ALLOWED for admin[admin 后台使用的全局函数]
 __IS_ALLOWED = function(path, p)
+
     if not __IS_ALLOWED_PERMISSION then
+
         local id = _http_cookie('i')
         local opr = __model.operator:findFirstById(id)
-        local items = __model.operator_role:findFirstById(opr.operator_role_id).permission_items
-        local pits = __model.operator_permission:findByIds(_str_split(items, ','))
+
+        local items = opr.operator_role_id and __model.operator_role:findFirstById(opr.operator_role_id) or ''
+
+        local pits
+        if items ~= '' then
+            pits = __model.operator_permission:findByIds(_str_split(items, ','))
+        end
+
         __IS_ALLOWED_PERMISSION = { opr = opr, p = pits }
     end
     if __IS_ALLOWED_PERMISSION.opr.role == 'admin' then
-        return true
+        return 1
     end
-    for _, v in pairs(__IS_ALLOWED_PERMISSION.p) do
-        if v.p == path and v.i == p then
-            return true
+    if __IS_ALLOWED_PERMISSION.p then
+        for _, v in pairs(__IS_ALLOWED_PERMISSION.p) do
+            if v.p == path and v.i == p then
+                return 1
+            end
         end
     end
-    return false
+
+    return
 end
+
 
 -- admin 登录页面进入密码
 __admin_psw = 'oshine-murphy'
