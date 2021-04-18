@@ -6,5 +6,6 @@ go.sum
 *.br
 runtime/*
 vendor
+.env
 
 .woo_manual
