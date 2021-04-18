@@ -8,9 +8,15 @@ end
 
 function class_source:index()
 
---    local member = __model.member:findFirstById(100)
+    --    local member = __model.member:findFirstById(100)
 
-    return self:renderJSON({ say = 'hello world!' }, '', 0)
+    local id = '512'
+
+    local psid = __PARSE_ID(id)
+
+    local decodePsid = __PARSE_ID(psid, true)
+
+    return self:renderJSON({ say = 'hello world!', id = id, psid = psid, decodePsid = decodePsid }, '', 0)
 end
 
 -- index/memberTotal

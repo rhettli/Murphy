@@ -36,6 +36,7 @@ function _M:new(o)
         _merge_left(self, o:new())
     end
 
+    require('conf/admin')
     return self
 end
 

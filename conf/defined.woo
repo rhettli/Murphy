@@ -25,38 +25,18 @@ __TABLE_SUB_TO_RIGHT = function(t, r)
     return res
 end
 
-__IS_ALLOWED = function(path, p)
-    if not __IS_ALLOWED_DB_PERMISSION then
-        local id = _http_cookie('i')
-        local opr = __model.operator:findFirstById(id)
-        local items = __model.operator_role:findFirstById(opr.operator_role_id).permission_items
-        local permission_items = __model.operator_permission:findByIds(_str_split(items, ','))
-        __IS_ALLOWED_DB_PERMISSION = { opr = opr, p = permission_items }
-    end
-    if __IS_ALLOWED_DB_PERMISSION.opr.role == 'admin' then
-        return true
-    end
-    for _, v in pairs(__IS_ALLOWED_DB_PERMISSION.p) do
-        if v.p == path and v.i == p then
-            return true
-        end
-    end
-
-    return false
-end
-
 __STR_SUB_TO_LEFT = function(str, to)
     return _str_sub(str, _str_rindex(str, to) + 1, #str)
 end
 
-__DECODE_ID = function(id)
-
-    return
-end
-
-__ENCODE_ID = function(id)
-
-    return
+-- 加密解密id，防止被爬虫爬取
+__PARSE_ID = function(id, isDecode)
+    local psw = ' .^%2@ fhy76169@)_+=<>/?t6' -- 发布前请修改此密码
+    local p = _id_parse(id, psw, isDecode)
+    if isDecode then
+        p = _sub_ex('re', p, ':')
+    end
+    return p
 end
 
 -- 获取多国语言
@@ -93,4 +73,3 @@ __queue = setmetatable({}, {
     end
 })
 
-__admin_psw = 'oshine-murphy'
