@@ -1,5 +1,5 @@
 # Murphy（正在开发中。。。）
->by liyanxi:oshine@wooyri.com
+>By liyanxi:oshine@wooyri.com
 >非常完善的woo web框架,名字灵感来自星际穿越女主角
 
 #### 安装与运行
@@ -10,7 +10,7 @@ woo murphy install [数据库用户名] [数据库密码] [数据库类型：mys
 woo ./
 ```
 
-然后访问http://127.0.0.1:8008
+然后访问 http://127.0.0.1:8008
 
 
 如果 更新了控制层中的admin类需要重新索引下权限
