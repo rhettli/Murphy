@@ -1,7 +1,7 @@
 local skip_router = {
     member = { 'login', 'reg' },
     pay = { 'start', 'status' },
-    cw_package = { 'search' },
+    package = { 'search' },
 }
 
 local class_base = {}

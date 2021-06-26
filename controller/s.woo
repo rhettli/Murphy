@@ -6,8 +6,23 @@ function class_source:new(o)
     return self
 end
 
-function class_source:installer()
+-- 安装woo
+-- https://***/s/woo?v=latest
+function class_source:woo()
 
+end
+
+-- 安装wpm
+-- http://127.0.0.1:8008/s/wpm?ver=1
+function class_source:wpm()
+    local real_ver = _http_params('ver')
+    if real_ver then
+        local mod_ver = __model.version:findFirst({ ['conditions'] = 'is_woo=0 and real_ver=:real_ver:',
+                                                    ['bind'] = { real_ver = real_ver },
+                                                    ['order'] = 'ver desc' })
+
+        return self:renderJSON(mod_ver:toJson())
+    end
 end
 
 function class_source:list()
