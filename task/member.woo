@@ -1,0 +1,36 @@
+return {
+    find = function(args, lan)
+
+        -- 如果使用命令 woo murphy find id 100
+        local filed = args[1]  -- filed=id
+        local value = args[2] -- value=100
+
+        if not _is_valid(filed) then
+            print(({ en = 'need key and value', zh = '缺少待查询的字段和值' })[lan])
+            return
+        end
+
+        if not _is_valid(value) then
+            value = filed
+            filed = 'id'
+            print(({ en = 'not get filed,will find id=' .. value, zh = '没有提供字段，查询id=' .. value })[lan])
+        else
+            print(({ en = 'find id=' .. value, zh = '查询id=' .. value })[lan])
+        end
+        -- 这里使用__model中的魔术方法可以取到member对象，进而查询
+        local member = __model.member:findFirstBy(filed, value)
+        _out('Member:', member)
+    end,
+    add = function(args, lan)
+
+    end,
+    del = function(args, lan)
+
+    end,
+    forbidden = function(args, lan)
+
+    end,
+    update = function(args, lan)
+
+    end
+}

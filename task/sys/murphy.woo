@@ -2,6 +2,8 @@
 
 return {
     run = function()
+
+
         local lan = (require('wpm@conf/conf') or {}).language or 'zh' -- 默认语言中文
 
         print(({ en = 'Language:english', zh = '当前语言：中文' })[lan])
@@ -9,9 +11,11 @@ return {
         print(({ en = 'Murphy cli start with version:%s\nAuthor:liyanxi,copyright:shanghaixiye ,Author:liyanxi/liye',
                  zh = 'Murphy 运行版本：%s，版权所属：上海曦夜科技,作者：李焱曦、李夜' })[lan]:format(_cat(_DIR .. '/version', true)))
 
+        print('')
+
         package.path = '@' .. _DIR .. '/vendor/?.woo;' .. '@' .. _env('WPM_PKG') .. '/?.woo;' .. _DIR .. '/?.woo;'
 
-        --print('Woo package path:', package.path)
+        print('Woo package path:', package.path)
 
         require('oshine/woo_mvc@1.?:core')
         _import('conf.defined')
@@ -48,6 +52,10 @@ return {
                     return
                 end
 
+                if (not _end_with(f.path, '.woo')) then
+                    return
+                end
+
                 local ff = _sub_ex('re', _del(woo.DEL_NORMAL, _str_replace(f.path, '\\', '/'), '.woo', './'), '/')
                 if _end_with(ff, 'murphy') then
                     return
@@ -58,6 +66,7 @@ return {
                 end
 
                 print(ff)
+
                 local t = _cat(f.path, true)
                 local fun = loadstring(t)()
                 for k, v in pairs(fun) do
@@ -65,6 +74,7 @@ return {
                         _color('diy', ('\t<suc>%s</>\n'):format(k))
                     end
                 end
+
             end)
         elseif arg[1] == 'cli' then
             --local member = __model.member:findFirstById(100).nickname ;print(member.nickname, member.id)
@@ -137,9 +147,9 @@ return {
                 if arg[2] == 'help' then
                     arg[3] = lan
                 end
-                require('task/' .. arg[1])[arg[2]](_del(woo.DEL_NORMAL, arg, 2, 1))
+                require('task/' .. arg[1])[arg[2]](_del(woo.DEL_NORMAL, arg, 2, 1), lan)
             else
-                print('not find any task file with:' .. f)
+                print(({ en = 'not find any task file with:', zh = '没有找到task文件' })[lan] .. f)
             end
         end
 
