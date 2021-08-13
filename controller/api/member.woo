@@ -100,7 +100,8 @@ function class_member:login()
         --first exec begin sql,and when function end ,will auto exec commit sql
         local device_id
         if device_no then
-            local _Device = _new_model('device')
+            local _Device = _new_model('device'):with(sql_handler)
+
             local device = _Device:findFirstBy('device_no', device_no)
             if _is_valid(device) then
                 -- update last login time [更新这个设备的最后登录时间]
@@ -111,7 +112,7 @@ function class_member:login()
                 if device.platform ~= platform then
                     return self:renderJSON(nil, 'fail[03]', -1)
                 end
-                device:with(sql_handler):save()
+                device:save()
 
                 device_id = device.id
                 -- update member's device_id
