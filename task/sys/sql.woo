@@ -1,5 +1,5 @@
 return {
-    update = function()
+    update = function(p,lan)
         local sqls = __model.sql:find()
         local _sql_handler
 
@@ -44,7 +44,7 @@ return {
             _sql_handler:close()
         end
     end,
-    create = function(p)
+    create = function(p,lan)
         if not p[1] then
             print("need sql file name,eg:woo murphy sql create create_member_table_v1")
             return

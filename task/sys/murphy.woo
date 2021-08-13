@@ -3,19 +3,18 @@
 return {
     run = function()
 
+        local lan = _cat(_DIR .. '/.lan', true) == 'zh' and 'zh' or 'en' -- 默认语言中文
 
-        local lan = (require('wpm@conf/conf') or {}).language or 'zh' -- 默认语言中文
+        _color('pre', ({ en = 'Language:english(use <woo murphy lan zh> switch chinese)', zh = '当前语言：中文(使用<woo murphy lan en> 切换到英文显示)' })[lan], 'red')
 
-        print(({ en = 'Language:english', zh = '当前语言：中文' })[lan])
-
-        print(({ en = 'Murphy cli start with version:%s\nAuthor:liyanxi,copyright:shanghaixiye ,Author:liyanxi/liye',
-                 zh = 'Murphy 运行版本：%s，版权所属：上海曦夜科技,作者：李焱曦、李夜' })[lan]:format(_cat(_DIR .. '/version', true)))
+        _color('pre', ({ en = 'Murphy cli start with version:%s\nAuthor:liyanxi,copyright:shanghaixiye ,Author:liyanxi/liye',
+                         zh = 'Murphy 运行版本：%s，版权所属：上海曦夜科技,作者：李焱曦、李夜' })[lan]:format(_cat(_DIR .. '/version', true)), 'green')
 
         print('')
 
         package.path = '@' .. _DIR .. '/vendor/?.woo;' .. '@' .. _env('WPM_PKG') .. '/?.woo;' .. _DIR .. '/?.woo;'
 
-        print('Woo package path:', package.path)
+        --print('Woo package path:', package.path)
 
         require('oshine/woo_mvc@1.?:core')
         _import('conf.defined')
@@ -30,7 +29,7 @@ return {
         --assert(lan, 'Error:not find conf.woo file at wpm package,make sure wpm package install correct. / 没有找到语言配置文件conf.woo 在wpm包中，请确认wpm包是否安装正确')
 
         if _is_cli() == false then
-            print(({ en = 'Error:mush cli mode,try:woo murphy.woo -h', zh = '必须以cli模式运行,试试：woo murphy.woo -h' })[lan])
+            print(({ en = 'Error:mush cli mode,try:woo murphy -h', zh = '必须以cli模式运行,试试：woo murphy -h' })[lan])
             return
         end
 
@@ -38,7 +37,8 @@ return {
 
         _out(({ en = 'Run with arg:', zh = '运行参数' })[lan], arg, '\n')
 
-        if _in_array(arg[1], { 'help' }) then
+        if not arg[1] or _in_array(arg[1], { 'help' }) then
+            print('=======可用命令：========')
             local p = _del(woo.DEL_NORMAL, arg, 2, 1)
             local rdir = _DIR .. '/task'
             local dir = p[1] and '/' .. p[1] or ''
@@ -72,10 +72,20 @@ return {
                 for k, v in pairs(fun) do
                     if type(v) == 'function' then
                         _color('diy', ('\t<suc>%s</>\n'):format(k))
+                        local r = fun['_' .. k]
+                        if r then
+                            _color('pre', '\t  ' .. (type(r) == 'table' and r[lan] or r), 'cyan')
+                        end
                     end
                 end
-
             end)
+        elseif arg[1] == 'lan' then
+            local lan = _DIR .. '/task/sys/lan'
+            if not _in_array(arg[2], { 'zh', 'en', 'help' }) then
+                arg[2] = 'help'
+            end
+
+            require(lan)[arg[2]](_del(woo.DEL_NORMAL, arg, 2, 1), lan)
         elseif arg[1] == 'cli' then
             --local member = __model.member:findFirstById(100).nickname ;print(member.nickname, member.id)
 

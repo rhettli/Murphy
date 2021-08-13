@@ -1,8 +1,9 @@
 return {
-    help = function(p)
+    help = function(p, lan)
 
     end,
-    clear = function(p)
+    _clear = { zh = '清除所有metadata(table)缓存', en = 'clear all cache of metadata(table)' },
+    clear = function(p, lan)
         -- todo delete file with p[1]
         _ls(_DIR .. '/runtime', function(f)
             if f.name == 'runtime' then
@@ -13,7 +14,8 @@ return {
         end)
         print('Done')
     end,
-    list = function(p)
+    _list = { zh = '查看所有metadata文件', en = 'list all metadata file' },
+    list = function(p, lan)
         local dir = p[1] and '/' .. p[1] or ''
         _ls(_DIR .. '/runtime' .. dir, function(f)
             if f.name == 'runtime' then

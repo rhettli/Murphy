@@ -1,5 +1,6 @@
 return {
-    update = function()
+    _update = { zh = '目录 /controller/admin/* 下的control文件被修改，需要手动调用此函数来更新权限', en = 'call this function after change file in folder: /controller/admin/*.woo' },
+    update = function(p, lan)
         _ls(_DIR .. '/controller/admin', function(file, is_folder)
 
             f = _str_replace(file.name, '\\', '/')
@@ -75,6 +76,7 @@ return {
     end,
     del = function(p)
     end,
+    help = { zh = '使用帮助，可以看也可以不看', en = 'user manual' },
     help = function(p)
         local en = [[
 if you update permission in <red>controller/admin/*</> ,you must run  <suc>%s</>

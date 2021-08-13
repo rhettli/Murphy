@@ -1,13 +1,13 @@
 return {
-    start = function()
+    start = function(p,lan)
         local queue = require('oshine/woo_mvc@1?:queue')
         queue.start()
     end,
-    stop = function()
+    stop = function(p,lan)
         local queue = require('oshine/woo_mvc@1?:queue')
         queue.stop()
     end,
-    reload = function()
+    reload = function(p,lan)
         local queue = require('oshine/woo_mvc@1?:queue')
         queue.reload()
     end

@@ -1,8 +1,8 @@
 return {
-    add = function(p)
+    add = function(p,lan)
 
     end,
-    list = function(p)
+    list = function(p,lan)
 
     end
 }

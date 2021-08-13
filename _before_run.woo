@@ -3,7 +3,7 @@
 
 package.path = '@' .. _DIR .. '/vendor/?.woo'
 
-print('before run:===', package.path)
+--print('before run:===', package.path)
 
 local env = require('oshine/woo_env@1.?:env'):new(_DIR .. '/.env')
 

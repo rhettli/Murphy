@@ -1,4 +1,5 @@
 return {
+    _find = '根据字段查找member对象，如果没有字段，默认查找id',
     find = function(args, lan)
 
         -- 如果使用命令 woo murphy find id 100
