@@ -68,4 +68,4 @@ return {
 ```
 
 ### 如果想查询id=100的用户的信息:`woo murphy member find id 100`
-### 如果在unix系统中murphy可以直接执行，那么命令可以简化为:`./murphy member find id 100`
+### 如果在unix系统中murphy加了可执行权限，那么命令可以简化为:`./murphy member find id 100`
