@@ -2,7 +2,7 @@ return {
     help = function(p, lan)
 
     end,
-    _clear = { zh = '清除所有metadata(table)缓存', en = 'clear all cache of metadata(table)' },
+    _clear = { zh = '清除所有metadata(table)缓存,在更新数据库表结构时执行', en = 'clear all cache of metadata(table),exec after update table struct' },
     clear = function(p, lan)
         -- todo delete file with p[1]
         _ls(_DIR .. '/runtime', function(f)

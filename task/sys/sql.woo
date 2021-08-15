@@ -1,5 +1,6 @@
 return {
-    update = function(p,lan)
+    _exec = { zh = '执行所有未曾执行的sql文件', en = 'exec all sql file' },
+    exec = function(param, lan)
         local sqls = __model.sql:find()
         local _sql_handler
 
@@ -44,7 +45,8 @@ return {
             _sql_handler:close()
         end
     end,
-    create = function(p,lan)
+    _create = { zh = '创建一条sql更新文件', en = 'create a sql file for update' },
+    create = function(p, lan)
         if not p[1] then
             print("need sql file name,eg:woo murphy sql create create_member_table_v1")
             return

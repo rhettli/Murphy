@@ -1,4 +1,5 @@
 return {
+    --:task-begin:find--
     _find = '根据字段查找member对象，如果没有字段，默认查找id',
     find = function(args, lan)
 
@@ -20,8 +21,11 @@ return {
         end
         -- 这里使用__model中的魔术方法可以取到member对象，进而查询
         local member = __model.member:findFirstBy(filed, value)
-        _out('Member:', member)
+        _out('Member:', member:toJson())
     end,
+
+    --:task-end:find--
+
     add = function(args, lan)
 
     end,

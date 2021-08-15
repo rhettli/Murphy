@@ -117,13 +117,10 @@ return {
             require(runtime)[arg[2]](_del(woo.DEL_NORMAL, arg, 2, 1))
         elseif arg[1] == 'task' then
             local task = _DIR .. '/task/sys/task'
-            if not _in_array(arg[2], { 'add', 'list', 'help' }) then
+            if not _in_array(arg[2], { 'new', 'list', 'help' }) then
                 arg[2] = 'help'
             end
-            if arg[2] == 'help' then
-                arg[3] = lan
-            end
-            require(task)[arg[2]](_del(woo.DEL_NORMAL, arg, 2, 1))
+            require(task)[arg[2]](_del(woo.DEL_NORMAL, arg, 2, 1),lan)
         elseif arg[1] == 'install' then
             -- start install/开始安装
             -- add db config
