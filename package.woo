@@ -48,14 +48,15 @@ return {
     --- 使用 'all' 来支持所有平台，或者 'windows drawn linux' 来支持windows mac linux
     ['platform'] = 'all',
 
-    --- use 'all' to support all arch ,or 'amd64 x86_64' to support amd64 x86_64 | 使用 'all' 来支持所有 arch ,或者 'amd64 x86_64' 来支持 amd64 x86_64 平台
+    --- use 'all' to support all arch ,or 'amd64 x86_64' to support amd64 x86_64
+    --- 使用 'all' 来支持所有 arch ,或者 'amd64 x86_64' 来支持 amd64 x86_64 平台
     --- other position:amd64 x86_64 arm arm64 ...
     arch = 'all',
 
     --- add remark of this package
     remark = {
         ['en'] = 'A web development framework for all wooer,author:liyanxi',
-        zh = '标准的mvc web开发框架，先给可爱的码人；作者:李焱曦'
+        zh = '标准的mvc web开发框架，献给有故事的码人，作者:李焱曦'
     },
 
     --- every package need a title|给包起个名字吧

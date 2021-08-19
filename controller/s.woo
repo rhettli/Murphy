@@ -1,7 +1,7 @@
 local class_source = {}
 
 function class_source:new(o)
-    o = o or {}
+    --o = o or {}
 
     return self
 end
@@ -12,15 +12,16 @@ function class_source:woo()
 
 end
 
--- 安装wpm
--- http://127.0.0.1:8008/s/wpm?ver=1
-function class_source:wpm()
-    local real_ver = _http_params('ver')
+-- 安装om
+-- http://127.0.0.1:8008/s/om?ver=1.15
+function class_source:om()
+    local ver = _http_params('ver')
+    local real_ver = _str_sub(ver, 0, 1)
     if real_ver then
-        local mod_ver = __model.version:findFirst({ ['conditions'] = 'is_woo=0 and real_ver=:real_ver:',
-                                                    ['bind'] = { real_ver = real_ver },
-                                                    ['order'] = 'ver desc' })
-
+        local mod_ver = __model.version:findFirst({ conditions = 'is_woo=0 and real_ver=:real_ver: and ver>=:ver:',
+                                                    bind = { real_ver = real_ver, ver = ver },
+                                                    order = 'ver desc' })
+        mod_ver.i = 'https://gitee.com/oshine/om/raw/master/install.woo|https://github.com/rhettli/om'
         return self:renderJSON(mod_ver:toJson())
     end
 end

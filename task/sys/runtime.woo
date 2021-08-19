@@ -28,6 +28,6 @@ return {
             end
 
         end)
-        print('\nYou can clear runtime file with: woo murphy runtime clear ')
+        print('\nYou can clear runtime file: woo murphy runtime clear ')
     end
 }

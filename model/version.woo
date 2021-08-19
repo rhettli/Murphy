@@ -21,8 +21,10 @@ end
 function _M:toJson()
     return {
         id = self.id,
-        ver = self.ver,
-        addr = self.addr
+        ver = self.ver * 1,
+        addr = self.addr,
+        code = self.code,
+        force = self.force * 1
     }
 end
 
