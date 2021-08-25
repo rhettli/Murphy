@@ -37,10 +37,10 @@ return {
         ['oshine/woo_env'] = '1.?|local',
         ['oshine/woo_tpl'] = '1.?|local',
         ['oshine/woo_mvc'] = '1.?|local',
-        ['oshine/woo_any_type'] = '?|local',
-        ['oshine/woo_args_capture'] = '?|local',
-        ['oshine/woo_manual'] = '?|download', -- download woo manual|下载woo用户手册
-        ['oshine/woo_ctl'] = '1.?|download'        -- download woo server control|下载woo 服务控制
+        ['oshine/woo_any_type'] = '1.?|local',
+        ['oshine/woo_args_capture'] = '1.?|local',
+        ['oshine/woo_manual'] = '1.?|download', -- download woo manual|下载woo用户手册
+        --  ['oshine/woo_ctl'] = '1.?|download'        -- download woo server control|下载woo 服务控制
     },
 
     --- use 'all' to support all platform or use 'windows drawn linux' to support windows mac linux platform
@@ -60,7 +60,8 @@ return {
     },
 
     --- every package need a title|给包起个名字吧
-    title = 'Murphy-(Web framework for woo)',
+    title = 'murphy-(Web framework for woo)',
+
 
 }
 
